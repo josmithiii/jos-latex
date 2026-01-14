@@ -1,0 +1,567 @@
+#!/usr/bin/perl -w
+
+# $Id: appdict 60 2014-02-22 05:46:03Z jos $
+
+#use diagnostics;
+
+#FIXME: HTML is correct but appdict does not yet prevent links
+
+#FIXME: Need to receive text within <TT> </TT> as normal text.
+
+# Modification history
+# 10/03/01/jos - We HAVE to encode entities at the end. See 'PROBLEM' below.
+# 10/02/00/jos - added ':?' to $endingstr cases
+# 10/03/00/jos - took ':?' out of $endingstr cases (didn't help)
+# 08/08/01/jos - upgraded urlification of raw URLs
+# 03/01/02/jos - added precompiled dictionary support
+# 08/12/03/jos - removed lynx support as workaround for perl 5.8 incompatibility
+#		 (actually the problem is probably in HTML::Filter)
+# 08/12/03/jos - converted from HTML::Filter (deprecated) to HTML:Parser
+# 08/13/06/jos - added DEF support
+# 11/04/06/jos - added option support
+# 08/17/08/jos - cleaned up dict-file reading using read_dicts in dutil
+# 08/17/08/jos - %seenKeys now only used by slurpurls
+# 08/20/08/jos - removed absolute path for dutil (now must be in search path)
+
+
+#print STDERR "INC = " . join(" ",@INC) . "\n";
+push @INC,"/w/kpt";
+
+require "dutil"; # /w/kpt/dutil
+
+# See /k/l/ToDo for design notes
+
+# Apply w3k dictionary database (.dict) to HTML file (.html)
+# EXAMPLE: appdict w3k.dict myfile.html outfile.html
+use strict;
+use HTML::Entities;
+my $debug = 0;
+my $firstonly = 1;  # 1 = replace only first occurrence, else all
+#my $uselynx = 0;    # 0 = use second parse pass (doubles all text)
+sub usage { die "usage: [-b Bibliography.html] $0 dictionary.dict .. infile1.html outfile.html\n ARGV = " . join(" ",@ARGV) . "\n" }
+
+print STDERR "ARGV[0] = $ARGV[0]\n" if $debug;
+my $option = "";
+my $bibfile = "";
+usage if (@ARGV < 3);
+while ($ARGV[0] =~ m/^\s*-(.+)/) {
+    $option = $1;
+    print STDERR "Found option '$option'\n" if $debug;
+    if ($option =~ m/bi?b?f?i?l?e?$/) {
+	shift;
+	$bibfile = $ARGV[0];
+	print STDERR "Bibliography file = '$bibfile'\n";
+    } else {
+	print STDERR "Unknown option '$option'\n";
+    }
+    shift;
+}
+my $outname = pop or usage;
+my $ihname = pop or usage;
+die("Input HTML file $ihname does not exist\n") if (not -e $ihname);
+my($instring,$err,@keystring);
+
+my $pass = 1;
+
+print STDERR "infile = $ihname\n";
+print STDERR "outfile = $outname\n";
+print STDERR "Reading dictionaries '" . join(', ',@ARGV) . "' . . . \n";
+
+if ($ihname =~ m/Bibliography/) {
+    print STDERR "firstonly set to 0 for assumed Bibliography\n" if ($firstonly);
+    $firstonly = 0; 
+# FIXME: Move this test to Makefile and pass in a parameter
+}
+
+my(@keys,@defs,@urls,%dscs,@comments,%key);
+
+# See /w/kpt/dutil
+&read_dicts(\@keys,\@defs,\@urls,\%dscs,\@comments,\%key,$debug);
+
+# For each entry in the dictionary, find KEY in the input text.
+#
+print STDERR "=== Processing input file /$ihname/\n";
+
+# Note: HTML Entities are decoded only on PASS 2.
+# If a key phrase contains these things, the pass-2 match will fail.
+
+my (@keymatch,@defmatch,@urlmatch);
+
+use HTML::Parser ();  # Say 'man HTML::Parser'
+
+my $pagetext = "";  # accumulates all text on pass 1
+my @keydone = 0;    # records when keyphrase has been seen this page
+my %seenKeys = ();  # list of "seen keys"
+
+sub justprint {
+    my $text = shift;
+    $text =~ s/\&nbsp;//g;  # don't let these throw us off
+    print $text;
+}
+
+sub text1 {
+#    my ($self,$text,$is_cdata) = @_;
+    my $text = shift;
+
+#DECODE_ENTITIES SUPPRESSED on 1/19/02/jos 
+# because we are not presently recoding after link installation
+# (because we don't know how to protect newly installed links), and
+# '<' in verbatim code environments (such as 'if (a<b)') is being
+# interpreted as the start of a tag name, and large chunks of code
+# are being omitted.
+#
+# PROPOSED SOLUTION: Protect all verbatim environments with <NOLINKS>
+# tags, and configure Parser to ignore_elements in there.
+# Note, however, that leaving entities alone does not seem to affect much.
+#
+#	$text = decode_entities($text);
+#
+    $text =~ s/\s+/ /g;
+    if ($text =~ /\w/) {
+	print STDERR "\n\n---Pass 1: text1: Input Text chunk = '$text'\n" if $debug;
+	my $ptext = $text;
+
+	# Add bare URLs to dictionary:
+	my $nkeys = @keys; # save original number of keys
+	&main::slurpurls($text,\@keys,\@urls,\%seenKeys);  # /w/kpt/dutil
+	my $nnkeys = @keys;
+	while ($nnkeys>$nkeys) { # keys and urls were prepended
+	    $nkeys = unshift @defs,''; # prepend empty def - FIXME: INEFFICIENT
+	    print STDERR "Prepended empty def\n" if $debug;
+    # NOTE: $dscs{$newurl} not dealt with - ok? [using defs instead anyway]
+	}
+
+	if ($debug && ($ptext ne $text)) {
+	    print STDERR "\nNew text after basic URLification = '$text'\n\n";
+	    $ptext = $text;
+	}
+
+	$pagetext .= ($text . "\n"); # Gather all page text together for pass-1 key-search
+    } else {
+	print STDERR "*** No word chars --- goto EXIT\n" if ($debug>1);
+    }
+  EXIT:
+    # PROBLEM: Angle brackets in <A HREF=...> converted also!
+#   $self->SUPER::text(encode_entities($text)); 
+    # PROBLEM: the text 'for (n=0;n<N;n++)' in a code listing causes remainder of listing
+    # to be slurped up into a 'tag'.  WE MUST ENCODE ENTITIES, but
+    # without encoding the HTML tags we've inserted.  However, note that
+    # the text 'for (n=0;n<2*N;n++)' or 'for (n=0;n < N;n++)' does NOT fool
+    # the browser (at least not Mozilla).
+#    $self->SUPER::text($text); # no encode
+# MAYBE NEED TO WORK WITH ENCODED TEXT => SEARCH STRINGS MUST BE ENCODED
+# MAYBE NEED TO PARTIALLY DECODE, E.G., TO CONVERT &nbsp; TO SPACE
+# HOW ABOUT HAVING TO ENCODING CONVENTIONS?
+#    print $text;
+}
+
+my $skipping = 0;
+my $in_math = 0;  # Track nesting depth in MATH/MATHDISPLAY elements
+
+sub start {
+    my $tagname = shift;
+    my $text = shift;
+#   my $tokens = shift;
+    print STDERR "\n\nPASS 2: START: TAG NAME = '$tagname'\n" if $debug;
+    print STDERR "PASS 2: START: text = '$text'\n" if $debug;
+#   print STDERR "PASS 2: START: TOKENS = $tokens = '" . join(" ",@$tokens) . "'\n" ;# if $debug;
+    print $text;
+    if (
+	$tagname eq "a"
+	|$tagname eq "h1"
+	|$tagname eq "nolinks"
+	|$tagname eq "title"
+	|$tagname eq "script"
+	|$tagname eq "style")
+    {
+	$skipping++;
+    }
+    # Skip MathJax content: CLASS="MATH" (inline) or CLASS="MATHDISPLAY" (display)
+    if ($text =~ /CLASS\s*=\s*["']?MATH/i) {
+	$skipping++;
+	$in_math++;
+	print STDERR "PASS 2: START: Skipping MathJax element (in_math=$in_math)\n" if $debug;
+    }
+}
+
+sub end {
+    my $tagname = shift;
+    my $text = shift;
+    print STDERR "\n\nPASS 2: END: TAG NAME = '$tagname'\n" if $debug;
+#    print "</$tagname>";
+    print $text;
+    if (
+	$tagname eq "a"
+	|$tagname eq "h1"
+	|$tagname eq "nolinks"
+	|$tagname eq "title"
+	|$tagname eq "script"
+	|$tagname eq "style")
+    {
+	$skipping--;
+    }
+    # Exit MathJax content when closing span/div while in_math > 0
+    if ($in_math > 0 && ($tagname eq "span" || $tagname eq "div")) {
+	$skipping--;
+	$in_math--;
+	print STDERR "PASS 2: END: Exiting MathJax element (in_math=$in_math)\n" if $debug;
+    }
+}
+
+sub text2 {
+    my $text = shift;
+
+    if ($text =~ /\w/ & ! $skipping) {
+	print STDERR "\n\nPASS 2:---Input Text = '$text'\n" if $debug;
+	my $ptext = $text; # used to detect change in $text
+
+	my($key,$def,$url,$dsc);
+	if ($debug) {
+	    for (my $i=0; $i<@keymatch; $i++) {
+		print STDERR "%*%*% keydone[$i] = '$keydone[$i]'\n";
+	    }
+	}
+	my @matches;  # Array of match replacements
+	my $m = -1;
+	for (my $i=0; $i<@keymatch; $i++) {
+	    print STDERR "\n*** i = $i\n" if $debug;
+	    if ($firstonly && $keydone[$i]) { 
+		print STDERR "Key '$keydone[$i]' already done\n" if $debug;
+	    } else {
+		$key = $keymatch[$i];
+		$def = $defmatch[$i];
+		$url = $urlmatch[$i];
+		print STDERR "keymatch[$i] = '$key'\n" if $debug;
+		print STDERR "def[$i] = '$def'\n" if $debug;
+		my $nkey = &main::normalize2($key);
+		print STDERR "NORMALIZED KEY = '$nkey'\n" if $debug;
+		my @keywords = split ' ', $nkey;
+		my $sp2 = &main::search_pattern(2,\@keywords);
+		print STDERR "PASS 2 search pattern = '$sp2'\n" if $debug;
+		# FIXME: NEED TO DETECT QUALIFIED CONTEXT PATH HERE
+		# AND USE THE SPECIFIED CONTEXT (AGGREGATE) DICTIONARY 
+		# FOR SUCH ESCAPES.
+		my $rtn = 0;
+# '/' = &#8260;
+		$rtn = ($text =~ m{$sp2}i); # NOTE: CANNOT HAVE CURLIES IN TEXT
+#		my $pdebug = $debug; $debug = 1;
+#		print STDERR "Search/Replace Match 1 = '$1'\n" ;# if ($debug && $1);
+		print STDERR "Search/Replace Match 2 = '$2'\n" if ($debug && $2); 
+		print STDERR "\tEnding Match 3 = '$3'\n" if ($debug && $3); 
+		print STDERR "\tMatch 4 = '$4'\n" if ($debug && $4); 
+		print STDERR "\tMatch 5 = '$5'\n" if ($debug && $5); 
+#		$debug = $pdebug;
+		if (!$rtn) {
+		    print STDERR "--- NO MATCH ---\n\n" if $debug;
+		}
+		next if !$rtn;
+
+		if ($def) { 
+		    print STDERR "Found DEF '$def' for KEY '$key'\n" if ($debug); 
+		    # FIXME: Encode entities here or in dutil
+		    # Javascript strings delimited by ''
+		    # Use &quot; instead? &apos; is said not to work in IE
+		    # $def =~ s/'/&quot;/g;
+		    # $def =~ s/'/\'/g;
+		    # $def =~ s/'/\\'/g; # emits two backslashes to HTML here
+		    #                      but only 1 in ~/.latex2html-init !
+		    $def = encode_entities($def); # new 2007/2/2
+		}
+#		$def = "Click for $url" if (not $def);
+#		$def = $def . "<HR>" if ($def);
+#		$def = $def . " &nbsp;&emdash;&nbsp; " if ($def);
+		my $prematch = $1;
+		my $linkmatch = $2;
+		if ($url =~ m/^\s*\?\s*$/) { # No URL yet known, make up a search
+		    # This will be a Google search.
+		    # To get a jos site search, say 'URL = search' instead of 'URL = ?'
+		    my $searchkey = $linkmatch;
+		    $searchkey =~ s/\s+/\+/g; # Convert each whitespace run to one '+'
+		    $url = "http://www.google.com/search?q=$searchkey";
+		    print STDERR "\t'?' URL converted to '$url'\n"; # if ($debug && $5); 
+		}
+		# remap to dsprelated.com where needed:
+		if (0 && $url =~ 
+		    m!^http://ccrma.stanford.edu/~jos/(mdft|filters|pasp|sasp)/(.*)$!) {
+		    my $book = $1;
+		    my $page = $2;
+		    $url = "http://www.dsprelated.com/dspbooks/$book/$page";
+		    print STDERR "\tJOS BOOK URL converted to '$url'\n"; # if ($debug && $5); 
+		}
+		$def = $def . " &nbsp;&#8212;&nbsp; " if ($def);
+		$def = $def . "Click for $url";
+		my $matchtext = "$prematch<A HREF=\"$url\"" . 
+	 	 ($def? " onMouseover=\"return escape(\'$def\')\"":"") . 
+		 ">$linkmatch<\/A>";
+		print STDERR "Match text = '$matchtext'\n" if ($debug);
+		push(@matches,$matchtext); $m++;
+		print STDERR "PRETEXT = $text\n" if ($debug && $i==0);
+		my $matchtag = "&&&MATCH-TAG-$m-&&&";
+		if ($firstonly) {
+		    $rtn = ($text =~ s/$sp2/$matchtag/i);
+		} else {
+		    $rtn = ($text =~ s/$sp2/$matchtag/ig);
+		}
+		print STDERR "POSTTEXT = $text\n" if ($debug && $i==0);
+		if ($rtn) {
+		    $keydone[$i] = 1;
+		    print STDERR "&*&*&*& SET KEYDONE[$i] (= '$key') TO 1\n" if $debug;
+		}
+		if ($debug && ($ptext ne $text)) {
+		    print STDERR "New text = '$text'\n\n" if $debug;
+		}
+	    }
+	} # $i iteration over keymatches
+
+	print STDERR "\n********** Loop finished\n\n" if $debug;
+
+	# Now install the final replacement text.
+	# This has to occur in a second pass because otherwise
+	# anchor text installed for some $i can get replaced by replacements for larger $i.
+	# See /w/kpt/test.html for a failing example: "CCRMA DSP Seminar"
+	# Question: can we relax this requirement for tooltips?
+
+	for (my $i=0; $i<@matches; $i++) {
+	    if ($firstonly) { # test of $firstonly is merely an optimization
+		$text =~ s/&&&MATCH-TAG-$i-&&&/$matches[$i]/;
+	    } else {
+		$text =~ s/&&&MATCH-TAG-$i-&&&/$matches[$i]/g;
+	    }
+	    print STDERR "POSTTEXT FINAL = $text\n" if ($debug && $i==0);
+	} # $i iteration over keymatches
+	if ($debug && ($ptext ne $text)) {
+	    print STDERR "\nNew text = '$text'\n\n" if $debug;
+	}
+    } else {
+	print STDERR "*** No word chars --- goto EXIT\n" if ($debug>1);
+    }
+  EXIT:
+# PROBLEM: Angle brackets in <A HREF=...> converted also!
+#   $self->SUPER::text(encode_entities($text)); 
+    # PROBLEM: the text 'for (n=0;n<N;n++)' in a code listing causes remainder of listing
+    # to be slurped up into a 'tag'.  WE MUST ENCODE ENTITIES, but
+    # without encoding the HTML tags we've inserted.  However, note that
+    # the text 'for (n=0;n<2*N;n++)' or 'for (n=0;n < N;n++)' does NOT fool
+    # the browser (at least not Mozilla).
+# MAYBE NEED TO WORK WITH ENCODED TEXT => SEARCH STRINGS MUST BE ENCODED
+# MAYBE NEED TO PARTIALLY DECODE, E.G., TO CONVERT &nbsp; TO SPACE
+# HOW ABOUT HAVING TO ENCODING CONVENTIONS?
+    print $text;
+}
+
+package main;
+
+# ------------------------ PASS 1 -----------------------------
+#
+# First parse the file, concatenating all non-tag HTML text
+# into one long string.  Then normalize the string to lower case
+# with each white-space run reduced to a single space.
+# Search the normalized text for each key.
+# For each match, store the key and url for pass 2
+# unless the current key matches within the previous matched key.
+
+$pass = 1;
+
+#if ($uselynx) {
+#    $pagetext = `lynx -dump $ihname`;
+#} else {
+#my @ignore_tags = qw(title);
+my @ignore_elements = qw(a h1 nolinks title script style);
+my $mf = HTML::Parser->new(api_version   => 3,
+		  unbroken_text => 1, # causes a segmentation fault?
+#			   attr_encoded => 1, # Do not decode entities (see comment above)
+			   text_h     => [\&text1,   "text"],
+#			   default_h     => [\&justprint,   "text"],
+#			   ignore_tags   => \@ignore_tags,
+  		         ignore_elements => \@ignore_elements,
+			   );
+$mf->parse_file($ihname);
+
+print STDERR "\n*** Pass 1 page text accumulated by parse_file = '$pagetext'\n" if $debug;
+
+my $normtext = lc($pagetext); # case insensitive on pass 1
+$normtext =~ s/\s+/ /g; # normalize any whitespace to single ' '
+#
+# FIXME: The following subst. must be matched by a similar one in KEYs,
+# but evidently this is not being done.  An alternative is to leave the
+# hyphens and underbars alone and allow them as optional in the search pattern
+# for pass 1. (I think this is the way Pass 2 works.)  In other words,
+# the "optimization" of change (-|_) to ' ' in both text and keys is
+# not working right.
+# JOS 6/19/2007: Let's try leaving (-|_) alone! (e.g., "loudness-gram")
+# (change deferred until I have time to study it further).
+$normtext =~ s/(-|_)/ /g; # change hyphens|underbars to optional spaces
+$normtext =~ s/(\'|\"|\`)//g; # ignore single or double quotes
+$normtext =~ s{/}{}g; # we'll use '/' as a search/replace delimiter
+
+
+print STDERR "\n\n ===================================== \n "  if $debug;
+print STDERR "NORMTEXT =\n'$normtext'\n" if ($debug);
+
+my($key,$def,$url);
+my $nkeys = @keys;
+for (my $i=0; $i<$nkeys; $i++) {
+    print STDERR "*** Start of loop, i=$i, nkeys = $nkeys\n" if $debug;
+    $key = $keys[$i];
+    next if $key =~ /^#/; # ignore comments
+    print STDERR "*** PASS1\nkey[$i] = '$key'\n" if $debug;
+    $def = $defs[$i];
+    print STDERR "def[$i] = '$def'\n" if $debug;
+    $url = $urls[$i];
+    print STDERR "url = '$url'\n" if $debug;
+    my $lkey = &normalize1($key);
+    print STDERR "LKEY = '$lkey'\n" if $debug;
+    my @keywords = split ' ', $lkey;
+    my $sp1 = &search_pattern(1,\@keywords);
+    print STDERR "PASS 1 SEARCH PATTERN = '$sp1'\n" if $debug;
+#    if (! ($normtext =~ s/$sp1//g)) { # Remove match (see appdictNote2.txt)
+    if (! ($normtext =~ s/$sp1//)) { # Remove match (see appdictNote2.txt)
+	print STDERR "*** Key[0] not present --- goto NEXT_KEY_1\n\n" if $debug;
+	goto NEXT_KEY_1;
+    } else {
+        #
+        # NEXT if $url points to current filename
+        #
+        my @pathelts = split('/',$url);
+	my $filename = pop(@pathelts);
+#        print STDERR "filename before strip = $filename\n";
+	$filename =~ s/\#.*$//; # Remove intra-page label, if any
+#        print STDERR "filename now = $filename\n";
+#        print STDERR "ihname = $ihname\n";
+	my $ihfn = $ihname;
+	$ihfn =~ s!^.*/!!; # strip away any leading path
+	$ihfn =~ s/\.noautolink$//; # strip away any trailing '.noautolink' extension
+#        print STDERR "ihname before strip = $ihname\n";
+#        print STDERR "ihname now = $ihfn\n";
+	if ($filename eq $ihfn) {
+	    print STDERR "FILENAME MATCH!:\n\tKEY = $key\n\tURL filename = $filename\n\tCur filename = $ihname\n" if $debug;
+	    goto NEXT_KEY_1;
+	}
+	push(@keymatch,$key); # Save UNnormalized key for pass 2
+	push(@defmatch,$def); # Save definition
+	if ($url eq 'search') {
+	    my $skey = $key;
+	    $skey =~ s/\s/+/g; # Convert spaces to '+' for search string
+	    $url = "http://search.freefind.com/find.html?id=3891388&pageid=r&mode=ALL&query=$skey";
+	    print STDERR "=== Search string for key '$key' set to '$url'\n" if $debug;
+        }
+	push(@urlmatch,$url);
+	print STDERR "*** Found '$key' in page at least once in normtext.\n" 
+	    if $debug;
+	print STDERR "keymatch[" . (@keymatch-1) . "] = $keymatch[@keymatch-1]\n" 
+	    if $debug;
+    }	
+  NEXT_KEY_1:
+    print STDERR "*** Made it to NEXT_KEY_1, i=$i, nkeys = $nkeys\n\n" if $debug;
+}	
+
+#print "appdict: pass 1 complete\n";
+#print STDERR "*** Pass 1 COMPLETE\n" if $debug;
+print STDERR "keymatch =\n\t", join("\n\t",@keymatch), "\n" if $debug;
+print STDERR "defmatch =\n\t", join("\n\t",@defmatch), "\n" if $debug;
+print STDERR "urlmatch =\n\t", join("\n\t",@urlmatch), "\n" if $debug;
+print STDERR "================================================\n" if $debug;
+
+# ------------------------ PASS 2 -----------------------------
+
+# All matches found.
+# Make a second pass to install links.
+
+@keydone = ((0,) x @keymatch);
+
+$pass = 2;
+print STDERR "Writing '$outname'\n" if $debug;
+open(STDOUT,, ">$outname") or die "Can't open output file '$outname' : $!\n";
+my $mf2 = HTML::Parser->new(api_version   => 3,
+		  unbroken_text => 1,
+		    attr_encoded => 1, # Do not decode entities (see comment above)
+                    start_h => [\&start, "tagname, text"],
+                    end_h   => [\&end,   "tagname, text"],
+		    text_h     => [\&text2,   "text"],
+		    default_h     => [\&justprint,   "text"],
+#		    nolinks_h     => [\&justprint,   "text"],
+			    );
+# Event is one of "text", "start", "end", "declaration", "comment",
+# "process", "start_document", "end_document" or "default".
+
+#$mf2->handler(title => undef);
+#$mf2->handler( nolinks => undef );
+#$mf2->handler( nolinks => "" );
+#			    a => undef,
+# nolinks => undef,
+#script style nolinks
+
+$mf2->parse_file($ihname);
+
+# Detect failed matches (presumably due to phrase straddling buffers):
+for (my $i=0; $i<@keymatch; $i++) {
+    $key = $keymatch[$i];
+    if (! $keydone[$i] ) {
+	print STDERR "\n*** ASSERTION FAILURE: keymatch[$i] = '$key' NEVER USED\n";
+	print STDERR "*** This happens when subelements of the phrase are in separate tags.\n";
+	print STDERR "*** For example, 'waveguide <i>transformer</i>' will match in pass 1\n";
+	print STDERR "*** but not in pass 2 where the <i> text is processed separately.\n\n";
+    }
+}
+
+#print "appdict: pass 2 complete\n";
+
+exit 0;
+
+# normalize1: convert search keys for faster Pass-1 search
+sub normalize1 { # (string $key)
+    my $key = shift;
+    my $lkey = lc($key); # map to lower case
+# JOS 6/19/2007: Let's try leaving (-|_) alone! (e.g., "loudness-gram")
+# (change deferred until I have time to study it further).
+    $lkey =~ s/-/ /g;    # change hyphens to optional spaces
+    $lkey =~ s/_/ /g;    # change underbars to optional spaces
+    $lkey =~ s/\s+/ /g;  # change whitespace runs to a single space
+    $lkey =~ s{/}{}g;  # need '/' for search/replace delimiter
+    return $lkey;
+}
+
+# normalize2: convert search keys for pass 2 search/replace using {} delimiters
+sub normalize2 { # (string $key)
+    my $nkey = shift;
+# JOS 6/19/2007: Let's try leaving (-|_) alone! (e.g., "loudness-gram")
+# (change deferred until I have time to study it further).
+    $nkey =~ s/-|_|{|}/ /g; # change hyphens, underbars, and curlies to optional spaces
+    $nkey =~ s/\s+/ /g;  # change whitespace runs to a single space
+#   $nkey =~ s/\s$//g;   # delete trailing whitespace (9/3/02)
+    return $nkey;
+}
+
+sub search_pattern {
+    my $pass = shift; # 1 or 2
+    my $kwr = shift; # ref to @keywords
+    if ( !$kwr ) {
+	print STDERR "appdict : search_pattern : \$kwr is NULL\n";
+        return 0;
+    }
+    my $endingstr  = "(s?|(\\'s)?|(es)?|d?|(ed)?|(ing)?)";
+    my $endingstr1 = $endingstr . "\\s*";
+    my $endingstr2 = $endingstr . "(_|-|\\s*)";
+    my $sp;
+    if ($pass == 1) {
+	# For pass 1, we are just detecting normalized KEYs in normalized text.
+	# Substitution occurs in pass 2.
+	# We catch any KEY, with word-stemming
+	$sp = "\\b" . join($endingstr1, @$kwr) . $endingstr . "(\\b)";
+    } else { # Text is not normalized on pass 2
+	# WARNING: Modifying parens will change $1,$2,etc. (used by caller):
+	#  Either <A ... </A> ... KEY or 
+	# $sp = "(<A[^<]+<\\s*/[aA]\\s*>[^<]*\\b
+	#	|\\b)(" 
+	#    . join($endingstr2, @$kwr) . $endingstrlast . ")";
+	#
+	# 8/15/03/jos: Added new ending below for case of bare URLs ending in '/'.
+	# It turns out '/' is not in \w, and \b is defined as "between \w and \W".
+	# Using \W in place of \b does not work because then the \W char gets 
+	# omitted in the output (being part of the match).
+	# Pass 1 does not have this issue since '/'s are removed.
+	$sp = "(\\b)(" . join($endingstr2, @$kwr) . $endingstr . ")(?=\\W|\$)";
+	#        $1                         $2                      
+    }
+    return $sp;
+}

@@ -1,0 +1,293 @@
+% included by stdcommon.tex
+
+\newcommand{\latexhtmlLARGE}{\normalsize} % e.g. /k/l/sasp/summary.tex
+
+%\newcommand{\twidth}{{ 4.3in}} % USE INSTEAD OF TEXTWIDTH FOR HTML WIDTH
+%\newlength{\twidth}\setlength{\twidth}{4.1in} % was 4.3 until 5/14/2008
+\newlength{\twidth}\setlength{\twidth}{6in} % was 4.1 until 11/29/2010
+%  8in should nearly fill default HTML pageview margin, but then PASP gets
+%  overfull vboxes in images.tex (265.5 pts over was the worst ~265.5/72~3.7in)
+% Based on iPad, iPhone, 
+\newlength{\theight}\setlength{\theight}{0.75\twidth} % A 16"W x 12"H monitor = 4/3 width/height ratio
+\newcommand{\captionwidth}{\twidth} % no \textwidth in HTML environment
+\newcommand{\mlfigwidth}{\twidth} % matlab figures too large initially
+
+% See stdfigs-latex.tex for explanation:
+\input{./mycaptionparlabel.tex}
+% Should pull in ./mycaptionparlabel-html.tex
+
+\newcommand{\stdFigScale}{0.8} % Good full-page scaling for Matlab plots
+\newcommand{\stdSmallFigScale}{0.5} % Good for little by-the-way figures
+% Used in bbt.tex, thms.tex
+
+% =================== POSTSCRIPT FIGURE SUPPORT ==================
+
+% Usage: \myFigure{num}{caption}
+\newcommand{\myFigure}[2]{
+	\begin{figure}[htbp]
+	\includegraphics{eps/#1} % the figure
+	%\caption{#2}\label{fig:#1}
+        \centering
+        \mycaptionparlabel{#2}{fig:#1}
+	\end{figure}
+}
+
+% Usage: \myFigureNoCap{num}
+\newcommand{\myFigureNoCap}[1]{
+	\begin{figure}[htbp]
+	\includegraphics{eps/#1} % the figure
+	\end{figure}
+}
+
+% Usage: \myFigureToWidth{name}{width}{caption}
+\newcommand{\myFigureToWidth}[3]{
+	\begin{figure}[htbp]
+% Cannot use \resizebox to make figures larger than natural size.
+% latex2html / graphicx.perl will cut them off on the right and top.
+%	\resizebox{#2}{!}{\includegraphics{eps/#1}}
+	\includegraphics[width=#2]{eps/#1}
+	%\caption{#3}\label{fig:#1}
+        \mycaptionparlabel{#3}{fig:#1}
+	\end{figure}
+}
+
+% Usage: \myFigureToWidthNoCap{name}{width}
+\newcommand{\myFigureToWidthNoCap}[2]{
+	\begin{figure}[htbp]
+% Cannot use \resizebox to make figures larger than natural size.
+% latex2html / graphicx.perl will cut them off on the right and top.
+%	\resizebox{#2}{!}{\includegraphics{eps/#1}}
+%????	Gets a divide-by-zero crash for /w/aspf/
+%       \includegraphics[width=#2]{eps/#1}
+	\includegraphics{eps/#1}
+	\end{figure}
+}
+
+% Usage: \myFigureRotateToWidth{name}{angle}{width}{caption}
+\newcommand{\myFigureRotateToWidth}[4]{
+	\begin{figure}[htbp]
+% FIXME: rotation AND scaling fails in /l/l2h/styles/graphics-support.perl
+% Therefore, we continue to use resizebox which cannot work
+%orig:	\rotatebox{#2}{\resizebox{#3}{!}{\includegraphics{eps/#1}}}
+%new:	\includegraphics[angle=#2,width=#3]{eps/#1}
+%kludge:
+	\includegraphics[width=#3]{eps/#1}
+	\caption{#4 --- [FIXME: Cannot do both rotation and scaling in latex2html graphicx support]}\label{fig:#1}
+	\end{figure}
+}
+
+% Usage: \myFigureRotateToBox{name}{angle}{width}{height}{caption}
+\newcommand{\myFigureRotateToBox}[5]{
+	\begin{figure}[htbp]
+% FIXME: rotation AND scaling fails in /l/l2h/styles/graphics-support.perl
+% Therefore, we continue to use resizebox which cannot work
+%orig:	\rotatebox{#2}{\resizebox{#3}{!}{\includegraphics{eps/#1}}}
+%new:	\includegraphics[angle=#2,width=#3]{eps/#1}
+%kludge:
+	\includegraphics[width=#3,height=#4]{eps/#1}
+	\caption{#5 --- [FIXME: Cannot do both rotation and scaling in latex2html graphicx support]}\label{fig:#1}
+	\end{figure}
+}
+
+% Usage: \myFigureToBox{name}{width}{height}{caption}
+\newcommand{\myFigureToBox}[4]{ 
+	\begin{figure}[htbp]
+%prv:	\resizebox{#2}{#3}{\includegraphics{eps/#1}}
+	\includegraphics[width=#2,height=#3]{eps/#1}
+	%\caption{#4}\label{fig:#1}
+        \mycaptionparlabel{#4}{fig:#1}
+	\end{figure}
+}
+
+% Usage: \myFigureScale{name}{scaleFactor}{caption}
+\newcommand{\myFigureScale}[3]{ 
+	\begin{figure}[htbp]
+%prv:	\scalebox{#2}{\includegraphics{eps/#1}}
+	\includegraphics[scale=#2]{eps/#1}
+	%\caption{#3}\label{fig:#1}
+        \mycaptionparlabel{#3}{fig:#1}
+	\end{figure}
+}
+
+\newcommand{\myFigureHere}[2]{\myFigure{#1}{#2}}
+
+% Usage: \myTwoFiguresToWidth{name1}{name2}{width}{caption1}{caption2}{caption}
+\newcommand{\myTwoFiguresToWidth}[6]{
+	\begin{figure}[htbp]
+	\centering
+% Cannot use \resizebox to make figures larger than natural size.
+% latex2html / graphicx.perl will cut them off on the right and top.
+%  	   \resizebox{#3}{!}{\includegraphics{eps/#1}}
+\begin{rawhtml}<HR>\end{rawhtml}
+  	   \includegraphics{eps/#1}
+	   \centerline{#4} % subcaption
+  	   \label{fig:#1}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\\
+%  	   \resizebox{#3}{!}{\includegraphics{eps/#2}}
+ 	   \includegraphics{eps/#2}
+	   \centerline{#5} % subcaption
+  	   \label{fig:#2}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\caption{#6}
+	\end{figure}
+}
+
+% Usage: \myTwoFiguresToBoxes{name1}{name2}{width}{sliceheight}{caption1}{caption2}{caption}
+\newcommand{\myTwoFiguresToBoxes}[7]{
+	\begin{figure}[htbp]
+	\centering
+% Cannot use \resizebox to make figures larger than natural size.
+% latex2html / graphicx.perl will cut them off on the right and top.
+%  	   \resizebox{#3}{!}{\includegraphics{eps/#1}}
+        \includegraphics{eps/#1}\\
+	\centerline{#5} % subcaption
+        \label{fig:#1}
+	\\
+% 	   \resizebox{#3}{#4}{\includegraphics{eps/#2}}
+        \includegraphics{eps/#2}\\
+	\centerline{#6} % subcaption
+        \label{fig:#2}
+	\caption{#7}
+	\end{figure}
+}
+
+% Usage: \myThreeFiguresToWidth{name1}{name2}{name3}{width}{caption1}{caption2}{caption3}{caption}
+\newcommand{\myThreeFiguresToWidth}[8]{
+	\begin{figure}[htbp]
+	\centering
+% Cannot use \resizebox to make figures larger than natural size.
+% latex2html / graphicx.perl will cut them off on the right and top.
+%  	   \resizebox{#4}{!}{\includegraphics{eps/#1}}
+\begin{rawhtml}<HR>\end{rawhtml}
+  	   \includegraphics{eps/#1}
+	   \centerline{#5} % subcaption
+  	   \label{fig:#1}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\\
+%  	   \resizebox{#4}{!}{\includegraphics{eps/#2}}
+ 	   \includegraphics{eps/#2}
+	   \centerline{#6} % subcaption
+  	   \label{fig:#2}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\\
+%  	   \resizebox{#4}{!}{\includegraphics{eps/#3}}
+ 	   \includegraphics{eps/#3}
+	   \centerline{#7} % subcaption
+  	   \label{fig:#2}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\caption{#8}
+	\end{figure}
+\begin{rawhtml}<HR>\end{rawhtml}
+}
+
+% Usage: \myThreeFiguresToBoxes{name1}{name2}{name3}{width}{sliceheight}{caption1}{caption2}{caption3}{caption}
+\newcommand{\myThreeFiguresToBoxes}[9]{
+  \myThreeFiguresToWidth{#1}{#2}{#3}{#4}{#6}{#7}{#8}{#9}
+}
+
+% Usage: \myFourFiguresToWidth{name1}{name2}{name3}{name4}{width}{caption}
+\newcommand{\myFourFiguresToWidth}[6]{
+	\begin{figure}[htbp]
+	\centering
+\begin{rawhtml}<HR>\end{rawhtml}
+% Cannot use \resizebox to make figures larger than natural size.
+% latex2html / graphicx.perl will cut them off on the right and top.
+%  	   \resizebox{#3}{!}{\includegraphics{eps/#1}}
+  	   \includegraphics{eps/#1}
+  	   \includegraphics{eps/#2}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\\
+ 	   \includegraphics{eps/#3}
+ 	   \includegraphics{eps/#4}
+\begin{rawhtml}<HR 50\%>\end{rawhtml}
+	\caption{#6}
+        \label{figboth:#1}
+	\end{figure}
+}
+
+\newcommand{\myFourFiguresToWidths}[9]{
+% Individual widths ignored in HTML version (\resizebox gets cut off):
+myFourFiguresToWidth{#1}{#2}{#3}{#4}{#5}{#9}
+}
+
+%======================== TABLE SUPPORT ========================
+
+% Usage: \myTable{Num[table prefix added]}{MultiLineCaption.}{table}
+\newcommand{\myTable}[3]{
+	\begin{table}[htbp]
+	\begin{center}
+	#3
+	\end{center}
+	\caption{#2}
+	\label{table:#1} % MUST GO AFTER CAPTION OR INSIDE ITS ARGUMENT
+	\end{table}
+}
+
+% Usage: \myTableHere{MultiLineCaption.}{table}
+\newcommand{\myTableHere}[3]{
+	\begin{table}[h]
+	\begin{center}
+	#2
+	\end{center}
+	\caption{#1}
+	\end{table}
+}
+
+% =================== CODE LISTING SUPPORT ===================
+
+% The code env creates a code-listing box.
+%USAGE: 
+%  \begin{code}{name}{caption} 
+%  \begin{verbatim}
+%  ... 
+%  \end{verbatim}
+%  \end{code}
+
+\newenvironment{code}[2]{% HTML VERSION
+    \begin{figure}
+	\centerline{\hrule\captionwidth}
+	\caption{#2}\label{code:#1}
+	% Inhibits fusing of figure into image:
+	% DO NOT PLACE A COMMENT WITHIN THE MAKEIMAGE ENVIRONMENT (l2h bug)
+	\begin{makeimage}
+	\end{makeimage}
+	}{%
+	\centerline{\hrule\captionwidth}
+    \end{figure}
+} % end code env def
+
+% =================== XFIG FIGURE SUPPORT ===================
+%
+% Usage: 
+%           \myTexFigure{name}{caption}
+%
+% Figures generated by xfig are assumed to have been exported
+% in .latex mode ('both parts').  This means both name.pstex_t 
+% (containing a latex picture environment) and name.pstex 
+% (containing raw postscript) are written by xfig.  
+% The .pstex_t and .pstex files must be in the subdirectory 'fig'
+% of the LaTeX document directory.
+%
+% When exporting figures from xfig, make sure
+% to reduce them to the desired size.  There are no resizing
+% facilities here, and there can't be because, while postscript
+% can be arbitrarily resized, the 'manual' annotations in the
+% .pstex_t file cannot.
+
+%Until 2020-08-02:
+\usepackage{color} % xfig figures exporting pstex_t files need this
+%\usepackage{xcolor} % /w/spectilt/
+
+\newcommand{\myTexFigure}[2]{
+  \myFigure{#1}{#2} % We now convert .fig to .eps in Makefile using figtex2eps
+}
+
+% Obsolete:
+\newcommand{\myTexFigurePRV}[2]{
+    \begin{figure}[tb]
+    \input{fig/#1.pstex_t}
+    %\caption{\protect #2}\label{fig:#1}
+    \mycaptionparlabel{#2}{fig:#1}
+    \end{figure}
+}

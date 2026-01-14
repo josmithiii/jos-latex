@@ -1,0 +1,378 @@
+\usepackage{amsmath}  % to get professional mode by default
+\usepackage{amssymb}  % \circledast - see LaTeX Companion, p. 222
+\usepackage{bm} % bold math - ADDED 7/21/04
+%\usepackage{mathtime} - dvips needs ``mtex.pfb'' first
+
+% Upper case preferred (easier to see)
+\newcommand{\BEQ}{\[}
+\newcommand{\EEQ}{\]}
+\newcommand{\BEQN}{\begin{equation}}
+\newcommand{\EEQN}{\end{equation}{}} % Extra empty box to work around l2h bug deleting \n afterwards when comment follows
+\newcommand{\BEQL}{\begin{equation}}
+\newcommand{\EEQL}{\end{equation}{}}
+\newcommand{\BEQA}{\begin{eqnarray}}
+\newcommand{\EEQA}{\end{eqnarray}{}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}{}}
+\newcommand{\beq}{\[}
+\newcommand{\eeq}{\]}
+\newcommand{\beqn}{\begin{equation} }
+\newcommand{\eeqn}{\end{equation}}
+\newcommand{\beqa}{\begin{eqnarray}}
+\newcommand{\eeqa}{\end{eqnarray}{}}
+\newcommand{\BEAS}{\begin{eqnarray*}}
+\newcommand{\EEAS}{\end{eqnarray*}}
+\newcommand{\beas}{\BEAS}
+\newcommand{\eeas}{\EEAS{}}
+% Use BEASMI/EEASMI to force image generation (e.g., for spacing issues)
+\newcommand{\BEASMI}{\latexhtml{}{\par\begin{center}\begin{makeimage}}\begin{eqnarray*}}
+\newcommand{\EEASMI}{\end{eqnarray*}\latexhtml{}{\end{makeimage}\end{center}\par}}
+
+\newcommand{\BA}{\begin{array}}
+\newcommand{\EA}{\end{array}}
+
+% conflicts with /k/l/sm/macros.tex: \ea
+%\newcommand{\ba}{\begin{array}}
+%\newcommand{\ea}{\end{array}}
+
+% CMJ style \newcommand{\eq}[1]{Eq.~(\ref{eq:#1})}
+\newcommand{\eq}[1]{(\ref{eq:#1})} % IEEE style
+\newcommand{\Eq}[1]{Equation (\ref{eq:#1})}
+\newcommand{\erefb}[1]{Eq.~(\ref{eq:#1})} % brief
+\newcommand{\eqn}[1]{(\ref{eq:#1})}
+\newcommand{\Eqn}[1]{Equation (\ref{eq:#1})}
+\newcommand{\eqns}[1]{(\ref{#1})}
+
+
+\newcommand{\defn}{\par\vspace{0.1in}{\bf Definition:\ }}
+\newcommand{\defnn}[1]{\par\vspace{0.1in}{\bf Definition (#1):\ }} % name in parens
+\newcommand{\Definition}{\par\vspace{0.1in}\textbf{Definition. }}
+\newcommand{\thm}{\par\vspace{0.1in}\noindent{\bf Theorem:\ }}
+\newcommand{\thml}[1]{\par\vspace{0.1in}{\bf Theorem (#1):\ }}
+\newcommand{\Theorem}{\textbf{Theorem. }}
+\newcommand{\Property}{\textbf{Property. }}
+\newcommand{\corr}{\par\vspace{0.1in}\textbf{Corollary:\ }}
+\newcommand{\Corollary}{\textbf{Corollary. }}
+\newcommand{\Lemma}{\textbf{Lemma. }}
+\newcommand{\Prop}{\textbf{Proposition. }}
+
+%Already defined in cktdefs.tex:
+% \newcommand{\eg}{\par\vspace{0.1in}{\bf Example:\ }}
+\newcommand{\Example}{\par\vspace{0.1in}\noindent{\bf Example:\ }}
+\newcommand{\Examples}{\par\vspace{0.1in}\noindent{\bf Examples:\ }}
+
+%does not work: \newcommand{\TheoremNo}[1]{\textbf{Theorem. \label{thm:#1}} } 
+\newcommand{\TheoremNo}[1]{\textbf{Theorem #1.}} % 12/20/2010 simplified version
+\newcommand{\PropertyNo}[1]{\textbf{Property #1.}} % new 12/20/2010
+\newcommand{\LemmaNo}[1]{\textbf{Lemma. \label{lemma:#1}} }
+\newcommand{\CorollaryNo}[1]{\textbf{Corollary. \label{cor:#1}} }
+
+%JOS:5/04: was \newcommand{\pf}{\emph{Proof:\ }}
+\newcommand{\pf}{\par\vspace{5pt}\noindent\emph{Proof:\ }}
+\newcommand{\pfend}{$\Box$}
+\newcommand{\pfendmath}{\Box}
+\newcommand{\Proof}{\textbf{Proof. }}
+\newcommand{\EndProof}{$\Box$}
+
+%does not work: \newcommand{\thmref}[1]{Thm.~(\ref{thm:#1})}
+%\newcommand{\thmref}[1]{Prop.{} #1} % 12/20/2010 simplified version
+\newcommand{\thmref}[1]{Thm.{} #1} % 12/20/2010 simplified version
+\newcommand{\propref}[1]{Property #1} % new 12/20/2010
+%\newcommand{\Thmref}[1]{Theorem~(\ref{thm:#1})}
+\newcommand{\Thmref}[1]{Theorem #1}
+
+\newcommand{\order}[1]{\Oscr\left(#1\right)}
+
+\newcommand{\lref}[1]{Lemma~(\ref{lemma:#1})}
+\newcommand{\Lref}[1]{Lemma~(\ref{lemma:#1})}
+
+\newcommand{\dref}[1]{Def.~\ref{def:#1}}
+\newcommand{\Dref}[1]{Definition~\ref{def:#1}}
+
+\newcommand{\epg}{}
+\newcommand{\crg}{\\}
+\newcommand{\crgg}{\\ \\}
+
+\newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
+\newcommand{\floortext}[1]{\lfloor#1\rfloor}
+\newcommand{\ceiltext}[1]{\lceil{#1}\rceil}
+\newcommand{\approaches}{\to}
+
+\DeclareMathOperator{\arccosh}{arccosh}
+\DeclareMathOperator{\arcsinh}{arcsinh}
+
+\newcommand{\Ascr}{{\cal A}}
+\newcommand{\Bscr}{{\cal B}}
+\newcommand{\Cscr}{{\cal C}}
+\newcommand{\Dscr}{{\cal D}}
+\newcommand{\Escr}{{\cal E}}
+\newcommand{\Fscr}{{\cal F}}
+\newcommand{\Hscr}{{\cal H}}
+\newcommand{\Iscr}{{\cal I}}
+\newcommand{\Lscr}{{\cal L}}
+\newcommand{\Laplace}{{\cal L}}
+\newcommand{\Nscr}{{\cal N}}
+\newcommand{\Oscr}{{\cal O}}
+\newcommand{\Pscr}{{\cal P}}
+\newcommand{\projop}{{\bf P}}
+\newcommand{\Rscr}{{\cal R}}
+\newcommand{\Sscr}{{\cal S}}
+\newcommand{\Tscr}{{\cal T}}
+\newcommand{\Xscr}{{\cal X}}
+\newcommand{\Zscr}{{\cal Z}}
+
+\newcommand{\ip}[1]{\left<#1\right>}
+\newcommand{\iptext}[1]{\langle #1\rangle}
+%old version: \newcommand{\ip}[2]{\left<#1,#2\right>}
+\newcommand{\normtext}[1]{ ||\,#1\,|| }
+\newcommand{\norm}[1]{\left\|\,#1\,\right\|}
+\newcommand{\normi}[1]{\norm{#1}_\infty}
+\newcommand{\set}[1]{\left\{#1\right\}}
+
+% very common operators -- more in operators.tex
+\newcommand{\realpart}[1]{\mbox{re\ensuremath{\left\{#1\right\}}}}
+\newcommand{\imagpart}[1]{\mbox{im\ensuremath{\left\{#1\right\}}}}
+\newcommand{\realparttext}[1]{\mbox{re\ensuremath{\{#1\}}}}
+\newcommand{\imagparttext}[1]{\mbox{im\ensuremath{\{#1\}}}}
+\newcommand{\realPart}[1]{\mbox{re}\left\{#1\right\}}
+\newcommand{\realPartSq}[1]{\mbox{re}^2\left\{#1\right\}}
+\newcommand{\real}{\Re}
+\newcommand{\imagPart}[1]{\mbox{im}\left\{#1\right\}}
+\newcommand{\imagPartSq}[1]{\mbox{im}^2\left\{#1\right\}}
+%defined in amsmath, but I don't know how to get spacing right: 
+%FIXME: Emit error when #1 is empty or otherwise odd (catch old usage)
+\renewcommand{\mod}[1]{\lp\mbox{mod}\;#1\rp}
+\newcommand{\sinc}{\mbox{sinc}}
+\newcommand{\diag}{\mbox{diag}}
+
+%defined in amsmath: \newcommand{\implies}{\Rightarrow}
+\newcommand{\impliess}{\,\,\Rightarrow\,\,}
+\newcommand{\impliesq}{\implies\quad}
+\newcommand{\simpliess}{\quad\Rightarrow\quad}
+
+\newcommand{\goesto}{\to}
+%\newcommand{\goestoas}[1]{\to_{#1}}
+%\newcommand{\goestoas}[1]{\stackrel{\to}{{#1}}}
+%\newcommand{\goestoas}[1]{\buildrel{\to}\over{#1}}
+\newcommand{\goestoas}[1]{\;\stackrel{\longrightarrow}{{\scriptscriptstyle #1}}\;}
+\newcommand{\conj}[1]{\overline{#1}}
+% \newcommand{\abstext}[1]{\leftv{#1}\rightv}
+\newcommand{\abstext}[1]{|#1|}
+% \newcommand{\abs}[1]{\left|\,#1\,\right|}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+% moved to stdcommon.tex
+% \newcommand{\isdef}{\stackrel{{\scriptscriptstyle\Delta}}{=}}
+% \newcommand{\isdeftext}{\buildrel {\scriptscriptstyle\Delta}\over=}
+%\newcommand{\isdef}{\buildrel \Delta\over=}
+
+\newcommand{\nn}{\nonumber}
+\newcommand{\nnr}{\nonumber \\}
+
+% NOTE: DO NOT end these macros with a newline.
+% In that case, a blank line is created between matrices in images.tex 
+% unless successive matrices are all on the same line in the source.
+% This will cause a failure in l2h output.
+\newcommand{\twobytwonp}[4]{\begin{array}{cc} #1 & #2 \\[2pt] #3 & #4 \end{array}}
+\newcommand{\twobytwonprs}[5]{\begin{array}{cc} #1 & #2 \\[#5] #3 & #4 \end{array}}
+\newcommand{\twobytwo}[4]{\left[\begin{array}{cc} #1 & #2 \\[2pt] #3 & #4 \end{array}\right]}
+\newcommand{\twobytwors}[5]{\left[\begin{array}{cc} #1 & #2 \\[#5] #3 & #4 \end{array}\right]}
+\newcommand{\twobytwor}[4]{\left[\begin{array}{rr} #1 & #2 \\[2pt] #3 & #4 \end{array}\right]}
+\newcommand{\twobyonenp}[2]{\begin{array}{c} #1 \\[2pt] #2 \end{array}}
+\newcommand{\twobyone}[2]{\left[\twobyonenp{#1}{#2}\right]}
+\newcommand{\onebytwo}[2]{\left[\begin{array}{cc} #1 & #2 \end{array}\right]}
+\newcommand{\onebytwotop}[2]{\begin{array}{r}\onebytwo{#1}{#2}\\[2pt]{}\end{array}}
+\newcommand{\onebythree}[3]{\left[\begin{array}{ccc} #1 & #2 & #3\end{array}\right]}
+\newcommand{\onebythreetop}[3]{\begin{array}{r}\onebythree{#1}{#2}{#3}\\[2pt]{}\\[2pt]{}\end{array}}
+\newcommand{\threebyonenp}[3]{\begin{array}{c} #1 \\[2pt] #2 \\[2pt] #3\end{array}}
+\newcommand{\fourbyonenp}[4]{\begin{array}{c} #1 \\[2pt] #2 \\[2pt] #3 \\[2pt] #4\end{array}}
+\newcommand{\fivebyonenp}[5]{\begin{array}{c} #1 \\[2pt] #2 \\[2pt] #3 \\[2pt] #4\\[2pt] #5\end{array}}
+\newcommand{\onebyfour}[4]{\left[\begin{array}{cccc} #1 & #2 & #3 & #4 \end{array}\right]}
+\newcommand{\onebyfournts}[4]{\left[\begin{array}{cccc}#1\!&\!#2\!&\!#3\!&\!#4\end{array}\right]}
+
+\newcommand{\twobyonep}[2]{\left(\twobyonenp{#1}{#2}\right)}
+\newcommand{\threebyone}[3]{\left[\threebyonenp{#1}{#2}{#3}\right]}
+\newcommand{\fourbyone}[4]{\left[\fourbyonenp{#1}{#2}{#3}{#4}\right]}
+\newcommand{\fivebyone}[5]{\left[\fivebyonenp{#1}{#2}{#3}{#4}{#5}\right]}
+\newcommand{\fivebyonens}[5]{\left[\!\!\fivebyonenp{#1}{#2}{#3}{#4}{#5}\!\!\right]}
+\newcommand{\sixbyone}[6]{\left[\sixbyonenp{#1}{#2}{#3}{#4}{#5}{#6}\right]}
+
+\newcommand{\threebythreenpmi}[9]{%
+\begin{makeimage}
+\threebythreenp{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}
+\end{makeimage}
+}
+
+\newcommand{\threebythreenp}[9]{%
+\begin{array}{ccc} 
+#1 & #2 & #3\\[2pt] 
+#4 & #5 & #6\\[2pt] 
+#7 & #8 & #9 
+\end{array}
+}
+
+\newcommand{\threebythree}[9]{\left[\threebythreenp{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}\right]}
+
+\newcommand{\threebythreert}[9]{\left[\begin{array}{rrr} 
+#1 & #2 & #3\\[2pt] 
+#4 & #5 & #6\\[2pt] 
+#7 & #8 & #9 
+\end{array}\right]}
+
+\newcommand{\twobythree}[6]{\left[\begin{array}{ccc} 
+#1 & #2 & #3\\[5pt] 
+#4 & #5 & #6
+\end{array}\right]}
+
+\newcommand{\twobythreesp}[7]{\left[\begin{array}{ccc} 
+#1 & #2 & #3\\[#7pt] 
+#4 & #5 & #6
+\end{array}\right]}
+
+%in amsmath? 
+\providecommand{\degrees}{\mbox{${}^{\circ}$}}
+
+\newcommand{\eqs}{\,\mathrel{\mathop=}\,}
+\providecommand{\approxs}{\,\;\approx\;\,}
+
+\newcommand{\lp}{\left(}
+\newcommand{\rp}{\right)}
+
+\newcommand{\bl}{\left(} % used? check source bag for \\bl\b
+\newcommand{\br}{\right)} % used?
+
+\newcommand{\lb}{\left[}
+\newcommand{\rb}{\right]}
+
+\newcommand{\lbr}{\left\{}
+\newcommand{\rbr}{\right\}}
+
+% x = \funcalign{foo}{n=0}{bar}{n \neq 0}
+\newcommand{\funcalign}[4]{\left\{\begin{array}{ll}
+	#1, & #2 \\[5pt]
+	#3, & #4 \\
+	\end{array}
+	\right.}
+
+\newcommand{\funcalignthree}[6]{\left\{\begin{array}{ll}
+	#1, & #2 \\[5pt]
+	#3, & #4 \\[5pt]
+	#5, & #6 \\
+	\end{array}
+	\right.}
+
+\newcommand{\cpile}[1]{\matrix{#1}}
+
+\newcommand{\conv}{\ast}
+\newcommand{\circonv}{\circledast} % AMS: \usepackage{amssymb}
+
+\newcommand{\E}[1]{\Escr\left\{#1\right\}} % expected value
+
+% I would prefer subscripts to superscripts.  Check favorite refs on this point:
+%Both in math mode no matter what I try - ANOTHER PERL 5 INTRODUCED BUG LIKELY:
+%\newcommand{\Linf}{\latexhtml{{\ensuremath{L^\infty}}}{{$L$-infinity}}}
+%\newcommand{\Lp}{\latexhtml{{\ensuremath{L^p}}}{\mbox{Lp}}}
+%\newcommand{\Ltwo}{\latexhtml{{\ensuremath{L^2}}}{\mbox{L2}}}
+%\newcommand{\Ltwotext}{\latexhtml{{\ensuremath{L^2}}}{\mbox{L2}}}
+%\newcommand{\Lone}{\latexhtml{{\ensuremath{L^1}}}{\mbox{L1}}}
+
+\newcommand{\Linf}{\ensuremath{L_\infty}}
+\newcommand{\Lp}{\ensuremath{L_p}}
+\newcommand{\Ltwo}{\ensuremath{L_2}}
+\newcommand{\Ltwotext}{\Ltwo}
+\newcommand{\Lone}{\ensuremath{L_1}}
+
+\newcommand{\ldotss}{\ldots\,}
+\newcommand{\iffs}{\;\Leftrightarrow\;}
+\newcommand{\corrto}{\;\longleftrightarrow\;}
+\newcommand{\corrtotext}{\;\leftrightarrow\;}
+
+\newcommand{\zt}{{\it z} transform} % Avoid math so auto-link will work
+\newcommand{\zts}{{\it z} transform } % Avoid math so auto-link will work
+\newcommand{\Zt}[1]{\ensuremath{\pmb{\mathcal{Z}}\{#1\}}} % bold calligraphic Z-transform
+
+% Also in cktdefs.tex
+\providecommand{\zbox}[1]{\fbox{$\displaystyle #1$}}
+\newcommand{\zboxlt}[1]{\fbox{$\displaystyle #1$}}
+
+% \newcommand{\doublebox}[2][0.75\hsize]{\begin{center}\fbox{\fbox{%
+\newcommand{\doublebox}[2][3in]{\begin{center}\fbox{\fbox{%
+\begin{minipage}{#1}{#2}\end{minipage} }} \end{center}}
+
+% Usage: 
+% \doublebox[0.3\hsize]{
+%   This is a big box
+%   \barray
+%      x &=&  a + \sum x^2 - 2 \\
+%        &=&  a - \sum x^3 - 7
+%   \earray
+% }
+
+\newcommand{\singlebox}[2][3in]{\begin{center}\fbox{%
+\begin{minipage}{#1}{\vspace{-0.15in}#2}\end{minipage} } \end{center}}
+
+% Usage: 
+% \singlebox {
+%    \doublebox[1in]{This is a box within a box}
+%    \barray
+%       x &=&  a + \sum x^2 - 2 \\
+%         &=&  a - \sum x^3 - 7 \\
+%         &=& mc^2
+%     \earray
+% }
+
+% Really one arg and one optional arg.  How to catch?
+%\html{\renewcommand{\singlebox}[2]{#2}}
+
+%% \newcommand{\reals}{{\bf R}}
+%% \newcommand{\ints}{{\bf Z}}
+%% \newcommand{\complex}{{\bf C}}
+%% \newcommand{\RN}{{\bf R}^N} % see also cktdefs.tex
+%% \newcommand{\Rthree}{{\bf R}^3}
+%% \newcommand{\CN}{{\bf C}^N}
+%% \newcommand{\RMM}{{\bf R}^M} % See stdcommon.tex for \RM = circle-R
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\ints}{\mathbb{Z}}
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\RN}{\reals^N} % see also cktdefs.tex
+\newcommand{\Rthree}{\reals^3}
+\newcommand{\CN}{\complex^N}
+\newcommand{\RMM}{\reals^M} % See stdcommon.tex for \RM = circle-R
+
+\newcommand{\labeledeq}[2]{\[\begin{tabular*}{\textwidth}{l@{\hspace{1in}}c@{\extracolsep{\fill}}r}
+{}&$#1$&(#2)\end{tabular*}\]}
+\newcommand{\labeledeqhold}[2]{\[#1\]} % Abort
+
+\newcommand{\labeledeqnoeffectoncentering}[1]{\qquad \makebox[0pt][l]{(#1)}}
+% NO GOOD: EMITS A BLANK LINE IN MATH MODE THAT KILLS COMPILE OF images.tex (``! Missing $ inserted.''): 
+% \newcommand{\labeledeqnot}[1]{} % Abort
+\newcommand{\labeledeqnot}[1]{\qquad\mbox{(#1)}} % Abort
+
+\newcommand{\shah}{\,\raisebox{0.8em}{\rotatebox{-90}{\resizebox{1em}{1em}{\ensuremath{\exists}}}}}
+
+\newenvironment{eqnarrayda}{
+\[
+\begin{array}{lcr@{\,}c@{\,}l}
+}{
+\end{array}
+\]
+}
+\newcommand{\beasda}{\begin{eqnarrayda}}
+\newcommand{\eeasda}{\end{eqnarrayda}}
+
+\newcommand{\relop}[1]{\,#1\,}
+
+%\newcommand{\intrange}[2]{#1,\ldots,#2} % Standard math notation
+\newcommand{\intrange}[2]{#1:#2} % Matlab notation
+\newcommand{\intrangethree}[3]{#1, #2, \ldots, #3} % Standard math notation
+\newcommand{\intrangefour}[4]{#1, #2, #3, \ldots, #4} % Standard math notation
+
+% /k/l/sasp/statdsp.tex
+\newcommand{\mux}{\mu_x}
+\newcommand{\muxh}{\hat{\mu}_x}
+\newcommand{\Ev}[1]{{\cal E}\left\{#1\right\}}
+\newcommand{\Var}[1]{\mbox{Var}\left\{#1\right\}}
+\newcommand{\vxh}{\hat{\sigma}_x^2}
+\newcommand{\rhxn}{\hat{r}_{x(n)}}

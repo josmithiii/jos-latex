@@ -1,0 +1,17 @@
+% Index style file for books --- see makeindex (1)
+% Adapted from l2h
+% Created from index-paper.ist on 9/3/02/jos
+
+preamble
+"\n \\addcontentsline{toc}{chapter}{Index}
+ \\begin{theindex} \n "
+%% 
+heading_prefix   "{\\bfseries\\hfil "
+heading_suffix   "\\hfil}\\nopagebreak\n"
+headings_flag       0
+%% headings_flag changed from 1 to 0 on 6/18/01 by jos
+%% It was printing "Symbols" above some entries and <first letter> above others
+%% 0 is the default anyway according to the man page.
+
+%% Added by jos:
+%level            ','

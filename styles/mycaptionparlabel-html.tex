@@ -1,0 +1,7 @@
+% mycaptionparlabel-html.tex
+% Input by stdfigs-latex.tex
+% Read the comment there
+
+% We cannot use \parbox or \small in this case or else l2h's
+% caption-matching code will fail, resulting in no figure number:
+\newcommand{\mycaptionparlabel}[2]{\caption{#1}\label{#2}}

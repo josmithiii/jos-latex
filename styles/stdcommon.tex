@@ -1,0 +1,219 @@
+% \batchmode
+
+% ------------------------ graphics -----------------------
+
+% Workaround for l2h-2K1 bug (incompatible with graphics package
+% resulting in images.tex lines with null arguments to includegraphics, e.g.,
+%       \includegraphics[]{eps/file.eps}
+\usepackage[dvips]{graphicx}
+\graphicspath{{./eps/}{./fig/}{./figures/}}
+
+% Alternate workaround (according to l2h email) 
+% = revert to older /l/l2h/styles/graphics.perl:
+%\usepackage[dvips]{graphics}
+
+\usepackage{subfigure} % New 4/2/05
+
+% ------------------------ index -----------------------
+
+\usepackage{makeidx} % I don't like the HTML version of this (keyword AND target title)
+\makeindex
+
+% ------------------------ Misc -----------------------
+
+\usepackage{latexsym} % for \Box, \Diamond etc. See p. 42-43 of Lamport
+\usepackage{calc} % e.g., in mdftp/complex-problems.tex
+
+% Package order before 9/13/02 was 
+%   makeidx,html,latexsym,boxedminipage, hyperref
+% However, html needs to go after hyperref, in principle.
+% BUT, then \url{} doesn't work, and \~{} comes out as ~{} unless it is used.
+% For now, let's not worry about broken links in PDF (or unwrapped captions
+% in the LOF).  I think the links that DO work outweigh the lost captions,
+% plus we can become more familiar with the quirks of hyperref.
+% OOPS - contents lines no longer wrap.  Suppressing hyperref for now.
+% Since comment env. defined in html.sty, order is reverted.
+
+% ------------------------ hyperref -----------------------
+%!Reviving this block to set hidelinks option - moved html section after this one
+%!\begin{comment} % NOT COMPATIBLE WITH pdfetex USING OPTIONS BELOW
+%!                % Error = ``missing \begin{document}''
+%!\begin{comment} % NOT COMPATIBLE WITH pdfetex USING OPTIONS BELOW
+                % Error = ``missing \begin{document}''
+\usepackage[
+%	\latexhtml{dvips}{latex2html},
+% HACK: COMMENT-OUT dvips NEEDED TO COMPILE /w/MainTalk/JOSOverview.tex
+        dvips,
+	linktocpage, % link only page number in TOC (dvips does not support breaking links across lines)
+% said to be obsolete now:
+%       latex2html,
+	bookmarks,
+        hidelinks, % REQUIRED 2019-11-12 to prevent links being buried under block of color (html.sty must go AFTER this or edited)
+        % colorlinks=false, % not enough to bypass above bug
+        % colorlinks=true, % how to make gray?
+	bookmarksopen=true, %open all bookmark folders
+%	bookmarksnumbered, %use section numbers with bookmarks
+ 	pdfpagemode=UseOutlines, %show bookmarks
+        hypertexnames=false, %added 4/17/2017 to work around ``ps2pdf GPL Ghostscript 9.19: ERROR: A pdfmark destination page points beyond the last page'' (but did not help with /l/l420/SMAC03A/)
+	pdfstartview={FitV 0}
+%       pdfstartview={FitV \hypercalcbp{\oddsidemargin+1in}}
+%	\Acrobatmenu{GoBack}{$\Longleftarrow$}
+%	\Acrobatmenu{FitWidth}{$\Longleftrightarrow$}
+%	\Acrobatmenu{FitPage}{$\updownarrow$}
+%	\Acrobatmenu{GoForward}{$\Longrightarrow$}
+	]{hyperref}
+%!\end{comment}
+
+% hyperref defines \slabel in connection with subequation labels,
+% which I don't use.  (See /usr/share/texmf/tex/latex/hyperref/nameref.sty )
+% If ever we need them, must rename \slabel
+% to \seclabel or something like that.
+%\renewcommand{\slabel}[1]{\label{sec:#1}} % doesn't work
+%\providecommand{\thesubequation}{} % CHANGE \slabel to \seclabel !!
+
+% From https://stackoverflow.com/questions/718479/what-is-the-best-way-to-produce-a-tilde-in-latex-for-a-website
+\newcommand{\urlwofont}[1]{\urlstyle{same}\url{#1}}
+\catcode`~=11 % make LaTeX treat tilde (~) like a normal character
+\newcommand{\urltilde}{\kern -.15em\lower .7ex\hbox{~}\kern .04em}
+\catcode`~=13 % revert back to treating tilde (~) as an active character
+
+\newcommand{\urltj}{~} % latest latex2html and hyperref have it all worked out, but be ready for anything
+
+% ------------------------ html -----------------------
+
+% latex2html: ~/w/inputs/html.sty
+\usepackage{html} 
+%%ExperimentHevea:\usepackage{hevea} % /opt/local/share/hevea/hevea.sty
+%%ExperimentHevea:\usepackage{html.hva} % ~/w/inputs/html.hva.sty
+
+% From Ross Moore:
+% Supports ~jos and \~jos but not \~{}jos :
+% So, the New API is LEAVE ~ ALONE (unquoted) in URL argument (2nd argument):
+%begin{latexonly}
+\newcommand{\htmladdnormallinkfootNewAPI}[2]{#1{\footnote{\htmlurl{#2}}}}
+%end{latexonly}
+
+\providecommand{\texttilde}[1]{~}
+
+% From Ross Moore:
+% Supports ~jos and \~jos AND \~{}jos :
+% Unfortunately, '_' must NOT be quoted as `\_'
+%begin{latexonly}
+\newcommand{\testtilde}[1]{%
+  \ifx\relax#1\relax\noexpand~\else\noexpand\~#1\fi}
+\renewcommand{\htmladdnormallinkfoot}[2]{#1{\bgroup
+   \def~{\noexpand~}\let\~\testtilde
+   \edef\next{\egroup \def\noexpand\thisurl{#2}}\next
+  \expandafter\footnote\expandafter{\expandafter\htmlurl\expandafter
+    {\thisurl}}}}
+
+\newcommand{\htmladdnormallinkfoottwo}[3]{%
+\htmladdnormallink{#1}{#3}\footnote{\htmladdnormallink{\texttt{#2}}{#3}}}
+
+%\renewcommand{\htmladdnormallink}[2]{#1}
+
+%end{latexonly}
+
+\providecommand{\textunderscore}{_} % Needed when above is used
+
+% ------------------------ multicol -----------------------
+
+\usepackage{multicol} % See p. 76 of LaTeX Companion
+\setlength{\columnseprule}{0.4pt}
+\setlength{\columnsep}{10pt} % plus 1000pt}
+
+% ------------------------ boxes -----------------------
+
+%begin{latexonly}
+\usepackage{boxedminipage} % See p. 277 of LaTeX Companion
+%\usepackage{tex4ht} % See LaTeX Web Companion
+%end{latexonly}
+%NOTE:
+%Package fancybox INCOMPATIBLE WITH TABLE OF CONTENTS in ``Article'' mode.
+%(causes only the word ``Contents'' to appear)
+%This is a KNOWN BUG! See /usr/share/texmf/tex/latex/misc/fancybox.sty
+%It does not seem to strike in book mode.
+%See stdfigs-*.tex / \newenvirontment{code}... for where we need it.
+%Working around it results in code-figure captions PRECEDING the code figure.
+%\usepackage{fancybox} % VerbatimEnvironment (see p. 278 of LaTeX Companion)
+
+% SELECT FONT
+%\renewcommand{\familydefault}{cmss}
+%%\renewcommand{\familydefault}{grarial}
+
+% ========== DEFAULT CASE =============
+%! IEEE STYLE, SORTED BY AUTHOR:
+% joscv comments this out:
+%!
+\bibliographystyle{ieeetrsort} % refs420, refs421, all books, etc.
+% WARNING: When this is commented out, books will have empty footnode.html files
+%          and you will see malformed citations in the text.
+
+% Standard IEEE STYLE: SORTED BY DATE:
+%!\bibliographystyle{ieee} % Faculty Report
+%\newcommand{\citename}[1]{#1} % needed with article.sty
+
+% Other Bibliography and citation styles:
+%TEMP\usepackage{apalike}
+%TEMP\bibliographystyle{apalike}
+
+%\bibliographystyle{cmj}
+%\newcommand{\citename}[1]{#1} % needed to use cmj.bst with article.sty
+
+%begin{latexonly}
+\newcommand{\makenavtoc}{}
+%end{latexonly}
+\begin{htmlonly}
+\newcommand{\makenavtoc}{
+{\bfseries Detailed Contents (and Navigation)}
+\tableofchildlinks
+}
+\end{htmlonly}
+
+
+\begin{latexonly}
+\hyphenation{wave-guide wave-guides im-ped-ance arc-tangent re-verb-er-a-tion pro-posed sin-u-soid proj-ect-ion exp-on-ent-ially comp-u-ta-tion-al sin-u-soid-al-ly damp-ers dif-fers amp-li-tude band-limited band-limit dis-crete exp-on-ent-ial sin-u-soid-al sin-u-soid spect-ral re-con-struct re-con-struct-ion}
+\end{latexonly}
+
+% Abbreviations used in jos.bib:
+%
+% Terse versions:
+%	\newcommand{\Appl}{Appl.}
+%	\newcommand{\Trans}{Trans.}
+%	\newcommand{\Int}{Int.}
+%	\newcommand{\Journal}{J.}
+%	\newcommand{\JournalOfThe}{J.}
+%	\newcommand{\JournalP}{J.}
+%	\newcommand{\Lab}{Lab.}
+%	\newcommand{\Eng}{Eng.}
+%	\newcommand{\Elec}{Elec.}
+%	\newcommand{\Soc}{Soc.}
+%	\newcommand{\Proc}{Proc.}
+%	\newcommand{\Conf}{Conf.}
+%	\newcommand{\ConfOn}{Conf.}
+%	\newcommand{\Tech}{Tech.}
+%	\newcommand{\Symp}{Symp.}
+%	\newcommand{\Dept}{Dept.}
+%	\newcommand{\Ama}{Amer.}
+%	\newcommand{\SocOf}{Soc.\ of}
+%	\newcommand{\Acoust}{Acoust.}
+%
+% Expanded versions:
+\input{../bib/abbreviations-verbose.tex}
+
+% The following should be deleted, but wgt still uses them,
+% and possibly others as well.
+% 
+% \newcommand{\OS}{OppenheimAndSchafer}
+% \newcommand{\BB}{Belevitch}
+% \newcommand{\DK}{DesoerAndKuh}
+% \newcommand{\MW}{McIntyreF}
+% \newcommand{\RG}{RabinerAndGold}
+% \newcommand{\LS}{LjungAndSoderstrom}
+% \newcommand{\MI}{MorseAndIngard}
+% \newcommand{\Jaffe}{JaffeAndSmith83}
+% \newcommand{\SRCICA}{SmithAndGossett84}
+% \newcommand{\JOSTSTANM}{STAN--M--14}
+% \newcommand{\VDPS}{VanDuynePierceAndSmithWDH}
+
+\input{./stddefs.tex}

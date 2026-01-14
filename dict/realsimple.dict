@@ -1,0 +1,749 @@
+# /w/rs/./aud_fb/Dictionary.txt
+PATH = / Engineering / Signal Processing
+KEY = Filter bank
+DEF = A set of filters that decompose a signal into a set of components
+corresponding to various spectral regions, as with an analysis filter bank, or
+resynthesize a signal from its analysis bank outputs, as with a synthesis
+filter bank.
+URL = http://en.wikipedia.org/wiki/Filter_bank
+
+PATH = / Engineering / Signal Processing
+KEY = Bandpass filter 
+DEF = A <i>bandpass filter</i> accepts input signal energy in a certain spectral band, and rejects the energy outside the band.
+URL = http://en.wikipedia.org/wiki/Band-pass_filter
+
+PATH = / Engineering / Signal Processing
+KEY = Spectrum
+DEF = The <i>spectrum</i> of a signal gives the distribution of signal energy as a function of frequency.
+URL = http://ccrma.stanford.edu/~jos/mdft/Example_Applications_DFT.html
+
+PATH = / Engineering / Signal Processing
+KEY = Passband
+DEF = The range of frequencies corresponding to spectral energy given as output of a digital filter.
+URL = http://ccrma.stanford.edu/~jos/filters/Simplest_Lowpass_Filter_I.html
+
+PATH = / Engineering / Signal Processing
+KEY = Bandwidth
+DEF = The size of the passband, typically expressed in Hz.
+URL = http://en.wikipedia.org/wiki/Bandpass
+
+PATH = / Engineering / Signal Processing
+KEY = Center frequency
+DEF = The midpoint of the passband.
+URL = http://en.wikipedia.org/wiki/Bandpass
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+KEY = Peripheral auditory system | human auditory periphery
+DEF = The <i>peripheral auditory system</i> is the portion of the auditory system not including the auditory organs in the spinal and brain.
+URL = ?
+
+# Presently conflicts with the Octave (Matlab-lookalike) program:
+# This conflict will go away when either context support or case-sensitivity
+# is implemented.
+#
+# PATH = / Music
+# SYNM = / Engineering / Signal Processing
+# KEY = octave
+# DEF = A frequency ratio corresponding to a factor of two, or doubling, in frequency.
+# URL = http://en.wikipedia.org/wiki/Octave
+
+PATH  = / Science / Linguistics / Phonetics
+KEY = Vowel
+DEF = A speech sound produced primarily by vibration of the vocal folds, with the vocal tract held in an open configuration.
+URL = http://ccrma.stanford.edu/~rjc/pubs/audio_speech/Describing_Speech_Sounds.html
+# /w/rs/./faust/Dictionary.txt
+# /w/rs/./faust_strings/Dictionary.txt
+KEY = ks.dsp | ks-help.pd | eks.dsp | eks-help.pd | freeax.dsp | freeax-help.pd | freeax-oxygen8.pd | midi-in.pd | audio-out.pd | pdext-freeax-oxygen8.q
+DEF = Download freeax.tar.gz containing this file.
+URL = http://ccrma.stanford.edu/realsimple/faust_strings/freeax.tar.gz
+
+#Now in /w/aspf/
+#KEY = cpgr.dsp | cpgrir.dsp | cpgrs-help.pd | cpgrs.dsp | cpgrs~-help.pd | cpgrui-help.pd | cpgrui.dsp | cpgrui~-help.pd | cpgr~-help.pd | cpgrui_vst.dsp
+#DEF = Download faustpd.tar.gz containing this file.
+#URL = http://ccrma.stanford.edu/realsimple/faust_strings/faustpd.tar.gz
+
+KEY = freeax.dsp
+DEF = Download freeax.tar.gz containing this file.
+URL = http://ccrma.stanford.edu/realsimple/faust/freeax.tar.gz
+# /w/rs/./harmonics/Dictionary.txt
+PATH = / Psychology / Perception
+KEY = Timbre
+DEF = According to the American Standards Association, timbre is that attribute of sensation in terms of which a listener can judge that two sounds having the same loudness and pitch are dissimilar.
+URL = http://en.wikipedia.org/wiki/Timbre
+URL = http://cnx.org/content/m11059/latest
+
+PATH = / Music / Theory
+KEY = Harmonic
+DEF = For a tone which posesses a perfectly harmonic overtone series, the nth harmonic is generally defined to oscillate at nf<sub>0</sub>Hz, where f<sub>0</sub> is the fundamental frequency.
+URL = http://en.wikipedia.org/wiki/Harmonic
+
+PATH = / Music / Theory
+KEY = Overtone
+DEF = An overtone is a sinusoidal component of a waveform of greater frequency than its fundamental frequency.
+URL = http://en.wikipedia.org/wiki/Overtone
+
+PATH = / Music / Theory
+KEY = Harmonic Series
+DEF = The harmonic series is the set of frequencies at which a musical instrument tends to vibrate.
+URL = http://cnx.org/content/m11118/latest
+URL = http://en.wikipedia.org/wiki/Harmonic_series_(music)
+
+KEY = Periodic Signal | Periodic | Period
+DEF = A periodic signal is a signal that forever repeats itself.
+URL = http://en.wikibooks.org/wiki/Signals_and_Systems/Periodic_Signals
+URL = http://cnx.org/content/m10744/latest
+URL = http://ccrma.stanford.edu/realsimple/lab_inst/
+
+KEY = Signal
+DEF = A signal is typically a real-valued function of time. A discrete-time signal is typically a real-valued function of discrete time, and is therefore a time-ordered sequence of real numbers.
+URL = http://ccrma.stanford.edu/~jos/filters/Definition_Signal.html
+URL = http://cnx.org/content/m0001/latest
+
+PATH = / Signal Processing
+KEY = Transient
+DEF = Transients are short intervals during which the signal evolves quickly in some nontrivial or relatively unpredictable way (Bello, 2005).  In computer music, the short attack portion of a sound is often treated as a transient signal.
+URL = http://en.wikipedia.org/wiki/Transient_%28acoustics%29
+
+
+# /w/rs/./hilbert/Dictionary.txt
+# To Do
+
+# /w/rs/./lab_inst/Dictionary.txt
+KEY = Clipping
+DEF = Clipping is a form of distortion that occurs when a signal is amplified beyond the limits of the system representing the signal.
+URL = http://ccrma.stanford.edu/~jos/pasp/Clipping_Nonlinearity.html
+URL = http://en.wikipedia.org/wiki/Clipping_%28audio%29
+
+KEY = Magnet
+DEF = A magnet is an object that has a magnetic field.
+URL = http://en.wikipedia.org/wiki/Magnet
+URL = http://hyperphysics.phy-astr.gsu.edu/hbase/magnetic/elemag.html#c1
+
+KEY = Magnetic field
+DEF = A magnetic field exerts a force on moving charge.
+URL = http://hyperphysics.phy-astr.gsu.edu/hbase/magnetic/magfie.html
+URL = http://en.wikipedia.org/wiki/Magnetic_field
+
+KEY = Spring
+DEF = According to Hooke's law, the force F exerted by a spring stretched a distance x from its rest position is F=-kx.
+URL = http://en.wikipedia.org/wiki/Spring_%28device%29
+URL = http://hyperphysics.phy-astr.gsu.edu/hbase/pespr.html
+
+KEY = Damper | Dashpot
+DEF = The elementary impedance element in mechanics is the dashpot.
+URL = http://ccrma.stanford.edu/~jos/pasp/Dashpot.html
+URL = http://en.wikipedia.org/wiki/Dashpot
+
+KEY = Piano | Pianoforte
+DEF = Pressing a key on the piano causes a felt-tipped hammer to strike a vibrating string.
+URL = http://www.speech.kth.se/music/5_lectures/
+URL = http://en.wikipedia.org/wiki/Piano
+
+KEY = Tuning fork
+DEF = Commonly made of steel, a tuning fork is used to produce an accurate reference pitch for tuning musical instruments.
+URL = http://en.wikipedia.org/wiki/Tuning_fork
+
+PATH = / Science / Physics
+KEY = Standing Wave
+DEF = In musical acoustics, standing waves appear to be stationary, but they are actually due to traveling waves interfering with each other.
+URL = http://cnx.org/content/m12413/latest/
+URL = http://hyperphysics.phy-astr.gsu.edu/hbase/waves/standw.html
+
+PATH = / Science / Physics
+KEY = Harmonic Oscillator | Oscillator
+DEF = When displaced from its equilibrium state, a harmonic oscillator experiences a restoring force according to Hooke's law.
+URL = http://ccrma.stanford.edu/~jos/filters/Mass_Spring_Oscillator_Analysis.html
+URL = http://ccrma.stanford.edu/~jos/pasp/Wave_Digital_Mass_Spring_Oscillator.html
+URL = http://ccrma.stanford.edu/~jos/pasp/Oscillation_Frequency.html
+URL = http://en.wikipedia.org/wiki/Harmonic_oscillator
+
+PATH = / Science / Physics
+KEY = Exponential Decay
+DEF = Exponential decay is characterized by a reduction over time that is proportional to the quantity being reduced.
+URL = http://en.wikipedia.org/wiki/Exponential_decay
+
+KEY = Envelope | Amplitude envelope
+DEF = The amplitude envelope, or relatively slowly-changing outline of a sound waveform, makes for a useful first approximation of the instantaneous loudness of the sound.
+URL = http://en.wikipedia.org/wiki/ADSR_envelope
+
+KEY = Transverse | Transverse wave
+DEF = A transverse wave causes a disturbance in the medium perpendicular to the direction in which the wave moves.
+URL = http://en.wikipedia.org/wiki/Transverse
+
+KEY = spectrum
+DEF = The spectrum of a signal gives the distribution of signal energy as a function of frequency.
+URL = http://ccrma.stanford.edu/~jos/mdft/Example_Applications_DFT.html
+
+KEY = pitch
+DEF = Pitch is the perceived fundamental frequency of a sound.
+URL = http://en.wikipedia.org/wiki/Pitch_(music)
+# EJB: Maybe we need a page on this in the psychoacoustics set of labs?
+
+KEY = potential energy
+DEF = Potential energy is the energy stored in a system due to the positions of the system elements.
+URL = http://ccrma.stanford.edu/~jos/pasp/Potential_Energy_Spring.html
+URL = http://ccrma.stanford.edu/~jos/pasp/Energy_Mass_Spring_Oscillator.html
+# /w/rs/./pidcontrol/Dictionary.txt
+PATH = / Engineering / Control 
+
+KEY = proportional-integral-derivative (PID) control | PID control coefficients | PID coefficients | PID control
+DEF = A proportional-integral-derivative (PID) controller feeds a linear combination of a measured quantity, the integral of the measured quantity, and the derivative of the measured quantity back to an actuator (motor) in order to alter the system dynamics.
+URL = http://en.wikipedia.org/wiki/PID_controller
+
+KEY = / Engineering / Control / viscous resistance
+DEF = When an object moves slowly through a liquid, it will experience a viscous drag which is approximately proportional to the velocity.
+URL = http://hyperphysics.phy-astr.gsu.edu/hbase/airfri.html#c3
+
+KEY = / Psychology / Perception / Inharmonicity
+DEF = Inharmonicity describes the degree to which the frequencies of the overtones of a tone differ from whole number multiples of the fundamental frequency.
+URL = http://en.wikipedia.org/wiki/Inharmonic
+
+KEY = Physical model | Physical modeling
+DEF = In science and technology, a physical model allows us to simulate or visualize something about the thing it represents.
+URL = http://en.wikipedia.org/wiki/Model_(physical)
+
+KEY = Digital waveguide synthesis
+DEF = Digital waveguide synthesis models are computational physical models for certain classes of musical instruments (string, winds, brasses, etc.) which are made up of delay lines, digital filters, and often nonlinear elements.
+URL = http://ccrma.stanford.edu/~jos/swgt/swgt.html
+URL = http://ccrma.stanford.edu/~jos/pasp/
+
+KEY = Ideal plucked string
+DEF = The ideal plucked string supports traveling wave propagation and is initialized with zero velocity.
+URL = http://ccrma.stanford.edu/~jos/pasp/Ideal_Plucked_String.html
+
+KEY = feedback control
+DEF = Feedback control is the discipline in which system dynamics are studied and altered by creating feedback loops.
+URL = http://en.wikipedia.org/wiki/Control_engineering
+
+KEY = feedback signal | feedback loop | fed back
+DEF = A <i>feedback signal</i> creates a <i>loop</i>.  That is, the term "feedback" refers to when an output signal is "fed back" to an input of the same system.
+URL = http://en.wikipedia.org/wiki/Feedback
+
+KEY = actuator
+DEF = An actuator transforms an input signal (such as an electrical signal) into motion.
+URL = http://en.wikipedia.org/wiki/Actuator
+
+KEY = sensor
+DEF = A <i>sensor</i> measures some physical quantity in a form that can be used electronically.  For example, piezoelectric crystals are often used in force sensors because they transduce force across the crystal into a voltage.  Optical sensors are typically based on the photoelectric effect.
+URL = ?
+
+KEY = op-amp circuit
+DEF = An <i>op-amp</i>, or <i>operational amplifier</i>, is an ideal voltage amplifier that is approximated in various ways by practical op-amp circuits.
+URL = http://www.uoguelph.ca/~antoon/gadgets/741/741.html
+# /w/rs/./psychoacoustics/Dictionary.txt
+
+KEY = Psychoacoustics | Psychoacoustic
+DEF = <i>Psychoacoustics</i> is the science of the human perception of sound.
+URL = http://en.wikipedia.org/wiki/Psychoacoustics
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+KEY = Audition | auditory
+DEF = <i>Audition</i> is the act of listening.
+URL = ?
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+KEY = Loudness | sones
+DEF = <i>Loudness</i> is a quantity, expressed in sones, which corresponds to the perceptual intensity of a sound.
+URL = http://www.acoustics.salford.ac.uk/research/arc/cox/sound_quality/loudness.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+KEY = Specific loudness-gram
+DEF = The profile of the specific loudness of a particular sound over time.
+URL = ?
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Peripheral auditory system
+DEF = The <i>peripheral auditory system</i> is the portion of the auditory system not including the auditory organs in the spinal and brain.
+URL = ?
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Outer ear
+DEF = The <i>outer ear</i> is the externally visible portion of the auditory system plus the auditory canal.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Auditory canal
+DEF = The <i>auditory canal</i> is the tube-like passage running from the entrance to the ear to the ear drum..
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Ear drum
+DEF = The <i>ear drum</i> is the membrane at the beginning of the middle ear that vibrates in response to sound from the auditory canal.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Middle ear
+DEF = The <i>middle ear</i> is the portion of the auditory system that transmits sound from the auditory canal to the cochlea.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Ossicles | ossicle
+DEF = <i>Ossicles</i> are tiny bones that are the primary components of the middle ear.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Oval window
+DEF = The <i>oval window</i> is the portion of the cochlea driven by the third ossicle of the middle ear.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Cochlea
+DEF = The <i>cochlea</i> is the spiral shaped primary organ of the inner ear.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+URL = http://www.blackwellpublishing.com/matthews/ear.html
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Inner ear
+DEF = The <i>inner ear</i> is the portion of the auditory system responsible for transmitting sound information to the nervous sytem.
+URL = http://www.iurc.montp.inserm.fr/cric/audition/english/ear/fear.htm
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Basilar membrane | BM
+DEF = The <i>basilar membrane</i> is the organ running the length of the cochlea that separates the cochlear duct from the scala timpani.
+URL = http://en.wikipedia.org/wiki/Basilar_membrane
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Hair cell | hair cells
+DEF = A <i>hair cell</i> is responsible for communicating sound vibration in the cochlea to the auditory nerve.
+URL = http://en.wikipedia.org/wiki/Hair_cell
+
+PATH = / Music
+KEY = Pure tone
+DEF = A musical sound whose waveform is comprised of a single sinusoid.
+URL = http://en.wikipedia.org/wiki/Pure_tone
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Auditory system
+DEF = The biological system that is primarily responsible for transmitting
+acoustic stimuli to the brain.
+URL = http://en.wikipedia.org/wiki/Auditory_system
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Reissner's membrane
+DEF = A cochlear membrane which serves as a diffusion barrier between the
+endolympth of the scala media and the perilymph of the scala vestibuli.
+URL = http://en.wikipedia.org/wiki/Reissner%27s_membrane
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Endolymph
+DEF = The cochlear fluid of the scala media.
+URL = http://en.wikipedia.org/wiki/Endolymph
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Perilymph
+DEF = The cochlear fluid of the scalae vestibuli and typmani.
+URL = http://en.wikipedia.org/wiki/Perilymph
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Scala vestibuli
+DEF = The cochlear duct driven by the oval window.
+URL = http://en.wikipedia.org/wiki/Scala_vestibuli
+
+PATH = / Science / Physics / Acoustics / Psychoacoustics
+SYNM = / Science / Biology / Anatomy
+KEY = Auditory nerve | cochlear nerve
+DEF = The portion of the vestibulocochlear nerve responsible for transmitting
+acoustic energy to the brain.
+URL = http://en.wikipedia.org/wiki/Cochlear_nerve
+# /w/rs/./rsadmin/Dictionary.txt
+KEY = REALSIMPLE Project | REALSIMPLE Website | REALSIMPLE
+URL = http://ccrma.stanford.edu/realsimple/
+
+KEY = LaTeX
+URL = http://www.latex-project.org/
+URL = http://www.tug.org
+
+KEY = Wallenberg Global Learning Network
+URL = http://www.wgln.org/
+
+KEY = Center for Computer Research in Music and Acoustics | CCRMA
+URL = http://ccrma.stanford.edu/
+
+PATH = / Science / Physics / Waves
+PATH = / Music
+KEY = Monochord
+DEF = The term <i>monochord</i> means a single stretched string that is fixed rigidly on both ends.  Monochord experiments are used to study vibrating strings.
+URL = http://en.wikipedia.org/wiki/Monochord
+URL = http://www.practicalphysics.org/go/Experiment_130.html
+URL = http://ccrma.stanford.edu/realsimple/weighted_mono/Theory.html
+
+KEY = Subversion
+URL = http://subversion.tigris.org/
+
+KEY = CNXML
+URL = http://beta.cnx.org/technology/cnxml/
+
+KEY = Connexions
+URL = http://cnx.org/
+
+PATH = / Music / Computer Music
+KEY = Pure Data | PD
+DEF = PD is a real-time graphical programming environment for audio and graphical processing.  It was planned as a free, better and more stable Max/fts, which has also been developed by Miller Smith Puckette at IRCAM.
+URL = http://crca.ucsd.edu/~msp/software.html
+
+PATH = / Music / Computer Music
+KEY = Pure-Data Extended | PDX
+URL = http://puredata.info/
+
+KEY = Creative Commons License 2.5 | Creative Commons License
+URL = http://creativecommons.org/licenses/by/2.5/
+
+PATH = / Science / Physics / Waves
+KEY = Traveling-Wave Animation
+URL = http://www.cnx.org/content/m13521/latest/
+URL = http://ccrma.stanford.edu/realsimple/travelingwaves
+
+PATH = / Music / Computer Music
+KEY = Elementary String Instruments
+URL = http://ccrma.stanford.edu/~jos/pasp/Elementary_String_Instruments.html
+
+PATH = / Engineering / Signal Processing
+KEY = Physical Audio Signal Processing
+URL = http://ccrma.stanford.edu/~jos/pasp/
+
+PATH = / Music / Electroacoustic Music
+KEY = Overdrive | overdrive | distortion | Distortion
+URL = http://ccrma.stanford.edu/realsimple/SimpleStrings/Nonlinear_Overdrive.html
+
+PATH = / Science / Physics / Waves
+KEY = Traveling-wave solution | Traveling-Wave Solution
+URL = http://ccrma.stanford.edu/realsimple/SimpleStrings/Traveling_Wave_Solution.html
+URL = http://ccrma.stanford.edu/realsimple/travelingwaves
+
+PATH = / Engineering / Electrical
+
+KEY = Delay Line
+URL = http://ccrma.stanford.edu/realsimple/Delay/Delay_lines.html
+
+KEY = quality factor | Q
+DEF = The quality factor <i>Q</i> of a two-pole resonator is equal to the resonant frequency divided by two times the damping constant.  If the <i>Q</i> is large, then the impulse response of the resonator will be long.  Conversely, if the <i>Q</i> is small, then the impulse response of the resonator will be short.
+URL = http://ccrma.stanford.edu/~jos/filters/Quality_Factor_Q.html
+
+PATH = / Music / Computer Music
+KEY = body resonator factoring | Body resonator factoring | Body Resonator Factoring
+URL = http://ccrma.stanford.edu/realsimple/BodyFactoring/Body_Resonator_Factoring.html
+
+PATH = / Science / Physics / Waves
+KEY = wave equation | Wave equation | Wave Equation
+URL = http://ccrma.stanford.edu/realsimple/WaveEquations/
+
+PATH = / Science / Physics / Waves
+KEY = boundary value problem | differential equation | boundary conditions
+DEF = A boundary value problem consists of a differential equation and the boundary conditions required to solve it.
+URL = http://en.wikipedia.org/wiki/Boundary_condition
+
+PATH = / Science / Physics / Waves
+KEY = Node
+DEF = The nodes of a standing wave are the locations where the wave motion has zero amplitude.
+URL = http://cnx.org/content/m12413/latest/
+URL = http://en.wikipedia.org/wiki/Node_(physics)
+
+PATH = / Science / Physics / Waves
+KEY = Antinode
+DEF = The antinodes of a standing wave are the locations where the wave motion has maximal amplitude.
+URL = http://cnx.org/content/m12413/latest/
+URL = http://en.wikipedia.org/wiki/Node_(physics)
+
+PATH = / Science / Physics / Waves
+KEY = Rigid termination | inverting reflection
+DEF = A rigid termination on a vibrating string causes displacement, velocity, and acceleration waves to be reflected with a sign inversion.
+URL = http://ccrma.stanford.edu/~jos/pasp/Rigid_Terminations.html
+
+PATH = / Science / Physics / Waves
+KEY = propagate | propagation | traveling wave
+DEF = Traveling waves propagate (i.e. travel) through space.
+URL = http://ccrma.stanford.edu/realsimple/travelingwaves
+URL = http://en.wikipedia.org/wiki/Wave_propagation
+
+PATH = / Science / Physics
+KEY = wave variable
+DEF = The wave equation can be transformed into many equivalent forms involving different variables, such as displacement, velocity, acceleration, slope, and force.  For a given problem, using one set of variables may be more convenient than another.
+URL = http://ccrma.stanford.edu/~jos/VariableChoice/Overview_Wave_Variable_Choices.html
+URL = http://ccrma.stanford.edu/~jos/pasp/Alternative_Wave_Variables.html
+
+PATH = / Science / Physics / Acoustics
+SYNM = / Science / Physics / Electromagnetics
+SYNM = / Engineering / Radio-Frequency Engineering
+SYNM = / Musics / Computer Music
+KEY = Waveguide
+DEF = A waveguide restricts wave propagation to a particular subspace, which is usually a line.  Vibrating strings, woodwinds, and transmission lines are examples of one-dimensional waveguides.
+URL = http://en.wikipedia.org/wiki/Waveguide
+
+PATH = / Science / Physics
+KEY = Vibration | vibrate
+DEF = If the mass of a harmonic oscillator is excited, the system responds by vibrating back and forth.  Whenever the mass is at its rest position, the system contains only kinetic energy.  Conversely, whenever the mass velocity is zero, the system contains only potential energy.
+URL = http://ccrma.stanford.edu/realsimple/lab_inst/Background.html
+URL = http://ccrma.stanford.edu/~jos/pasp/Mass_Spring_Resonators.html
+
+PATH = / Music
+KEY = bass
+DEF = Bass tones are generally low in pitch and contain a lot of low-frequency content.  Low-pass filters emphasize low frequencies.  For example, turning up the bass knob on a stereo controls a low-pass filter that increases the amount of low-frequency content you hear.
+URL = http://ccrma.stanford.edu/~jos/filters/Simplest_Lowpass_Filter_I.html
+URL = http://ccrma.stanford.edu/~jos/filters/Lowpass_Filter_Design.html
+
+PATH = / Music
+KEY = treble
+DEF = Treble tones are generally high in pitch and contain a lot of high-frequency content.  High-pass filters emphasize high frequencies.  For example, turning up the treble knob on a stereo controls a high-pass filter that increases the amount of high-frequency content you hear.
+URL = http://ccrma.stanford.edu/~jos/filters/Simplest_Lowpass_Filter_I.html
+URL = http://ccrma.stanford.edu/~jos/filters/Lowpass_Filter_Design.html
+
+PATH = / Science / Physics
+KEY = velocity
+DEF = The velocity of an object is the time derivative of the object's displacement. Velocity is a commonly chosen wave variable in physical modeling.
+URL = http://ccrma.stanford.edu/~jos/Mohonk05/Ideal_Struck_String_Velocity.html
+
+PATH = / Science / Physics
+KEY = displacement | displace
+DEF = The displacement of an object describes how far away and in what direction it has been moved, or <i>displaced</i>, from its rest position. Displacement is a commonly chosen wave variable in physical modeling.
+URL = http://ccrma.stanford.edu/~jos/Mohonk05/Ideal_Plucked_String_Displacement.html
+
+PATH = / Engineering / Signal Processing
+
+KEY = Volume Level | Output Gain
+DEF = The <i>volume level</i> of an audio device corresponds to the gain applied to the signal right before it reaches the output.
+URL = http://ccrma.stanford.edu/~jos/pasp/Amplifier_Feedback.html
+# EJB:  Maybe there is a more appropriate off-site link?
+#       I added this key because the word "volume" comes up so often in the Realsimple labs.
+
+KEY = Edgar J Berdahl | Edgar Berdahl | Ed Berdahl
+DEF = Edgar Berdahl's Home Page
+URL = http://ccrma.stanford.edu/~eberdahl/
+
+KEY = Nelson Lee
+DEF = Nelson Lee's Home Page
+URL = http://ccrma.stanford.edu/~nalee/
+
+KEY = Ryan J Cassidy | Ryan Cassidy
+DEF = Ryan Cassidy's Home Page
+URL = http://ccrma.stanford.edu/~rjc/
+# /w/rs/./stkforpd/Dictionary.txt
+KEY = external object | externals
+DEF = An external object is a PD object whose behavior is defined using C code.  Such objects can generally be made especially efficient and can implement extended behaviors that are fundamentally different and not supported by other PD objects.
+URL = http://puredata.info/
+
+# 'class' is too generic
+KEY = object class | class instance | object-oriented
+DEF = In an object-oriented programming language, each object created during the execution of a program is an instance of a class of objects.
+URL = http://en.wikipedia.org/wiki/Object-oriented_programming
+
+KEY = header files | header
+DEF = A header file contains a set of declarations.  The corresponding source code implements the declared behaviors and includes the declarations from the header file.
+URL = http://en.wikipedia.org/wiki/Header_file
+
+# KEY = source code
+# DEF = The <i>source code</i> for a program (or project) consists of the files needed to compile that program.  The source files normally contain plain ASCII text and are written by the programmer using a text editor.  For example, programs written the language C++ generally include .h files (headers) and .cpp files.
+# Now a disambiguation page: URL = http://en.wikipedia.org/wiki/Source_Code
+
+KEY = library | library file | library files
+DEF = Containing both code and data, libraries provide extended functionality to a programming environment.
+URL = http://en.wikipedia.org/wiki/Library_(computer_science)
+
+KEY = compile | compiler
+DEF = The compiler transforms human-readable source code into machine-readable code.
+URL = http://en.wikipedia.org/wiki/Compiler
+URL = http://gcc.gnu.org/
+
+KEY = open-source | open-source code
+DEF = Program developers may choose to openly distribute the source code to their programs.  This open-source development paradigm makes it easier for a large development community to work together because anyone can can see what code everyone else is writing. In addition, it makes it possible for independent developers to make use of one another's code.
+URL = http://www.opensource.org/
+# /w/rs/./travelingwaves/Dictionary.txt
+KEY = uniform medium
+DEF = A uniform medium has the same physical properties at all points in space.
+URL = http://en.wikipedia.org/wiki/Wave
+
+KEY = Initial value problem | Initial conditions
+DEF = An initial value problem consists of a differential equation and an initial condition.  The solution to an initial value problem is a function y(t) solving the differential equation and satisfying the initial condition y(t<sub>0</sub>)=y<sub>0</sub>.
+URL = http://en.wikipedia.org/wiki/Initial_value_problem
+# /w/rs/./vir_flute/Dictionary.txt
+KEY = noise | broadband
+DEF = In signal processing, noise is a random signal.  Broadband noise contains energy over a wide range of frequencies.
+URL = http://en.wikipedia.org/wiki/White_noise
+
+KEY = nonlinear | nonlinearity
+DEF = Any function that is not linear is nonlinear.  There are no general methods for solving nonlinear equations or nonlinear differential equations. This is why it is usually easier, although generally less accurate, to approximate a nonlinear function by a linear function if possible.
+URL = http://en.wikipedia.org/wiki/Nonlinear
+
+KEY = turbulence | turbulent
+DEF = Turbulent flow is the opposite of laminar flow.
+URL = http://en.wikipedia.org/wiki/Turbulence
+
+KEY = laminar
+DEF = Laminar fluid flow has no disruptions between the flow layers.  Laminar flow is the opposite of turbulent flow.
+URL = http://en.wikipedia.org/wiki/Laminar_flow
+
+KEY = overblowing
+DEF = Flutists can increase the pitch of a note to one of the harmonics of the open-ended tube.  This technique is known as overblowing and involves increasing the velocity of the air jet from the mouth and rolling the lips inward closer to the embouchure hole.
+URL = http://hyperphysics.phy-astr.gsu.edu/hbase/music/flute.html
+
+KEY = jet
+DEF = Flutists produce a jet of air by forcing air out of the mouth through a small opening in the lips.
+URL = http://www.phys.unsw.edu.au/jw/fluteacoustics.html#airjet
+URL = http://en.wikipedia.org/wiki/Jet
+# EJB hasn't found any accessible engineering-style explanations on the WWW of jets in fluids.
+
+KEY = soft-clipper | clipper
+DEF = A clipper limits the minimum and maximum values of a signal.  All clippers are nonlinear.
+URL = http://ccrma.stanford.edu/~jos/pasp/Nonlinear_Distortion.html
+# /w/rs/./vir_tube/Dictionary.txt
+PATH = / Science / Physics / Mechanics / Continuum Mechanics
+KEY = Classical fluid mechanics
+DEF = A branch of continuum mechanics concerned with states of matter in which the substance continually deforms under shear stress.
+URL = http://en.wikipedia.org/wiki/Fluid_mechanics
+
+PATH = / Science / Physics / Mechanics / Continuum Mechanics
+KEY = Universal gas constant
+DEF = A constant scientific value relating pressure, density, and temperature of an ideal gas.
+URL = http://en.wikipedia.org/wiki/Gas_constant
+
+PATH = / Science / Chemistry
+KEY = Molar mass
+DEF = The mass of one mole of a chemical compound.
+URL = http://en.wikipedia.org/wiki/Gas_constant
+
+PATH = / Science / Physics / Thermodynamics
+KEY = Absolute temperature
+DEF = The average thermal energy of a substance, expressed in degrees Kelvin, relative to absolute zero (approx. -273.15 degrees Celsius).
+URL = http://scienceworld.wolfram.com/physics/AbsoluteTemperature.html
+
+PATH = / Science / Physics / Thermodynamics
+KEY = Kelvin
+DEF = The units of absolute temperature.
+URL = http://scienceworld.wolfram.com/physics/Kelvin.html
+
+PATH = / Science / Physics / Mechanics / Continuum Mechanics
+KEY = Ideal gas law
+DEF = An equation relating pressure, temperature, and density in an ideal gas.
+URL = http://scienceworld.wolfram.com/physics/IdealGasLaw.html
+
+PATH = / Science / Physics / Mechanics / Continuum Mechanics
+KEY = Ideal gas
+DEF = A theorized gas in which constituent particles have no mass and no intermolecular forces.
+URL = http://scienceworld.wolfram.com/physics/IdealGas.html
+
+PATH = / Science / Physics / Thermodynamics
+SYNM = / Science / Physics / Acoustics
+KEY = Heat capacity ratio | adiabatic gas constant | adiabatic index
+DEF = The ratio of isobaric (constant pressure) heat capacity to isochoric
+(a.k.a. `isovolumetric', or constant volume) heat capacity.
+URL = http://scienceworld.wolfram.com/physics/GammaHeatCapacityRatio.html
+
+PATH = / Science / Physics / Thermodynamics
+KEY = Heat capacity
+DEF = The amount of energy required to raise a given standard mass of a substance by a standard temperature degree (e.g., in SI units, expressed as Joules per gram-degree-Celsius).
+URL = http://scienceworld.wolfram.com/physics/HeatCapacity.html
+
+PATH = / Science / Physics / Waves
+SYNM = / Science / Physics / Acoustics
+SYNM = / Science / Physics / Electromagnetics
+KEY = Longitudinal wave
+DEF = A <i>longitudinal wave</i> is one in which the fluctuating displacements carrying the wave are parallel to the direction of wave propagation.
+URL = http://scienceworld.wolfram.com/physics/LongitudinalWave.html
+
+PATH = / Science / Physics / Continuum Mechanics / Fluid Mechanics
+SYNM = / Science / Physics / Acoustics
+KEY = Volume velocity | volumetric flow rate | rate of fluid flow
+DEF = The amount of fluid that passes a given point in a one-dimensional acoustic tube, expressed in cubic meters per second.
+URL = http://en.wikipedia.org/wiki/Volumetric_flow_rate
+
+PATH = / Science / Physics
+KEY = Ambient
+DEF = An <i>ambient</i> quantity is one that exists in the surrounding environment of a physical system.
+URL = http://en.wikipedia.org/wiki/Ambient_temperature#Ambient_vs._room_temperature
+
+PATH = / Science / Physics / Thermodynamics
+SYNM = / Science / Physics / Acoustics
+KEY = adiabatic
+DEF = An <i>adiabatic</i> process is one which occurs without loss or gain of heat.
+URL = http://en.wikipedia.org/wiki/Adiabatic_process
+
+PATH = / Science / Physics / Waves
+KEY = Wave impedance | impedance
+DEF = The <i>wave impedance</i> in a propagation medium relates the force-related component of the wave motion to the displacement-related component of the motion.
+URL = http://ccrma.stanford.edu/~jos/OnePorts/Impedance.html
+
+PATH = / Science / Physics / Waves
+KEY = Reflection coefficient
+DEF = The <i>reflection coefficient</i> in wave propagation is a constant which gives the ratio of the strength of a reflected wave to that of an incident wave at an impedance mismatch.
+URL = http://en.wikipedia.org/wiki/Reflection_coefficient
+
+PATH = / Mathematics / Geometry
+KEY = cross-sectional area
+DEF = The <i>cross-sectional area</i> of an oblong object is the area visible when the object is sliced transverse to its longest axis.
+URL = http://en.wikipedia.org/wiki/Area
+
+PATH = / Science / Physics / Thermodynamics
+KEY = Temperature
+DEF = A measure of the average thermal energy of a substance, typically expressed in degrees Celsius, or degrees Kelvin.
+URL = http://en.wikipedia.org/wiki/Temperature
+# /w/rs/./waveguideintro/Dictionary.txt
+KEY = Audio decay time | T60
+DEF = The audio decay time (T60) is the amount of time it takes for an exponentially-decaying quantity to decay by 60dB.
+URL = http://ccrma.stanford.edu/~jos/mdft/Audio_Decay_Time_T60.html
+
+KEY = Lowpass filter
+DEF = A lowpass filter rejects high frequencies and does not affect low frequencies.
+URL = http://ccrma.stanford.edu/~jos/filters/Simplest_Lowpass_Filter_I.html
+URL = http://en.wikipedia.org/wiki/Low-pass_filter
+URL = http://www.st-andrews.ac.uk/~jcgl/Scots_Guide/experiment/lowpass/lpf.html
+# EJB was thinking that it might be nice to have a field-independent explanation
+# of lowpass filters.  Low-pass filter models could be motivated by an RC-circuit 
+# model, a damped mass model (velocity/force), a thermal model, an acoustical model, etc.
+
+KEY = Quasiperiodic
+DEF = In audio signal processing, a quasiperiodic signal is nearly periodic, possibly with a time-varying period T(t).
+URL = http://en.wikipedia.org/wiki/Almost_periodic_function
+URL = http://planetmath.org/encyclopedia/Periodic.html
+
+KEY = observable
+DEF = An observable quantity is one that may be measured directly.
+URL = http://en.wikipedia.org/wiki/Observable
+
+KEY = Sampling
+DEF = Sampling is the process of converting a continuous-time signal into a discrete-time signal.
+URL = http://ccrma.stanford.edu/~jos/mdft/Sampling_Theory.html
+URL = http://en.wikipedia.org/wiki/Sampling_%28signal_processing%29
+
+KEY = Real number
+DEF = The set of real numbers may be expressed informally as the set of all numbers that may be expressed as a decimal number with possibly an infinite number of digits.  More formally, the set of real numbers is the field of rational and irrational numbers.
+URL = http://mathworld.wolfram.com/RealNumber.html
+URL = http://en.wikipedia.org/wiki/Real_number
+
+
+
+# /w/rs/./weighted_mono/Dictionary.txt
+PATH = / Music / Instruments
+
+KEY = Monochord
+DEF = Used as both a musical instrument and a scientific laboratory instrument, a <i>monochord</i> consists of a single stretched string, sometimes attached to a sound box.
+URL = http://ccrma.stanford.edu/realsimple/mono_inst/
+URL = http://ccrma.stanford.edu/realsimple/lab_inst/
+URL = http://en.wikipedia.org/wiki/Monochord
+
+KEY = Mode of Vibration
+DEF = A <i>mode of vibration</i> is a <i>mechanical resonance</i> at a single frequency.  For example, the vibrational modes of an ideal guitar string are sinusoidally shaped, with a whole number of periods along the length of the string.
+URL = http://www.kettering.edu/~drussell/guitars/electric.html
+
+KEY = Hertz
+DEF = <i>Hertz</i> means "cycles per second", and is abbreviated 'Hz'.  It is the standard name for frequency units in cycles per second.  Another common frequency unit is "radians per second", which is two-pi times frequency in Hertz.
+URL = http://en.wikipedia.org/wiki/Hertz
+
+KEY = Wavelength
+DEF = A <i>wavelength</i> is the distance between crests (peaks) in a wave containing only one frequency.  For example, the wavelength of a pure tone in air can be calculated as the speed of sound in air divided by the sounding frequency. Thus, for an A-440 tone, such as produced by a tuning fork, taking the speed of sound in air to be 345 meters per second, we get that the wavelength is about three quarters of a meter [ (345 meters per second) / (440 cycles per second) = 0.78 meters per cycle ].
+URL = http://en.wikipedia.org/wiki/Wavelength
+

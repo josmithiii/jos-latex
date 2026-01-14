@@ -1,0 +1,734 @@
+# Makefile.tex - Self-contained LaTeX build system
+# This file should be included from a project Makefile that sets NAME and other options.
+#
+# Required: NAME must be set before including this file
+# Optional overrides: OTHER_DEPENDS, OTHER_SRCS, OTHER_GOODIES, OTHER_CLEANS,
+#                     INDEXSTYLE, OTHER_PRODUCTS, OTHER_DICTS, JOS_LATEX
+#
+# Example Makefile:
+#   NAME = mydocument
+#   OTHER_DEPENDS = *.tex eps/*.eps
+#   JOS_LATEX = jos-latex
+#   include $(JOS_LATEX)/Makefile.tex
+
+# ============================================================================
+# Configuration Variables
+# ============================================================================
+
+# JOS_LATEX: Path to jos-latex infrastructure (set by including Makefile)
+JOS_LATEX ?= .
+
+# Paths (can be overridden)
+KROOT ?= $(HOME)/w
+SYSIN ?= $(KROOT)/inputs
+
+# Tools
+MAKE := make
+LATEX ?= latex -file-line-error -recorder
+BIBTEX ?= bibtex
+TAR ?= tar
+PRINT ?= lpr
+CP ?= /bin/cp
+
+# Platform detection and viewer setup
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    # macOS
+    PDFV ?= open
+    PSV ?= open
+    OHTML ?= open
+    CPOPTR ?= -R
+    DVIV ?= open
+else
+    # Linux/other
+    PDFV ?= xpdf
+    PSV ?= gv --scale=2 -geometry 620x720-400-400 --center
+    OHTML ?= xdg-open
+    CPOPTR ?= -rpdf
+    DVIV ?= xdvi
+endif
+
+# PS2PDF options
+PS2PDF_BOOK_OPTS ?= -dPDFSETTINGS=/prepress -dProcessColorModel=/DeviceGray -dColorConversionStrategy=/Gray
+PS2PDF_OPTS ?=
+PS2PDF_OPTS_FOR_FIGURES ?= -dEPSCrop
+PS2PDF ?= ps2pdf $(PS2PDF_OPTS)
+PS2PDFBOOKS ?= ps2pdf $(PS2PDF_BOOK_OPTS)
+
+# DVIPS: -G0 fixes ligature problems with times font
+DVIPS ?= dvips -Ppdf -G0
+
+# Index style (can be overridden in main Makefile)
+INDEXSTYLE ?= $(JOS_LATEX)/config/index-book.ist
+MAKEINDEX ?= makeindex -s $(INDEXSTYLE)
+
+# Installation paths
+DESTROOT ?= $(KROOT)/h/josn
+WEBUPD ?= $(KROOT)/scripts/webupd
+BIBFILE ?= $(JOS_LATEX)/bib/jos.bib
+
+# Automatic linking (appdict)
+APPDICT ?= $(JOS_LATEX)/tools/appdict
+LOCALDICTPROG ?= $(JOS_LATEX)/tools/localdict
+OPENDICT ?= $(JOS_LATEX)/dict/open.dict
+STDDICTS ?= $(OPENDICT) $(JOS_LATEX)/dict/realsimple.dict
+LOCALDICT ?= $(KROOT)/d/local.dict
+DICTIONARY ?= $(OTHER_DICTS) $(LOCALDICT)
+
+# Build tools
+FILTERBBL ?= $(JOS_LATEX)/tools/filterbbl
+
+# Derived paths
+HTMLDIR ?= $(NAME)HTML
+LOCALINSTDIR ?= $(NAME)INST
+
+# Source files
+SRCS_NOMAKE = $(NAME).tex $(OTHER_SRCS) $(NAME).l2h
+SRCS = Makefile $(SRCS_NOMAKE)
+SYSSRC = $(BIBFILE)
+
+# Products
+PRODUCTS = $(NAME).pdf $(OTHER_PRODUCTS)
+
+# latex2html
+L2H ?= latex2html
+
+# ============================================================================
+# Phony Targets Declaration
+# ============================================================================
+
+.PHONY: all dvi dvio ps pso psoq eps epso gz gzip
+.PHONY: p pdf po pom pdfo qpdf qp qpdfo qpo pb bookpdf pbo
+.PHONY: products prod t touch tm touchmake qps qpso
+.PHONY: 2up 2upp 2uppdf pdf2up pdf2 all2up 2upall 2upo
+.PHONY: 4up 4upp 4uppdf pdf4up pdf4 all4up 4upall 4upo
+.PHONY: clean rclean hclean tclean distclean tc tco fresh freshq
+.PHONY: b bt bibtex index indextoc test ttest
+.PHONY: html h thtml htmlo ho htmldo
+.PHONY: htgzl htgz ascii
+.PHONY: install installh qih qinstallh qi inh installnh mi rmi mih
+.PHONY: ch copy-html-to-dest installsrc srctar
+.PHONY: il ilo ilw oq installo io ql qil
+.PHONY: unlink unprv linkdiffs localdict localdictf ld ldf
+.PHONY: print lpr p2up print2up print_2up p4up print4up print_4up printq pq
+.PHONY: help oldhelp
+# Naming: f=fresh, i=install, l=links, w=web, o=open
+.PHONY: fil filo filw fi fiw fio
+.PHONY: psclean pdfclean book book1
+.PHONY: pc post_install pst psto qpst qpsto prs
+.PHONY: epsfigs
+
+# ============================================================================
+# Default Target
+# ============================================================================
+
+$(NAME): $(NAME).pdf
+
+# ============================================================================
+# DVI Targets
+# ============================================================================
+
+dvi: $(NAME).dvi
+	@echo 'Now say make dvio'
+
+dvio do o: $(NAME).dvi
+	$(DVIV) $(NAME).dvi
+
+# ============================================================================
+# PostScript Targets
+# ============================================================================
+
+ps: $(NAME).ps
+	@echo 'Now say make pso'
+
+pso: $(NAME).ps
+	$(PSV) $(NAME).ps
+
+psoq:
+	$(PSV) $(NAME).ps
+
+# ============================================================================
+# EPS Targets
+# ============================================================================
+
+eps: $(NAME).eps
+	@echo 'Now say make epso'
+
+epso: $(NAME).eps
+	$(PSV) $(NAME).eps
+
+# ============================================================================
+# Gzip Target
+# ============================================================================
+
+gz gzip: $(NAME).ps.gz
+
+# ============================================================================
+# PDF Targets
+# ============================================================================
+
+p pdf: $(NAME).pdf
+
+po pom pdfo: $(NAME).pdf
+	$(PDFV) $(NAME).pdf
+
+qpdf qp: qps
+	$(PS2PDF) $(NAME).ps $(NAME)-TEMP.pdf
+	mv $(NAME)-TEMP.pdf $(NAME).pdf
+
+qpdfo qpo: qpdf
+	$(PDFV) $(NAME).pdf
+
+pb bookpdf: $(NAME).bookpdf
+	mv $(NAME).bookpdf $(NAME).pdf
+
+pbo: pb
+	$(PDFV) $(NAME).pdf
+
+# ============================================================================
+# Products Target
+# ============================================================================
+
+products prod: $(PRODUCTS)
+
+ll: $(PRODUCTS) .HTML-TIMESTAMP
+
+# ============================================================================
+# Touch Targets
+# ============================================================================
+
+t touch:
+	touch $(NAME).tex
+
+tm touchmake: touch
+	touch $(NAME).tex
+
+# ============================================================================
+# Quick Build (single pass, no bibliography)
+# ============================================================================
+
+qps:
+	$(LATEX) $(NAME)
+	$(DVIPS) -o $(NAME).ps $(NAME).dvi
+
+qpso: qps
+	$(PSV) $(NAME).ps
+
+# ============================================================================
+# Multi-up Printing (2-up, 4-up)
+# ============================================================================
+
+2up $(NAME)_2up.ps:: $(NAME).ps
+	-/bin/rm -f $(NAME)_2up.ps
+	psnup -pletter -n 2 $(NAME).ps > $(NAME)_2up.ps
+
+2upp 2uppdf pdf2up pdf2 $(NAME)_2up.pdf: $(NAME)_2up.ps
+	-/bin/rm -f $(NAME)_2up.pdf
+	$(PS2PDF) $(NAME)_2up.ps $(NAME)_2up.pdf
+
+all2up 2upall: 2up 2uppdf
+
+2upo: $(NAME)_2up.pdf
+	$(PDFV) $(NAME)_2up.pdf
+
+4up $(NAME)_4up.ps: $(NAME).ps
+	-/bin/rm -f $(NAME)_4up.ps
+	psnup -pletter -n 4 $(NAME).ps > $(NAME)_4up.ps
+
+4upp 4uppdf pdf4up pdf4 $(NAME)_4up.pdf: $(NAME)_4up.ps
+	-/bin/rm -f $(NAME)_4up.pdf
+	$(PS2PDF) $(NAME)_4up.ps $(NAME)_4up.pdf
+
+all4up 4upall: 4up 4uppdf
+
+4upo: $(NAME)_4up.pdf
+	$(PDFV) $(NAME)_4up.pdf
+
+# ============================================================================
+# Three-Pass LaTeX Build System
+# ============================================================================
+
+# Pass 1: Initial LaTeX run
+# We touch the index file on pass 1 in case it does not exist
+# Note: Use SRCS_NOMAKE (not SRCS) to avoid rebuilding when only Makefile changes
+# Comment: Makefile changes don't affect LaTeX output, so skip rebuild
+.LATEX-PASS1-TIMESTAMP: $(SRCS_NOMAKE) $(OTHER_DEPENDS) $(SYSSRC)
+	touch $(NAME).ind
+	touch $(NAME).idx
+	touch $(NAME).lof
+	touch $(NAME).lot
+	$(MAKE) epsfigs
+	$(LATEX) $(NAME)
+	touch .LATEX-PASS1-TIMESTAMP
+
+# BibTeX pass (ignore errors when there are no refs)
+b bt bibtex .BIBTEX-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(BIBFILE)
+	-$(BIBTEX) $(NAME)
+	@if [ -f $(NAME).bbl ]; then \
+		/bin/mv $(NAME).bbl $(NAME)0.bbl; \
+		$(FILTERBBL) $(NAME)0.bbl $(NAME).bbl; \
+	fi
+	touch .BIBTEX-TIMESTAMP
+
+# Pass 2: After bibliography
+.LATEX-PASS2-TIMESTAMP:: .BIBTEX-TIMESTAMP
+	$(LATEX) $(NAME)
+	touch .LATEX-PASS2-TIMESTAMP
+
+# Pass 3: Final pass (produces DVI)
+$(NAME).dvi .LATEX-PASS3-TIMESTAMP: .LATEX-PASS2-TIMESTAMP $(NAME).ind
+	$(LATEX) $(NAME)
+	touch .LATEX-PASS3-TIMESTAMP
+
+# ============================================================================
+# Clean Targets
+# ============================================================================
+
+clean::
+	-/bin/rm -f $(NAME).dvi $(NAME).log $(NAME)-TEMP.pdf octave-core octave-workspace
+	-/bin/rm -f $(NAME).blg $(NAME).fls *.LOG *~ $(OTHER_CLEANS)
+	-/bin/rm -f *.aux *.bbl *.toc *.lof *.lot *.inx *.idx *.ind *.ilg *.dictpc
+	-/bin/rm -f .LATEX-*-TIMESTAMP .BIBTEX-TIMESTAMP .HTML-TIMESTAMP .INSTALL-TIMESTAMP .LINK-TIMESTAMP
+	-/bin/rm -f *.noautolink.txt *.log $(NAME).out fig/*.out
+
+rclean:: clean
+	-/bin/rm -f $(PRODUCTS) $(NAME).ps $(NAME).eps $(NAME)_2up.* $(NAME)_4up.*
+
+hclean:: clean
+	-/bin/rm -rf $(HTMLDIR)
+	-/bin/rm -rf $(LOCALINSTDIR)
+	-/bin/rm -f .HTML-TIMESTAMP
+
+tclean distclean tc:: rclean hclean
+
+tco:: tclean pdf pdfo
+
+fresh: rclean .LATEX-PASS3-TIMESTAMP
+	@echo 'Now say make dvio, pso, pdfo, or epso'
+	@date
+
+# Quiet version (for when no errors are likely)
+freshq: rclean
+	-/bin/rm -f /tmp/latex1.log /tmp/latex2.log
+	$(LATEX) -interaction=nonstopmode $(NAME) > /tmp/latex1.log
+	touch .LATEX-PASS1-TIMESTAMP
+	-$(BIBTEX) $(NAME)
+	touch .BIBTEX-TIMESTAMP
+	$(LATEX) -interaction=nonstopmode $(NAME) > /tmp/latex2.log
+	touch .LATEX-PASS2-TIMESTAMP
+	@echo "[fresh] Last pass for $(NAME)"
+	$(MAKE) $(NAME).ind
+	$(LATEX) $(NAME)
+	touch .LATEX-PASS3-TIMESTAMP
+	@echo 'Now say make dvio, pso, pdfo, or epso'
+	@date
+
+# ============================================================================
+# Print Targets
+# ============================================================================
+
+print lpr: $(NAME).ps
+	$(PRINT) $(NAME).ps
+
+p2up print2up print_2up: $(NAME)_2up.ps
+	$(PRINT) $(NAME)_2up.ps
+
+p4up print4up print_4up: $(NAME)_4up.ps
+	$(PRINT) $(NAME)_4up.ps
+
+printq pq: $(NAME).ps /tmp/pq
+	cp $(NAME).ps /tmp/pq
+
+/tmp/pq:
+	mkdir /tmp/pq
+
+# ============================================================================
+# Installation Targets
+# ============================================================================
+
+# il = install + links
+il: .LINK-TIMESTAMP
+
+oq:
+	$(OHTML) file:$(DESTROOT)/$(NAME)/index.html
+
+# ilo = install + links + open
+ilo: .LINK-TIMESTAMP
+	$(OHTML) file:$(DESTROOT)/$(NAME)/index.html
+
+# io = install + open (no links)
+io: .INSTALL-TIMESTAMP
+	$(OHTML) file:$(DESTROOT)/$(NAME)/index.html
+
+.LINK-TIMESTAMP: .INSTALL-TIMESTAMP .LOCALDICT-TIMESTAMP
+	@for i in `cat .INSTALL-TIMESTAMP`/$(NAME)/*.html; do \
+	  ( if [ -L $$i ]; then \
+		echo Skipping link $$i; \
+	  else \
+	   echo /bin/mv -f $$i $$i.noautolink; \
+	   /bin/mv -f $$i $$i.noautolink; \
+	   echo "$(APPDICT) $(DICTIONARY) $$i.noautolink $$i || exit 1"; \
+	        $(APPDICT) $(DICTIONARY) $$i.noautolink $$i || exit 1; \
+	   echo /bin/rm -f $$i.noautolink; \
+	        /bin/rm -f $$i.noautolink; \
+	   fi ) \
+	done
+	touch .LINK-TIMESTAMP
+	touch $(DESTROOT)/$(NAME)/.LINKED
+	touch $(DESTROOT)/$(NAME)
+
+# ql/qil = quick install + links (skip build, just copy and link)
+ql qil: rmi $(DESTROOT)/$(NAME)
+	$(MAKE) copy-html-to-dest
+	-$(CP) $(CPOPTR) $(PRODUCTS) $(OTHER_GOODIES) $(DESTROOT)/$(NAME)
+	-/bin/rm -f .INSTALL-TIMESTAMP
+	@echo $(DESTROOT) > .INSTALL-TIMESTAMP
+	-(cd $(DESTROOT)/$(NAME); ln -s index.html Welcome.html)
+	-/bin/rm -f $(DESTROOT)/$(NAME)/.LINKED
+	-$(MAKE) post_install
+	touch .LINK-TIMESTAMP
+	touch $(DESTROOT)/$(NAME)/.LINKED
+
+unlink unprv:
+	/bin/rm -f $(DESTROOT)/$(NAME)/.LINKED
+
+# Install HTML only
+installh: $(DESTROOT)/$(NAME) .HTML-TIMESTAMP .LINK-TIMESTAMP
+	$(MAKE) copy-html-to-dest
+
+# Quick install of HTML only
+qih qinstallh: $(DESTROOT)/$(NAME)
+	$(MAKE) copy-html-to-dest
+
+# Quick install of all products EXCEPT HTML
+qi inh installnh: gz pdf $(DESTROOT)/$(NAME)
+	$(CP) $(CPOPTR) $(PRODUCTS) $(OTHER_GOODIES) $(DESTROOT)/$(NAME)
+
+mi:
+	$(MAKE) install DESTROOT=$(DESTROOT)
+
+rmi: $(DESTROOT)
+	-/bin/rm -rf $(DESTROOT)/$(NAME)
+
+mih:
+	$(MAKE) installh DESTROOT=$(DESTROOT)
+
+# Main installation
+install: .INSTALL-TIMESTAMP
+
+# Use order-only prerequisite (|) for dest dir to avoid rebuild when dir timestamp changes
+ch copy-html-to-dest: | $(DESTROOT)/$(NAME)
+	@echo "Copy $(HTMLDIR)/* to $(DESTROOT)/$(NAME)"
+	(cd $(HTMLDIR); tar -cf - .) | (cd $(DESTROOT)/$(NAME); tar -xpf -)
+
+.INSTALL-TIMESTAMP: $(PRODUCTS) $(OTHER_GOODIES) .HTML-TIMESTAMP | $(DESTROOT)/$(NAME)
+	$(MAKE) copy-html-to-dest
+	$(CP) $(CPOPTR) $(PRODUCTS) $(OTHER_GOODIES) $(DESTROOT)/$(NAME)
+	-/bin/rm -f .INSTALL-TIMESTAMP
+	@echo $(DESTROOT) > .INSTALL-TIMESTAMP
+	-(cd $(DESTROOT)/$(NAME); ln -s index.html Welcome.html)
+	-/bin/rm -f $(DESTROOT)/$(NAME)/.LINKED
+	-$(MAKE) post_install
+
+$(DESTROOT):
+	mkdir -p $@
+
+# Use order-only prerequisite (|) to avoid rebuild when parent dir timestamp changes
+$(DESTROOT)/$(NAME): | $(DESTROOT)
+	@if [ ! -e $(DESTROOT)/$(NAME) ]; then \
+		echo mkdir $(DESTROOT)/$(NAME); \
+		mkdir $(DESTROOT)/$(NAME); \
+	fi
+
+$(HTMLDIR) $(NAME)ASCII:
+	mkdir -p $@
+
+# ============================================================================
+# Index Handling
+# ============================================================================
+
+$(NAME).idx:
+	touch $(NAME).idx
+
+$(NAME).l2h:
+	touch $(NAME).l2h
+
+index $(NAME).ind: .LATEX-PASS1-TIMESTAMP
+	-$(MAKEINDEX) $(NAME).idx
+
+# Extra compile to get index into TOC
+indextoc: .LATEX-PASS3-TIMESTAMP
+	$(MAKE) qps
+
+# ============================================================================
+# Test Targets
+# ============================================================================
+
+test:
+	touch $(NAME).ind
+	$(LATEX) $(NAME)
+	touch .LATEX-PASS1-TIMESTAMP
+
+ttest: test
+	$(MAKE) test
+
+# ============================================================================
+# HTML Generation (via latex2html)
+# ============================================================================
+
+html h: .HTML-TIMESTAMP
+
+thtml:
+	touch $(NAME).aux
+	$(MAKE) html
+
+htmlo ho: .HTML-TIMESTAMP
+	$(OHTML) $(HTMLDIR)/$(NAME).html
+
+.HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h
+	mkdir -p $(HTMLDIR)
+	@echo "Using: $(L2H)"
+	time $(L2H) -dir $(HTMLDIR) -init_file $(NAME).l2h $(NAME).tex
+	@if grep -q 'Overfull \\vbox' $(HTMLDIR)/images.log 2>/dev/null; then \
+		echo "*** FATAL OVERFULL VBOX IN L2H $(HTMLDIR)/images.log ***"; exit 1; \
+	fi
+	touch .HTML-TIMESTAMP
+	@echo 'Now say make htmlo'
+
+# Tarfile of HTML directory (with links preserved)
+htgzl: .HTML-TIMESTAMP
+	$(TAR) -cvf - $(HTMLDIR) | gzip > $(HTMLDIR).tgz
+
+# Tarfile of HTML directory (breaking links)
+htgz: .HTML-TIMESTAMP
+	$(TAR) -cvhf - $(HTMLDIR) | gzip > $(HTMLDIR).tgz
+
+# ============================================================================
+# Source Archiving
+# ============================================================================
+
+installsrc: $(SRCS)
+	cp -rp $(SRCS) $(SRCROOT)
+	-cp -rp eps $(SRCROOT)
+	-cp -rp fig $(SRCROOT)
+	-cp -rp matlab $(SRCROOT)
+
+srctar:
+	-/bin/mv $(NAME)_src.tgz $(NAME)_src_prv.tgz
+	/bin/rm -rf /tmp/$(NAME)_src
+	mkdir /tmp/$(NAME)_src
+	cp -rp $(SRCS) /tmp/$(NAME)_src
+	(cd /tmp; tar cvzf $(NAME)_src.tgz $(NAME)_src)
+	mv /tmp/$(NAME)_src.tgz .
+
+# ============================================================================
+# PS/Gzip Targets
+# ============================================================================
+
+$(NAME).ps.gz: $(NAME).ps
+	cp -p $(NAME).ps $(NAME).eps
+	gzip -f $(NAME).ps
+	mv $(NAME).eps $(NAME).ps
+
+$(NAME)_2up.ps.gz: $(NAME)_2up.ps
+	cp -p $(NAME)_2up.ps $(NAME)_2up.eps
+	gzip -f $(NAME)_2up.ps
+	mv $(NAME)_2up.eps $(NAME)_2up.ps
+
+# ============================================================================
+# Convenience Targets
+# Naming: f=fresh (clean first), i=install, l=links, w=web, o=open
+# ============================================================================
+
+# fil = fresh + install + links
+fil: rmi tclean il
+
+# filw = fresh + install + links + web
+filw: fil
+	$(WEBUPD) $(NAME)
+
+# filo = fresh + install + links + open
+filo: fil oq
+
+# ilw = install + links + web
+ilw: il
+	$(WEBUPD) $(NAME)
+
+# fi = fresh + install (no links)
+fi: rmi distclean install
+
+# fiw = fresh + install + web (no links)
+fiw: fi
+	$(WEBUPD) $(NAME)
+
+# fio = fresh + install + open (no links)
+fio: fi oq
+
+# ============================================================================
+# Local Dictionary (for automatic linking)
+# ============================================================================
+
+localdict ld: .LOCALDICT-TIMESTAMP
+
+localdictf ldf:
+	-/bin/rm -f .LOCALDICT-TIMESTAMP
+	$(MAKE) localdict
+
+.LOCALDICT-TIMESTAMP: $(STDDICTS)
+	-/bin/rm -f $(LOCALDICT)
+	$(LOCALDICTPROG) $(STDDICTS) $(LOCALDICT)
+	touch .LOCALDICT-TIMESTAMP
+
+# ============================================================================
+# Cleaning (continued)
+# ============================================================================
+
+psclean:
+	-/bin/rm -f $(NAME).ps $(NAME).ps.gz
+
+pdfclean:
+	-/bin/rm -f $(NAME).pdf
+
+# Cropped PDF
+pc $(NAME)c.pdf: $(NAME).pdf
+	-/bin/rm -f $(NAME)c.pdf
+	pdfcrop --margins 10 --verbose $(NAME).pdf $(NAME)c.pdf
+
+# Post install (can be overridden in main Makefile)
+post_install::
+	@echo 'post_install complete' > /dev/null
+
+pst: ps
+	/bin/cp -p -f $(NAME).ps /tmp
+
+psto: pst
+	$(PSV) /tmp/$(NAME).ps
+
+qpst:
+	/bin/cp -p -f $(NAME).ps /tmp
+
+qpsto: qpst
+	$(PSV) /tmp/$(NAME).ps
+
+# ============================================================================
+# Booklet Printing
+# ============================================================================
+
+book1 $(NAME)_book1.ps: $(NAME).ps
+	psnup -pletter -r -n 2 $(NAME).ps > $(NAME)_2upr.ps
+	psbook $(NAME)_2upr.ps $(NAME)_book.ps
+
+book $(NAME)_book.ps: $(NAME).ps
+	psbook $(NAME).ps $(NAME)_tmp.ps
+	psnup -pletter -l -n 2 $(NAME)_tmp.ps > $(NAME)_book.ps
+	/bin/rm -f $(NAME)_tmp.ps
+
+# ============================================================================
+# Suffix Rules
+# ============================================================================
+
+.SUFFIXES: .tex .aux .dvi .eps .ps .epsi .pdf .bbl .gz .png .pnm .fig .pstex .bookpdf .pn .jpg
+
+.ps.eps: $*.ps
+	ps2epsi $< $@
+
+.ps.gz: $*.ps
+	gzip $*.ps
+
+# Note: $(NAME).tex depending on OTHER_DEPENDS is handled via .LATEX-PASS1-TIMESTAMP
+
+.tex.dvi: $*.tex $(SYSSRC) $(OTHER_DEPENDS)
+	$(LATEX) $*
+	touch .LATEX-PASS1-TIMESTAMP
+
+.tex.aux: $*.tex $(SYSSRC)
+	$(LATEX) $*
+
+.tex.bbl: $*.tex $(SYSSRC)
+	$(BIBTEX) $*
+
+.dvi.ps:
+	-$(DVIPS) -o $@ $<
+
+.dvi.eps:
+	-$(DVIPS) -o $@ $<
+
+.eps.epsi: eps/$*.eps
+	(cd eps; ln -s $*.eps $*.epsi)
+
+.ps.pdf: $*.ps
+	$(PS2PDF) $*.ps $*-TEMP.pdf
+	/bin/mv -f $*-TEMP.pdf $*.pdf
+
+.ps.bookpdf: $*.ps
+	$(PS2PDFBOOKS) $*.ps $*.bookpdf
+
+.png.pnm:
+	pngtopnm $< > $@
+
+.pnm.png:
+	pnmtopng $< > $@
+
+.jpg.pn:
+	jpegtopnm < $< > $@
+
+.pn.eps:
+	pnmtops < $< > $@
+
+# ============================================================================
+# EPS Figures from FIG files
+# ============================================================================
+
+FIGTEX2EPS ?= figtex2eps
+
+figs := $(wildcard fig/*.fig)
+epss := $(figs:fig/%fig=eps/%eps)
+epsfigs: $(epss)
+
+eps/%.eps: fig/%.fig
+	(cd ./fig; $(FIGTEX2EPS) $(<:fig/%=%))
+	mv $(<:%.fig=%.eps) eps
+
+# ============================================================================
+# Help
+# ============================================================================
+
+help:
+	@echo 'LaTeX Build System - Common Targets:'
+	@echo ''
+	@echo 'Building:'
+	@echo '  make pdf (or p)     Build PDF via DVI and PS'
+	@echo '  make po             Build and open PDF'
+	@echo '  make pb             Build print-ready PDF (grayscale, embedded fonts)'
+	@echo '  make qps            Quick single-pass build (no bibliography/index)'
+	@echo '  make fresh          Clean rebuild from scratch'
+	@echo ''
+	@echo 'Output formats:'
+	@echo '  make dvi            Build DVI only'
+	@echo '  make ps             Build PostScript'
+	@echo '  make html           Build HTML version'
+	@echo ''
+	@echo 'Viewing:'
+	@echo '  make dvio           View DVI'
+	@echo '  make pso            View PostScript'
+	@echo '  make pdfo           View PDF'
+	@echo '  make htmlo          View HTML'
+	@echo ''
+	@echo 'Cleaning:'
+	@echo '  make clean          Remove intermediate files'
+	@echo '  make rclean         Remove outputs too'
+	@echo '  make tclean         Total clean (including HTML)'
+	@echo ''
+	@echo 'Installation (f=fresh, i=install, l=links, w=web, o=open):'
+	@echo '  make install        Install HTML + products (no links)'
+	@echo '  make il             Install + links'
+	@echo '  make ilw            Install + links + web upload'
+	@echo '  make fil            Fresh + install + links'
+	@echo '  make filw           Fresh + install + links + web upload'
+	@echo ''
+	@echo 'Misc:'
+	@echo '  make index          Generate index'
+	@echo '  make 2up            Two-up PostScript'
+	@echo '  make tsa            Timestamp analysis (predict what rebuilds)'
+	@echo '  make help-course    Course-development help'
+	@echo '  make help           This help'

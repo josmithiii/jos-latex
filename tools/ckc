@@ -1,0 +1,43 @@
+#!/usr/bin/perl -W
+use strict;
+
+use Env qw(PATH HOME);
+
+my $nosamba = 1;
+
+print "PATH = $PATH\n";
+print "HOME = $HOME\n";
+
+my $foo = `pwd`;
+print "cwd = $foo\n";
+
+die "*** CANNOT BUILD AS ROOT" if ($HOME =~ m/root/);
+
+if ($foo =~ m!/user/j/jos/!) {
+    print "Looks like we're at CCRMA\n";
+    if (not -f ".CCRMA-TIMESTAMP" ) {
+	print "Need to 'make ccrma'\n";
+	system("make ccrma");
+	system("touch .CCRMA-TIMESTAMP");
+    } else {
+	print "No need to 'make ccrma'\n";
+    }
+} else {
+    print "Looks like we're at home\n";
+}
+
+if (0) { # obsolete stuff
+    my $indir = '/c/ps2pdf/in';
+    if (not -f $indir) {
+	print "Need to run smbmount (username = Julius):\n";
+	if ($nosamba) {
+	    print "(skipped)\n";
+	} else {
+#	    system("smbmount //jos800/C$ /c -o username=administrator");
+#	    system("smbmount //jos800/C$ /c -o username=Julius");
+	    system("smbmount //jos800/ps2pdf /c/ps2pdf -o username=Julius");
+	}
+    } else {
+	print("smbmount has been run\n");
+    }
+}

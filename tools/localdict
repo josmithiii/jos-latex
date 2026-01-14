@@ -1,0 +1,26 @@
+#!/usr/bin/perl -w
+#!C:/Local/perl/bin/perl.exe -w
+#
+# localdict: Create one dictionary file from one or more input dictionaries,
+# doing any desired translations along the way.
+#
+# EXAMPLE: localdict /k/d/open.dict /k/d/j.dict /k/d/local.dict
+
+use strict;
+my $debug = 1;
+my $outname;
+sub usage { die "USAGE: $0 infile1.dict [infile2.dict ...] outfile.dict\n"; }
+$outname = pop or usage;
+if (-e $outname) { die "Output file $outname EXISTS"; }
+open(STDOUT, ">$outname") or die "Can't open '$outname' : $!\n";
+# @ARGV now contains only dictionary file(s)
+print STDERR "outfile = $outname\n";
+print STDERR "Reading dictionary file(s) " . join(', ',@ARGV) . "\n";
+
+while(<>) {
+#    s&http://www-ccrma.stanford.edu/~jos/&../&ig;
+    s&www-ccrma&ccrma&ig;
+    s&ccrma-www&ccrma&ig;
+    s&\.\./&http://ccrma.stanford.edu/~jos/&ig;
+    print;
+}

@@ -1,0 +1,33 @@
+#!/usr/bin/perl -w
+#!E:/Local/perl/bin/perl.exe -w
+#
+# filterbbl: Filter a .bbl file  to remove quoted newlines
+#
+# EXAMPLE: filterbbl oldfile.bbl newfile.bbl
+#
+# Made from filtermail 2/13/06/jos
+
+use strict;
+my $outname;
+sub usage { die "USAGE: $0 infile outfile\n"; }
+unless (@ARGV == 2) { usage };
+$outname = pop;
+open(STDOUT, ">$outname") or die "Can't open '$outname' : $!\n";
+print STDERR "filterbbl: reading bbl file '$ARGV[0]'\n";
+print STDERR "outfile = $outname\n";
+
+my $linebuf = "";
+
+while(<>) {
+    chomp;
+    if (m/%$/) {
+	chop;
+	$linebuf .= $_;
+    } else {
+	if ($linebuf) {
+	    print $linebuf;
+	    $linebuf = "";
+	}
+	print $_ . "\n";
+    }
+}
