@@ -1,0 +1,134 @@
+%\documentclass[10pt,draft]{book}
+\documentclass[10pt]{book}
+%!!! NORMAL SETTING IS 10-POINT:
+%\documentclass[18pt]{book}
+%\documentclass[10pt,draft]{book}
+% FONT CHANGED TO TIMES ON 8/1/04:
+% NOTE: 1/12/05: Try /usr/bin/pslatex
+% =====================================
+% 8/15/05: Recommendation from
+% http://www.tug.org/TeXnik/mainFAQ.cgi?file=hyperref/hyperref
+%\usepackage{mathptmx}% instead of package times
+%\usepackage[scaled=0.9]{helvet} % or [scaled=0.92], if you like
+%\usepackage{courier}
+% However, I prefer the defaults, really.
+% =====================================
+%begin{latexonly}
+%\usepackage{aaai}
+%\usepackage{lmodern} % NEW in tetex 3.0 - small-caps and italics not working
+%\usepackage{times} % ligature spacing and delimiter problems w WXP print
+%\usepackage{mathtime} % see stdmath.tex: must be after math bold is defined
+%!!!!USED FOR 2004 DRAFT VERSIONS\usepackage{mathptm} % seems to work
+%!!!!USED FOR 2004 DRAFT VERSIONS\renewcommand\ttdefault{cmtt} % override 'pcr' used by times
+%\usepackage{lucidabr} % dvipd needs lbd.pfb first
+%same: \usepackage{ntimes}
+%end{latexonly}
+
+%\usepackage{bookman} - large - ``novel'' style
+%\usepackage{chancery} - all italics!
+%\usepackage{charter} - like Helvetica
+%\usepackage{helvet}
+%\usepackage{newcent} - rather bold, like bookman
+%\usepackage{palatino} - tilde too high
+% HACK: Delete 'draft' below for final pass:
+%\documentclass[11pt,draft]{book}
+%\documentclass[natbib]{book}
+%\usepackage[square,comma]{natbib}
+%invoked in stdcommon: \usepackage{makeidx}
+
+\input{jos-latex/styles/stdcommon.tex}
+%\input{stdcommon.tex}
+
+% FIXME: SET UP \lhead, \rhead
+
+\newcommand{\inxx}[1]{\index{#1}} % Used in wgtintro.tex (kluwer macro)
+
+% ----------------- PAGE DIMENSIONS AND LAYOUT -------------
+
+%\input{stdpagedimen.tex}
+% For DeHart's Printing:
+
+%begin{latexonly}
+% On 6/27/2007 I tried to switch to geometry.sty because it was said to 
+% pass dimensions on to the PDF file.  However, 
+%Width ok, height about 1 inch over: \usepackage[paperwidth=6in,paperheight=9in,left=0.9in,top=0.6in,right=0.6in,bottom=0.3in]{geometry}
+%RWS uses (sizes PDF pages correctly using pdflatex): \usepackage{geometry}
+\usepackage{vmargin}
+%no effect:
+%\setlength{\voffset}{-1truein} % cancel the built-in ``driver margin''
+%\setlength{\hoffset}{-1truein} % cancel the built-in ``driver margin''
+% 12% cheaper than 6x9 at DeHart's:
+%\setpapersize{custom}{6in}{8.75in}
+% Used at pubgraphics Aug. 2006 and also at BookSurge 2007:
+%!!! NORMAL SETTING !!!: 
+%!!! 
+\setpapersize{custom}{6in}{9in}
+% New trial settings: 
+% CreateSpace can't: \setpapersize{custom}{7in}{9in}
+% CreateSpace can: \setpapersize{custom}{7in}{10in}
+% Note: Mitra page textwidth = 5.76" which I think is too wide for easy reading
+%       (too hard to "carriage return" to beginning of next line)
+%       7in wide - 0.9in (left) - 0.6in (right) => 5.5" textwidth
+%       Maybe I want 5" or less textwidth in a 7" width.
+%!!! HACK FOR EFFICIENT PAPER USAGE IN PRINTOUTS !!!:
+%\setpapersize{custom}{8.5in}{11in} \providecommand{\sixbynineclearpage}{}
+%RWS uses(6x9): \setmargins{.75in}{.75in}{4.5in}{7.6in}{0in}{0in}{0.2in}{0.4in}
+% OnScreen PDF: \setpapersize{custom}{6in}{5.33in}
+% HACK TEST
+%\setpapersize{custom}{7in}{9in}
+%\setmarginsrb{leftmargin}{topmargin}{rightmargin}{bottommargin}%
+%		     {headheight}{headsep}{footheight}{footskip}
+% 0.6" margins, with 0.3" allowed for binding:
+%\setmargrb{0.9in}{0.6in}{0.6in}{0.6in} % bottom margin comes out 0.9"
+%\setmargrb{0.9in}{0.6in}{0.6in}{0.5in} % identical to 0.6!
+%\setmargrb{0.9in}{0.6in}{0.6in}{0.4in} % now we get 0.7"
+%To 1/2/2012: \setmargrb{0.9in}{0.6in}{0.6in}{0.3in} % now we get 0.7"
+%CreateSpace Book Reviewer says need at least 1" inside margin ("gutter"):
+\setmargrb{1.1in}{0.6in}{0.4in}{0.3in}
+%CreateSpace also wants at least 0.25" on outside => have 0.15" for spill
+
+%end{latexonly}
+
+\providecommand{\sixbynineclearpage}{\clearpage} % disable for 8.5 x 11 pages
+%\newcommand{\sixbynineclearpage}{}
+%\input{../stdbigbookhdr.tex} % stdbigbookhdr.tex
+%\newcommand{\sixbynineclearpage}{} % disable for 8.5 x 11 pages
+
+% FOR DOUBLE SPACING: \renewcommand{\baselinestretch}{2}
+% \setlength{\textfloatsep}{.1in}
+
+% PARAGRAPH LAYOUT
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+% \parindent=0mm
+% \parskip=10pt plus3pt minus 2pt
+
+% NEW 1/24/02
+%begin{latexonly}
+%\begin{comment}
+\usepackage{fancyheadings} % must appear after changes to \textwidth
+\pagestyle{fancy}
+\setlength{\headrulewidth}{0pt}
+\setlength{\footrulewidth}{0pt} % the default, actually
+\lhead[\rm Page \thepage]{\leftmark}  % Usage: \lhead[LH-even]{LH-odd}
+\rhead[\rightmark]{\rm Page \thepage}
+\cfoot{} % Suppress page numbering at bottom
+%\end{comment}
+% was lfoot:
+%!!!HACKED UNTIL FINAL DRAFT ON 7/16/03: 
+%\setlength{\footrulewidth}{0.4pt}
+%\cfoot{{\small\runningcitation}}
+%Was here 10/3/02 -- see ``Moved here'' above
+%\setlength{\textwidth}{\booktextwidth} % seems to be needed again
+%\setlength{\textheight}{\booktextheight}
+%end{latexonly}
+
+%begin{latexonly}
+\input{jos-latex/styles/stdfigs-latex.tex}
+% stdfigs-latex.tex
+%end{latexonly}
+
+\begin{htmlonly}
+\input{jos-latex/styles/stdfigs-html.tex}
+% stdfigs-html.tex
+\end{htmlonly}

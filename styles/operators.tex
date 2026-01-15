@@ -1,0 +1,108 @@
+%\newcommand{\oper}[1]{\protect\mbox{#1}}
+%\newcommand{\oper}[1]{\protect\hbox{#1}}
+%\newcommand{\oper}[1]{\protect\mbox{{\tt #1}}}
+%to 7/28/01: \newcommand{\oper}[1]{\protect\mbox{{\sc #1}}}
+%the ``protect'' was being imaged as a blank glyph by l2h
+%\newcommand{\oper}[1]{\mbox{{\sc #1}}} %no more:
+%2/2/02: operators in captions not being recognized by l2h:
+%\newcommand{\oper}[1]{{\sc #1}}
+%2/2/02: but \sc is invalid in math mode. Try what should be same as mbox:
+\newcommand{\oper}[1]{\hbox{\sc #1}}
+%2/2/02: Now captions are recognized and \sc is working!  How does mbox differ?
+%4/16/06: Changed mbox to hbox, fixing last two HTML figure-caption errors
+
+\newcommand{\Op}{\oper{Op}}
+
+\newcommand{\Sinc}{\oper{Sinc}}
+\newcommand{\asinc}{\hbox{asinc}} % prefer all-lowercase roman, like sin, cos
+%defined: \newcommand{\sinc}{\oper{sinc}}
+
+\newcommand{\shift}{\oper{Shift}}
+\newcommand{\dec}{\oper{Dec}}
+\providecommand{\dB}{\mbox{dB}} % small-caps looks bad
+
+%\newcommand{\select}{\oper{Select}}
+%\newcommand{\Select}{\oper{Select}}
+% What do you think?
+\newcommand{\select}{\oper{Downsample}}
+\newcommand{\Select}{\oper{Downsample}}
+\newcommand{\lowpass}{\oper{Lowpass}}
+
+\newcommand{\alias}{\oper{Alias}}
+\newcommand{\zeropad}{\oper{ZeroPad}}
+\newcommand{\flip}{\oper{Flip}}
+% \floortext defined in stdmath.tex:
+\newcommand{\floortextop}{\oper{floor}}
+
+%defined as fdot in wgtmac.tex:
+%\newcommand{\ft}{\oper{FT}}
+%\newcommand{\ift}{\oper{IFT}}
+
+\newcommand{\dft}{\oper{DFT}}
+
+\newcommand{\idft}{\oper{IDFT}}
+
+\newcommand{\dtft}{\oper{DTFT}}
+
+\newcommand{\idtft}{\oper{IDTFT}}
+
+\newcommand{\fft}{\oper{FFT}}
+
+\newcommand{\ifft}{\oper{IFFT}}
+
+\newcommand{\sample}{\oper{Sample}}
+
+\newcommand{\env}{\oper{Envelope}}
+
+\newcommand{\window}{\oper{Window}}
+
+\newcommand{\nyq}{\oper{Nyquist}}
+\newcommand{\Nyquist}{\oper{Nyquist}}
+
+\newcommand{\cola}{\oper{Cola}}
+
+\newcommand{\str}{\oper{Stretch}}
+
+\newcommand{\scale}{\oper{Scale}}
+\newcommand{\Scale}{\oper{Scale}}
+
+\newcommand{\rpt}{\oper{Repeat}}
+
+% Brought in from /k/l/r320/reader.mac on 1/5/01:
+\newcommand{\DFT}{\oper{DFT}}
+\newcommand{\IDFT}{\oper{IDFT}}
+\newcommand{\FT}{\oper{FT}}
+\newcommand{\IFT}{\oper{IFT}}
+\newcommand{\DTFT}{\oper{DTFT}}
+\newcommand{\IDTFT}{\oper{IDTFT}}
+\newcommand{\Conv}{\oper{Conv}}
+\newcommand{\Corr}{\oper{Corr}}
+\newcommand{\Acorr}{\oper{Acorr}}
+\newcommand{\Shift}{\oper{Shift}}
+\newcommand{\Stretch}{\oper{Stretch}}
+\newcommand{\Repeat}{\oper{Repeat}}
+\newcommand{\ZeroPad}{\oper{ZeroPad}}
+\newcommand{\CZeroPad}{\oper{CausalZeroPad}}
+\newcommand{\Alias}{\oper{Alias}}
+\newcommand{\Dec}{\oper{Downsample}}
+\newcommand{\Flip}{\oper{Flip}}
+\newcommand{\Energy}{\oper{E}}
+\newcommand{\Interp}{\oper{Interp}}
+\newcommand{\PInterp}{\oper{PerInterp}}
+\newcommand{\RectWin}{\oper{Chop}}
+\newcommand{\Chop}{\oper{Chop}}
+
+% From /k/l/lecs/Compression/ on 1/5/00:
+\newcommand{\DCT}{\oper{DCT}}
+\newcommand{\DST}{\oper{DST}}
+\newcommand{\FFT}{\oper{FFT}}
+\newcommand{\IFFT}{\oper{IFFT}}
+\newcommand{\STFT}{\oper{STFT}}
+
+%r320:
+\newcommand{\wrap}{\oper{wrap}}
+
+%amsmath defines \mod, but it has screwy spacing
+\newcommand{\mymod}[1]{\oper{mod}\ #1}
+
+\newcommand{\Sample}{\oper{Sample}}
