@@ -1,0 +1,1048 @@
+% YOU NEED ALSO 
+% \input{../stdmath.tex}
+% \input{stdmath.tex}
+
+% \input{icmc91.macros}
+\newcommand{\wi}{wave impedance}
+\newcommand{\wis}{\wi\qsp}
+
+%\newcommand{\wgtFigScl}{0.8} % good for 8.5 x 11
+%\newcommand{\wgtFigScl}{0.7} % good for 6x9 format
+\newcommand{\wgtFigScl}{0.9} % tried for 2005 draft
+
+%\newcommand{\tplus}{{\tiny+}}
+%\newcommand{\tminus}{{\tiny-}}
+\newcommand{\tplus}{{+}}
+\newcommand{\tminus}{{-}}
+\newcommand{\tpm}{{\pm}}
+%\newcommand{\etm}{e^\tminus} % electric charge
+\newcommand{\etm}{e} % electric charge
+
+% Lumped
+
+\newcommand{\Fa}{F_a}    % analog force laplace transform
+\newcommand{\Fd}{F_d}    % digital force laplace transform
+\newcommand{\fd}{f_d}    % digital force laplace transform
+\newcommand{\Fp}{F^\tplus}
+\newcommand{\Fm}{F^\tminus}
+
+% \newcommand{\V}{V}	% not used yet
+\newcommand{\Vb}{V_b}
+\newcommand{\Va}{V_a}    % analog velocity laplace transform
+\newcommand{\Vd}{V_d}    % digital velocity laplace transform
+\newcommand{\vd}{v_d}    % digital velocity laplace transform
+
+\newcommand{\blt}{bilinear transform}
+\newcommand{\blts}{bilinear transform\qsp}
+
+% fingerhole.tex
+\newcommand{\To}{T} 
+\newcommand{\So}{S}
+\newcommand{\Lo}{L}
+\newcommand{\Ao}{A}
+\newcommand{\Popo}{P_1^\tplus}
+\newcommand{\Pomo}{P_1^\tminus}
+\newcommand{\Ptpo}{P_2^\tplus}
+\newcommand{\Ptmo}{P_2^\tminus}
+
+\newcommand{\Radius}{r}  % radius of a sphere (delay-echo.tex)
+
+\newcommand{\R}{R} % pole radius
+\newcommand{\Ri}{\R_i} 
+\newcommand{\Rimo}{\R_{i-1}} 
+\newcommand{\sR}{\sqrt{R}}
+\newcommand{\Rb}{R_b}            % Bridge, Bore, Bow impedance (friction curve)
+\newcommand{\Rbt}{\tilde{R}_b}  % Normalized bridge impedance (twocoupledstrings.tex)
+\newcommand{\Rbh}{\hat R_b}
+\newcommand{\Rz}{R_0}
+\newcommand{\Ro}{R_1}
+\newcommand{\Rm}{R_m}            % reed aperture impedance
+%\newcommand{\RR}{\real} % Reflectance
+% Replaced by \Rho and \Rhot:
+%\newcommand{\RR}{S}            % New reflectance (Schur functions) cont. time
+%\newcommand{\RRt}{\tilde{\RR}} % New reflectance (Schur functions) discr. time
+\newcommand{\Rs}{\R(s)}
+\newcommand{\Rc}{\R}
+\newcommand{\Rcs}{\Rc(s)}
+\newcommand{\Rp}{\R^\tplus}
+\newcommand{\Rpm}{\R^\pm}
+\newcommand{\Rpms}{\Rpm(s)}
+\newcommand{\Rcp}{\Rc^\tplus}
+\newcommand{\Rcm}{\Rc^\tminus}
+\newcommand{\Rcpm}{\Rc^\pm}
+\newcommand{\Rcps}{\Rcp(s)}
+\newcommand{\Rcms}{\Rcm(s)}
+\newcommand{\Rcpms}{\Rcpm(s)}
+
+% 421/VariableChoice/
+\newcommand{\Rtube}{\R_{\hbox{\tiny T}}}
+
+\newcommand{\rc}{k} % reflection coefficient
+\newcommand{\rci}{\rc_i} % i'th reflection coefficient
+
+\newcommand{\ai}{acoustic tube impedance}
+\newcommand{\ais}{\ai\qsp}
+\newcommand{\Ra}{R_A}
+\newcommand{\Rapm}{\Ra^\pm}
+\newcommand{\Ras}{\Ra(s)}
+\newcommand{\Rapms}{\Rapm(s)}
+\newcommand{\Rap}{\Ra^\tplus}
+\newcommand{\Raps}{\Rap(s)}
+\newcommand{\Ram}{\Ra^\tminus}
+\newcommand{\Rams}{\Ram(s)}
+
+% Distributed
+
+\newcommand{\yr}{y_r}
+\newcommand{\yl}{y_l}
+
+\newcommand{\gr}{g_r}
+\newcommand{\gl}{g_l}
+
+\newcommand{\yrt}{\yt_r}
+\newcommand{\ylt}{\yt_l}
+
+\newcommand{\yrx}{y'_r}
+\newcommand{\ylx}{y'_l}
+
+\newcommand{\yrxx}{y''_r}
+\newcommand{\ylxx}{y''_l}
+
+\newcommand{\yrtt}{\ytt_r}
+\newcommand{\yltt}{\ytt_l}
+\newcommand{\yrttt}{\yttt_r}
+\newcommand{\yttttt}{{\partial^5 y/\partial t^5}}
+\newcommand{\yrttttt}{{\yttttt_r}}
+
+\newcommand{\yp}{y^\tplus}
+\newcommand{\ym}{y^\tminus}
+\newcommand{\ypm}{y^\pm}
+\newcommand{\ypmt}{\dot y^\pm}
+\newcommand{\ypt}{\dot y^\tplus}
+\newcommand{\ymt}{\dot y^\tminus}
+\newcommand{\ypmtt}{\ddot y^\pm}
+
+% For pasp/fig/wglossy.fig and associated text in book and research paper (two different cases)
+\newcommand{\mndx}{m} % me
+%\newcommand{mndx}{k} % Matti
+\newcommand{\ynm}{y_{n,\mndx}} % or maybe y(nT,mX)
+\newcommand{\yfnm}{y^f_{n,\mndx}} % or maybe y(nT,mX)
+\newcommand{\yffnm}{y^{ff}_{n,\mndx}} % or maybe y(nT,mX)
+\newcommand{\ynpom}{y_{n+1,\mndx}}
+\newcommand{\ynpompo}{y_{n+1,\mndx+1}}
+\newcommand{\ynmom}{y_{n-1,\mndx}}
+\newcommand{\yffnmom}{y^{ff}_{n-1,\mndx}}
+\newcommand{\ynmmo}{y_{n,\mndx-1}}
+\newcommand{\yfnmmo}{y^f_{n,\mndx-1}}
+\newcommand{\ynmpo}{y_{n,\mndx+1}}
+\newcommand{\ynmompt}{y_{n-1,\mndx+2}}
+\newcommand{\ynmompf}{y_{n-1,\mndx+4}}
+\newcommand{\ynmpth}{y_{n,\mndx+3}}
+\newcommand{\ynmpfi}{y_{n,\mndx+5}}
+\newcommand{\yfnmpo}{y^f_{n,\mndx+1}}
+
+\newcommand{\ypnm}{\yp_{n,\mndx}}
+\newcommand{\ypnmmo}{\yp_{n,\mndx-1}}
+\newcommand{\ypnmpo}{\yp_{n,\mndx+1}}
+\newcommand{\ypnpom}{\yp_{n+1,\mndx}}
+\newcommand{\ypnmom}{\yp_{n-1,\mndx}}
+\newcommand{\ypnmpth}{\yp_{n,\mndx+3}}
+\newcommand{\ypnmpfi}{\yp_{n,\mndx+5}}
+
+\newcommand{\ymnm}{\ym_{n,\mndx}}
+\newcommand{\ymnmmo}{\ym_{n,\mndx-1}}
+\newcommand{\ymnmpo}{\ym_{n,\mndx+1}}
+\newcommand{\ymnpom}{\ym_{n+1,\mndx}}
+\newcommand{\ymnmom}{\ym_{n-1,\mndx}}
+\newcommand{\ymnmpth}{\ym_{n,\mndx+3}}
+\newcommand{\ymnmpfi}{\ym_{n,\mndx+5}}
+
+\newcommand{\yfull}{y(t,x)}
+
+\newcommand{\y}{y}
+\newcommand{\yx}{y'}
+\newcommand{\yxx}{y''}
+\newcommand{\yxxxx}{y''''}
+\newcommand{\yt}{{\dot y}}
+\newcommand{\ytt}{{\ddot y}}
+\newcommand{\yttx}{{\ddot y'}}
+\newcommand{\yxxt}{{\dot y''}}
+\newcommand{\yttt}{{\dddot y}}
+%\newcommand{\yttt}{\partial^3 y/\partial t^3}
+%\newcommand{\yttttt}{\partial^5 y/\partial t^5}
+
+\newcommand{\Yp}{Y^\tplus}
+\newcommand{\Ym}{Y^\tminus}
+\newcommand{\Yx}{Y'}
+
+\newcommand{\ypx}{y'^\tplus}
+\newcommand{\ymx}{y'^\tminus}
+\newcommand{\ypmx}{y'^\pm}
+\newcommand{\ypmxx}{y''^\pm}
+
+% CLA:
+% \newcommand{\tdelta}{{\tiny \Delta}}
+\newcommand{\tdelta}{{\Delta}}
+\newcommand{\Pm}{p_m}          % Mouth pressure
+\newcommand{\Pb}{p_b}          % Bore pressure
+\newcommand{\Pd}{p_\tdelta}          % Pressure drop bore-to-mouth
+\newcommand{\Phd}{{\hat p}_\tdelta} 
+% \newcommand{\Pbp}{\Pb^{\null^\tplus}}     % Left-going
+\newcommand{\Pbp}{\Pb^\tplus}       % Left-going
+\newcommand{\Pbm}{\Pb^\tminus}       % Right-going
+
+\newcommand{\pr}{pressure}
+
+\newcommand{\Pds}{\Pd^\ast}
+\newcommand{\Phds}{\Phd^\ast}
+% \newcommand{\Pdp}{\Pd^{\null^\tplus}}
+\newcommand{\Pdp}{\Pd^\tplus}
+% \newcommand{\Pdc}{\Pd^{\tiny c}}
+\newcommand{\Pdc}{\Pd^c}
+
+\newcommand{\h}{h}               % Half-pressure
+\newcommand{\hsubm}{\h_m}        % Mouth half-pressure
+\newcommand{\hb}{\h_b}           % Bore half-pressure
+\newcommand{\Hb}{H_b}           % Bore half-pressure
+\newcommand{\hbp}{\hb^\tplus}     % Left-going
+\newcommand{\hbm}{\hb^\tminus}     % Right-going
+\newcommand{\hd}{\h_\tdelta}          % half-pressure drop bore-to-mouth
+\newcommand{\hdp}{\hd^\tplus}
+\newcommand{\hdc}{\hd^c}
+
+\newcommand{\rhot}{\hat\rho}       % \rhot(\Pdp) = \r(\Pd(\Pdp))
+
+% From icmc91.macros (conical waveguides):
+% \def\r{\rho}
+%\newcommand{\rtx}{\rho(t,\x)}
+%\newcommand{\rptx}{\rho'(t,\x)}
+%\newcommand{\rtxi}{\rho(t,\xi)} % waveeqntubes.tex
+%\newcommand{\rptxi}{\rho'(t,\xi)} % waveeqntubes.tex
+% \def\l{\lambda}
+
+% Changed from \rho_a to \rho on 6/9/04
+\newcommand{\rair}{\rho}       % density of air
+
+% From icmc91.macros (conical waveguides):
+%\newcommand{\A}{A}
+%\newcommand{\Ax}{\A(\x)}
+%\newcommand{\Axi}{\A(\xi)}
+%\newcommand{\Apx}{\A'(\x)}
+%\newcommand{\Apxi}{\A'(\xi)}
+\newcommand{\fofx}{f(t,\x)}
+\newcommand{\fpx}{f'(t,\x)}
+\newcommand{\fxpdx}{f(t,\x+d\x)}
+
+\newcommand{\V}{V}
+\newcommand{\Vp}{\V^\tplus}
+\newcommand{\Vm}{\V^\tminus}
+
+\newcommand{\up}{u^\tplus}
+\newcommand{\um}{u^\tminus}
+\newcommand{\upm}{u^\pm}
+
+\newcommand{\Uc}{U} % notation chosen for waveeqntubes.tex
+\newcommand{\Ucs}{\Uc(s)}
+\newcommand{\Ucps}{\Uc^\tplus(s)}
+\newcommand{\Ucms}{\Uc^\tminus(s)}
+\newcommand{\Ucpms}{\Uc^\pm(s)}
+
+\newcommand{\U}{u} % notation chosen for reedboremech.tex
+\newcommand{\Us}{\U(s)}
+\newcommand{\Ups}{\U^\tplus(s)}
+\newcommand{\Ums}{\U^\tminus(s)}
+\newcommand{\Upms}{\U^\pm(s)}
+\newcommand{\ut}{{\dot u}}
+\newcommand{\uttx}{\ut(t,\x)}
+\newcommand{\utttx}{\utt(t,\x)}
+\newcommand{\utx}{u(t,\x)}
+\newcommand{\utt}{{\ddot u}}
+\newcommand{\uttt}{{\ddot u}}
+
+% notation chosen for reedboremech.tex
+\newcommand{\Um}{\U_m}
+\newcommand{\Ub}{\U_b}
+% \newcommand{\Ubp}{\Ub^{\null^\tplus}}
+\newcommand{\Ubp}{\Ub^\tplus}
+\newcommand{\Ubm}{\Ub^\tminus}
+
+\newcommand{\apm}{a^\pm}
+
+\newcommand{\fp}{f^{\tplus}}
+\newcommand{\fm}{f^{\tminus}}
+\newcommand{\fpm}{f^\pm}
+\newcommand{\fpi}{\fp_i}
+\newcommand{\fmi}{\fm_i}
+\newcommand{\fpmi}{\fpm_i}
+\newcommand{\fpimo}{\fp_{i-1}}
+\newcommand{\fmimo}{\fm_{i-1}}
+\newcommand{\fn}{\tilde{f}}
+\newcommand{\fnp}{\fn^\tplus}
+\newcommand{\fnm}{\fn^\tminus}
+\newcommand{\fnpm}{\fn^\pm}
+\newcommand{\df}{f_{\tdelta}}
+\newcommand{\dftilde}{\tilde{\fd}}
+\newcommand{\fh}{{\hat f}}
+\newcommand{\fhpi}{\fh^\tplus_i}
+\newcommand{\fhpimo}{\fh^\tplus_{i-1}}
+\newcommand{\fhmimo}{\fh^\tminus_{i-1}}
+
+\newcommand{\fnpi}{\fn^\tplus_i}
+\newcommand{\fnmi}{\fn^\tminus_i}
+\newcommand{\fnpimo}{\fn^\tplus_{i-1}}
+\newcommand{\fnmimo}{\fn^\tminus_{i-1}}
+
+\newcommand{\vp}{v^\tplus}
+\newcommand{\vm}{v^\tminus}
+\newcommand{\vpm}{v^\pm}
+\newcommand{\vpi}{\vp_i}
+\newcommand{\vmi}{\vm_i}
+\newcommand{\vpmi}{\vpm_i}
+\newcommand{\vpimo}{\vp_{i-1}}
+\newcommand{\vn}{\tilde{v}}
+\newcommand{\vnp}{\vn^\tplus}
+\newcommand{\vnm}{\vn^\tminus}
+\newcommand{\vnpm}{\vn^\pm}
+\newcommand{\vnpi}{\vn^\tplus_i}
+\newcommand{\vnmi}{\vn^\tminus_i}
+
+\newcommand{\fx}{f'}
+\newcommand{\fxx}{f''}
+\newcommand{\ft}{\dot f}
+\newcommand{\ftt}{\ddot f}
+\newcommand{\gx}{g'}
+\newcommand{\gxx}{g''}
+\newcommand{\gt}{\dot g}
+\newcommand{\gtt}{\ddot g}
+
+\newcommand{\T}{K}       % String Tension. Need T for sampling interval
+\newcommand{\e}{\epsilon} % String density
+\newcommand{\si}{s_i}
+
+% eigensolution A
+\newcommand{\esa}{e^{s(t\pm x/c)}}
+\newcommand{\esap}{e^{s(t+x/c)}}
+\newcommand{\esiap}{e^{\si(t+x/c)}}
+\newcommand{\esam}{e^{s(t-x/c)}}
+\newcommand{\esiam}{e^{\si(t-x/c)}}
+
+\newcommand{\Ap}{A^\tplus}
+\newcommand{\Am}{A^\tminus}
+
+\newcommand{\Fs}{f_s}    % Sampling rate in time
+\newcommand{\Nus}{\nu_s} % Sampling rate in space
+\newcommand{\Ts}{T}      % Sampling interval in time
+\newcommand{\Xs}{X}      % Sampling interval in space
+
+\newcommand{\xm}{x_m}
+\newcommand{\tn}{t_n}
+
+%\newcommand{\Sb}{S_b}
+\newcommand{\Sb}{\Rho_b} % 8/11/10
+\newcommand{\Fb}{F_b}
+
+\newcommand{\Hh}{{\hat H}}
+\newcommand{\Hl}{H_l}          % Loop filter
+\newcommand{\hl}{h_l}          % Loop filter
+\newcommand{\Hhl}{\Hh_l}         % Estimated loop filter
+\newcommand{\G}{\Gamma}
+\newcommand{\Gz}{\G_0}
+\newcommand{\Gh}{{\hat G}}
+\newcommand{\gh}{{\hat g}}
+\newcommand{\Ngh}{N_\gh}
+\newcommand{\Allp}{H_a}
+\newcommand{\AllpConsol}{H_c}
+\newcommand{\Na}{N_\Allp}
+\newcommand{\Hs}{H_s}
+\newcommand{\Hhs}{\Hh_s}
+\newcommand{\ms}{{m_s}}
+
+\newcommand{\Nc}{{N_c}}
+
+\newcommand{\Mh}{\hat{M}}
+
+\newcommand{\zio}{z^{-\cz/c(\omega)}}
+\newcommand{\zoh}{z^{1/2}}
+\newcommand{\zmoh}{z^{-{1/2}}}
+
+\providecommand{\ejo}{e^{j\omega}}
+%\newcommand{\ejok}{e^{j\omega_k}}
+\newcommand{\ejokT}{e^{j\omega_kT}}
+\newcommand{\emjo}{e^{-j\omega}}
+\newcommand{\emjok}{e^{-j\omega_k}}
+\newcommand{\emjokT}{e^{-j\omega_kT}}
+\newcommand{\ejonT}{e^{j\omega n\Ts}}
+
+\newcommand{\ci}{R}
+
+\newcommand{\muse}{{\mu/\e}}
+\newcommand{\muoe}{\frac{\mu}{\e}}
+\newcommand{\muoes}{\frac{\mu}{\e s}}
+\newcommand{\muooes}{\frac{\mu(\omega)}{\e s}}
+\newcommand{\muote}{\frac{\mu}{2\e}}
+\newcommand{\muoote}{\frac{\mu(\omega)}{2\e}}
+\newcommand{\muotesc}{\frac{\scriptstyle\mu}{2\e}}
+\newcommand{\muootesc}{\frac{\scriptstyle\mu(\omega)}{2\e}}
+\newcommand{\muste}{{\mu/2\e}}
+\newcommand{\mustep}{{\lp\mu/2\e\rp}}
+\newcommand{\muostep}{{\lb\mu(\omega)/2\e\rb}}
+\newcommand{\xsc}{{x/c}}
+\newcommand{\xoc}{\frac{x}{c}}
+\newcommand{\xocsc}{\frac{\scriptstyle x}{c}}
+\newcommand{\xmoc}{\frac{\xm}{c}}
+\newcommand{\xmsc}{{\xm/c}}
+\newcommand{\mXsoc}{{m\Xs/c}}
+\newcommand{\mXssc}{{m\Xs/c}}
+\newcommand{\mumTsste}{{\mu m\Ts/2\e}}
+\newcommand{\muomTsste}{{\mu(\omega) m\Ts/2\e}}
+\newcommand{\muomTsote}{\frac{\mu(\omega) m\Ts}{2\e}}
+\newcommand{\muTsste}{{\mu \Ts/2\e}}
+\newcommand{\muoTsste}{{\mu(\omega) \Ts/2\e}}
+\newcommand{\muoTsote}{\frac{\mu(\omega) \Ts}{2\e}}
+
+\newcommand{\cz}{c_0}
+
+\newcommand{\fl}{{f_l}}
+\newcommand{\fr}{{f_r}}
+
+\newcommand{\vr}{{v_r}}
+\newcommand{\vi}{{v_i}}
+\newcommand{\vro}{\vr(\omega)}
+\newcommand{\vio}{\vi(\omega)}
+\newcommand{\co}{c(\omega)}
+% \newcommand{\del}{{\scriptstyle\Delta}}
+% \newcommand{\do}{\del\omega}
+\newcommand{\domega}{{\tdelta}\omega}
+\newcommand{\Tso}{\Ts(\omega)}
+
+\newcommand{\pointsize}{\normalsize}
+\newcommand{\smallerpointsize}{\latex{\small}}
+\newcommand{\largerpointsize}{\latex{\large}}
+
+\pointsize\rm
+
+% \newcommand{\rawFigureEps}
+% \newcommand{\rawFigure}[1]{\rawFigure{eps/#1}}
+
+\newcommand{\dinv}{z}            % formerly d^{-1}
+\newcommand{\delop}[1]{z^{-#1}}  % formerly d^{#1}
+
+\newcommand{\Pl}{{P_l}}          % Loop filter phase delay
+\newcommand{\Ph}{{\hat P}}       % Estimated phase delay
+\newcommand{\Phl}{\Ph_l}         % Estimated loop filter phase delay
+
+% Power waves
+\newcommand{\Ps}{{\cal P}}
+\newcommand{\Psp}{\Ps^\tplus}
+\newcommand{\Psm}{\Ps^\tminus}
+
+\newcommand{\eh}{\hat e}
+\newcommand{\Eh}{\hat E}
+
+\newcommand{\Ah}{{\hat A}}
+\newcommand{\Bh}{{\hat B}}
+\newcommand{\ah}{{\hat a}}
+\newcommand{\bh}{{\hat b}}
+
+\newcommand{\tz}{t_0}
+
+\newcommand{\Wp}{W^\tplus}
+\newcommand{\Wm}{W^\tminus}
+
+\newcommand{\scream}[1]{\message{*!*!*!*: #1}}
+
+% From icmc86.macros (clar.mac):
+
+\newcommand{\wg}{wave\-guide}
+\newcommand{\Wg}{Wave\-guide}
+
+\newcommand{\vb}{v_b}           % Bow velocity
+\newcommand{\vs}{v_s}           % String velocity
+\newcommand{\vsl}{v_{s,l}}      % Left string velocity (comma required by uneditable figure eps/fBowedStringsWGM.eps)
+\newcommand{\vsr}{v_{s,r}}      % Left string velocity (comma required by uneditable figure eps/fBowedStringsWGM.eps)
+\newcommand{\vdelta}{v_\tdelta} % velocity difference \vb-\vs
+\newcommand{\vdc}{\vdelta^c}
+\newcommand{\vdp}{\vdelta^\tplus}
+\newcommand{\vsp}{\vs^\tplus}   % Left-going
+\newcommand{\vslp}{\vsl^\tplus}   % Left-going
+\newcommand{\vslm}{\vsl^\tminus}   % Right-going
+\newcommand{\vsrp}{\vsr^\tplus}   % Left-going
+\newcommand{\vsrm}{\vsr^\tminus}   % Right-going
+
+\newcommand{\vtilde}{\tilde{v}}
+
+\newcommand{\vt}{\dot v}
+\newcommand{\Vt}{\dot V}
+\newcommand{\vh}{\hat{v}}
+\newcommand{\vht}{\hat{\vt}}
+\newcommand{\Vht}{\hat{\Vt}}
+\newcommand{\vx}{v'}
+\newcommand{\xt}{\dot x}
+\newcommand{\xht}{\hat{\xt}}
+\newcommand{\xtt}{\ddot x}
+\newcommand{\xh}{{\hat x}}
+\newcommand{\xhtt}{{\hat{\ddot x}}}
+\newcommand{\yh}{\hat y}
+
+\newcommand{\tutEm}[1]{\emph{#1}}
+\newcommand{\tutOnly}[1]{#1}
+
+\newcommand{\tmsq}[1]{[#1]^2}
+
+% scat.tex and loadedj.tex
+\newcommand{\chati}{{\hat c}_i}
+\newcommand{\chis}{{\hat c}^2_i}
+\newcommand{\foop}{x^\tplus}
+
+\newcommand{\dc}{dc}
+\renewcommand{\ln}{\mbox{ln}}
+
+\newcommand{\pderiv}[2]{\frac{\partial #1}{\partial #2}}
+%\newcommand{\poper}[1]{{\frac{\scriptstyle\partial}{\scriptstyle\partial} #1}}
+\newcommand{\poper}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\dpoper}[1]{\dfrac{\partial}{\partial #1}}
+
+%\newcommand{\parinset}{\\ \penalty1000\hbox{}\hspace{20pt}}
+
+\newcommand{\jw}{j \omega}
+
+% eqnerr appendix:
+
+\newcommand{\ok}{\omega_k}
+\newcommand{\ejon}{e^{j\omega n}}
+\newcommand{\emjon}[1]{e^{-j\omega #1}}
+\newcommand{\ejok}{e^{j\ok}}
+\newcommand{\eqv}{\equiv\message{CHANGE eqv TO equiv IN SOURCE}}
+
+\newcommand{\cpp}{\texttt{C++}}
+\newcommand{\cpps}{\texttt{C++}\ }
+\newcommand{\gdb}{\texttt{gdb}}
+
+% FIXME: Allocate counter for problems.  Use section number.
+\newenvironment{problem}{{\bfseries Problem:}}{}
+
+\newcommand{\bookurl}{http://ccrma.stanford.edu/\~{}jos/pasp/} 
+\newcommand{\Alpha}{\Ascr}
+
+\newcommand{\M}{m} % physical mass
+
+% delay.tex:
+\newcommand{\ub}{\mathbf{u}} % vector
+%\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\xb}{\mathbf{x}}
+\newcommand{\Xb}{\mathbf{X}}
+\newcommand{\yb}{\mathbf{y}}
+\newcommand{\Yb}{\mathbf{Y}}
+\newcommand{\Ab}{\mathbf{A}}
+\newcommand{\Bb}{\mathbf{B}}
+\newcommand{\Cb}{\mathbf{C}}
+\newcommand{\Delv}{{\underline{\Delta}}}
+\newcommand{\Hbold}{\mathbf{H}}
+\newcommand{\Fbold}{\mathbf{F}} % vector
+\newcommand{\Amtx}{\mathbf{A}} % matrix
+\newcommand{\Bmtx}{\mathbf{B}}
+\newcommand{\Cmtx}{\mathbf{C}}
+\newcommand{\Dmtx}{\mathbf{D}} % matrix
+\newcommand{\Emtx}{\mathbf{E}} % matrix
+%\newcommand{\Gmtx}{\mathbf{\Gamma}} % ``missing glyph Gamma'' from dvips
+%\newcommand{\Gmtx}{\boldmath{\Gamma}} % does nothing
+%\newcommand{\mybm}{} % HACK!
+\newcommand{\mybm}{\bm} % normal
+\newcommand{\Gmtx}{{\mybm \Gamma}} % works! Uses bm.sty
+\newcommand{\Geemtx}{{\mybm G}}
+\newcommand{\Hmtx}{\mathbf{H}} % matrix
+\newcommand{\Imtx}{\mathbf{I}} 
+\newcommand{\Lmtx}{\mathbf{L}} 
+%\newcommand{\Lamm}{\mathbf{\Lambda}} 
+\newcommand{\Lamm}{{\mybm \Lambda}} 
+\newcommand{\Mmtx}{\mathbf{M}} % matrix
+\newcommand{\Pmtx}{\mathbf{P}} 
+\newcommand{\Qmtx}{\mathbf{Q}} 
+\newcommand{\Umtx}{\mathbf{U}} 
+\newcommand{\umtx}{\mathbf{u}} 
+\newcommand{\Vmtx}{\mathbf{V}}  % interp-lagrange.tex
+\newcommand{\Wmtx}{\mathbf{W}}  % weight matrix
+\newcommand{\Zeromtx}{\mathbf{0}} % StateSpace.tex
+\newcommand{\zerov}{\underline{0}} % DigitizingNewton.tex
+
+% lossless filters:
+\newcommand{\Atilde}{\tilde{A}} % guitar.tex
+\newcommand{\abar}{\overline{a}} % Delay.tex
+\newcommand{\At}{\tilde{A}}
+\newcommand{\Abt}{\tilde{\Ab}}
+\newcommand{\Ht}{\tilde{H}}
+\newcommand{\Hmtxt}{{\tilde{\Hmtx}}}
+\newcommand{\Htmtx}{{\tilde{\Hmtx}}} % StateSpace.tex - CONSISTENT WITH \Atmtx et al.
+\newcommand{\Wb}{{\mathbf{W}}}
+
+% reverb-jcrev.tex:
+\newcommand{\AP}[2]{\hbox{AP}_{#1}^{\,#2}}
+\newcommand{\FFCF}[2]{\hbox{FFCF}_{#1}^{\,#2}}
+\newcommand{\FBCF}[2]{\hbox{FBCF}_{#1}^{\,#2}}
+\newcommand{\LBCF}[3]{\hbox{LBCF}_{#1}^{\,#2,\,#3}}
+\newcommand{\DEL}[1]{z^{-#1\Fs}}
+
+%waveeqn.tex
+\newcommand{\ib}{\mathbf{i}}
+\newcommand{\jb}{\mathbf{j}}
+\newcommand{\kb}{\mathbf{k}}
+\newcommand{\pb}{\mathbf{p}}
+\newcommand{\dpb}{\del\mathbf{p}}
+\newcommand{\qb}{\mathbf{q}}
+\newcommand{\dqb}{\del\mathbf{q}}
+\newcommand{\ab}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\Tb}{\mathbf{\T}}
+\newcommand{\del}{d}
+
+% From cfdn:
+
+%\newcommand{\Tb}{\mathbf{T}}
+\newcommand{\Tbt}{\Tb^\ast}
+\newcommand{\Tbi}{\Tb^{-1}}
+\newcommand{\Tbit}{{\Tbi}^\ast}
+
+%\newcommand{\Dmtx}{\mathbf{D}}
+\newcommand{\Dmtxi}{\Dmtx^{-1}}
+\newcommand{\Dmtxt}{\Dmtx^\ast}
+\newcommand{\Dmtxti}{\Dmtx^{-\ast}}
+
+%\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\Umtxi}{\Umtx^{-1}}
+\newcommand{\Umtxt}{\Umtx^\ast}
+\newcommand{\Umtxti}{\Umtx^{-\ast}}
+
+%\newcommand{\Emtx}{\mathbf{E}}
+\newcommand{\Emtxi}{\Emtx^{-1}}
+\newcommand{\Emtxt}{\Emtx^\ast}
+\newcommand{\Emtxti}{\Emtx^{-\ast}}
+
+\newcommand{\Atmtx}{\tilde{\Amtx}}
+\newcommand{\Atmtxt}{\Atmtx^\ast}
+\newcommand{\Amtxt}{\Amtx^\ast}
+
+\newcommand{\Btmtx}{\tilde{\Bmtx}}
+\newcommand{\Ctmtx}{\tilde{\Cmtx}}
+\newcommand{\Dtmtx}{\tilde{\Dmtx}}
+
+%\newcommand{\pb}{\mathbf{p}}
+\newcommand{\pbp}{\pb^+}
+\newcommand{\pbm}{\pb^-}
+\newcommand{\pbpt}{{\pbp}^\ast}
+\newcommand{\pbmt}{{\pbm}^\ast}
+
+\newcommand{\pp}{p^+}
+\newcommand{\pv}{\mathbf{p}}
+\newcommand{\pvt}{\pv^\ast}
+\newcommand{\pvp}{\pv^+}
+\newcommand{\ppi}{\pp_i}
+\newcommand{\pvpt}{{\pvp}^\ast}
+
+\newcommand{\pminus}{p^-}
+\newcommand{\pvm}{\pv^-}
+\newcommand{\pmi}{\pminus_i}
+\newcommand{\pvmt}{{\pvm}^\ast}
+
+% FIXME: Search for \vv - looks like it should be v not p:
+\newcommand{\vv}{\mathbf{p}}
+\newcommand{\vvt}{\vv^\ast}
+\newcommand{\vvp}{\vv^+}
+\newcommand{\vvpt}{{\vvp}^\ast}
+\newcommand{\vvm}{\vv^-}
+\newcommand{\eb}{\mathbf{e}}
+
+\newcommand{\Gb}{\Gmtx} 
+\newcommand{\Gv}{{\Gmtx}}
+\newcommand{\Gvt}{\Gmtx^T}
+
+\newcommand{\Gt}{\tilde{\Gamma}}
+\newcommand{\Gtv}{\tilde{\Gb}} % or \mathbf{\Gt}
+%\newcommand{\Gtvt}{\tilde{\Gb}^\lower[2pt]{T}}
+\newcommand{\Gtvt}{\tilde{\Gb}^T}
+
+\newcommand{\onev}{\mathbf{1}}
+\newcommand{\onevt}{\onev^T}
+
+\newcommand{\tsixty}{t_{60}}
+\newcommand{\nsixty}{n_{60}}
+\newcommand{\tsw}{\tsixty(\omega)}
+
+\newcommand{\EDC}{\hbox{EDC}}
+\newcommand{\EDR}{\hbox{EDR}}
+
+% ../operators.tex
+\providecommand{\oper}[1]{\hbox{\sc #1}}
+\providecommand{\flip}{\oper{Flip}}
+\providecommand{\alias}{\oper{Alias}}
+\providecommand{\dtft}{\oper{DTFT}}
+\providecommand{\dft}{\oper{DFT}}
+\providecommand{\dB}{\mbox{dB}} % small-caps looks bad
+\providecommand{\sample}{\oper{Sample}}
+
+%\newcommand{\subsubsubsection}[1]{\paragraph{#1}}
+
+%now in stdcommon.tex: \newcommand{\bookonly}[1]{#1}
+\newcommand{\booknot}[1]{}
+%\newcommand{\bookonly}[1]{}
+%\newcommand{\booknot}[1]{#1}
+
+\newcommand{\choosenp}[2]{\begin{array}{c}#1\\#2\end{array}}
+\newcommand{\choosep}[2]{\left(\choosenp{#1}{#2}\right)}
+
+%\newcommand{\hbar}{\overline{h}}
+\newcommand{\etab}{\overline{\eta}}
+\newcommand{\etah}{{\hat \eta}}
+\newcommand{\etabh}{\overline{\hat \eta}}
+\newcommand{\Nh}{{\hat N}}
+\newcommand{\hh}{{\hat h}}
+
+% delay-allpass.tex, wgo.tex
+% subset of filters/filtermath.tex : app-statespace.tex section
+\newcommand{\av}{\underline{a}}
+\newcommand{\bv}{\underline{\beta}} % wgfdtd
+\newcommand{\beev}{\underline{b}} % wgfdtd
+\newcommand{\ev}{\underline{e}}
+\newcommand{\g}{\gamma}
+\newcommand{\gv}{\underline{\gamma}} % wgfdtd
+\newcommand{\geev}{\underline{g}} % /w/spatial-memory/invention/invention.tex
+\newcommand{\gm}{\gamma^\tminus}
+\newcommand{\gp}{\gamma^\tplus}
+\newcommand{\gpm}{\gamma^\tpm}
+\newcommand{\qv}{\underline{q}}
+\newcommand{\gvm}{\gv^\tminus}
+\newcommand{\gvp}{\gv^\tplus}
+\newcommand{\Hv}{\underline{H}} % interp-lagrange.tex
+\newcommand{\hv}{\underline{h}} % interp-high-order.tex
+\newcommand{\dhv}{\underline{dh}} % dsp2seq.tex
+\newcommand{\wv}{\underline{w}}
+\newcommand{\xv}{\underline{x}}
+\newcommand{\sigmav}{\underline{\sigma}}
+%\newcommand{\Xv}{\underline{X}}
+\newcommand{\xvdot}{\underline{\xdot}} % state-space-intro.tex
+\newcommand{\xvddot}{\underline{\xddot}}
+\newcommand{\xhv}{\underline{\hat{x}}}
+\newcommand{\xhva}{\underline{\hat{x}}^\ast}
+\newcommand{\xvt}{\tilde{\xv}}
+\newcommand{\xtilde}{\tilde{x}}
+\newcommand{\yv}{\underline{y}}
+\newcommand{\Vv}{\underline{V}} % interp-lagrange.tex
+\newcommand{\Xv}{\underline{X}}
+\newcommand{\Yv}{\underline{Y}}
+\newcommand{\vvec}{\underline{v}}
+\newcommand{\uv}{\underline{u}}
+%\newcommand{\uvx}{\underline{u}_x}
+\newcommand{\ubar}{\overline{u}}
+\newcommand{\ubarx}{\ubar_x}
+\newcommand{\ubary}{\ubar_y}
+\newcommand{\ubarz}{\ubar_z}
+\newcommand{\ups}{\upsilon} % wgfdtd
+\newcommand{\upsv}{\underline{\upsilon}}
+\newcommand{\lam}{\lambda}
+\newcommand{\htilde}{\tilde{h}}
+
+\newcommand{\cv}{\underline{c}}
+\newcommand{\cscalar}{c}
+\newcommand{\dv}{\underline{d}}
+\newcommand{\dscalar}{d}
+\newcommand{\fv}{\underline{f}}
+\newcommand{\Fv}{\underline{F}}
+\newcommand{\zvec}{\underline{z}}
+\newcommand{\zeev}{\underline{z}} % /w/spatial-memory/invention/invention.tex
+\newcommand{\zvv}{\underline{\zeev}} % /w/dsp2seq/fig/tiir-rnn.fig
+\newcommand{\tauv}{\underline{\tau}}
+\newcommand{\ov}{\underline{\omega}}
+\newcommand{\ovn}{\underline{\tilde{\omega}}}
+%crashes l2h when used in a figure caption: \newcommand{\ovn}{\tilde{\ov}}
+\newcommand{\xvn}{\tilde{\xv}}
+\newcommand{\Lv}{\underline{L}}
+\newcommand{\on}{\tilde{\omega}}
+\newcommand{\pvec}{\underline{p}}
+\newcommand{\peev}{\underline{p}} % /w/spatial-memory/invention/invention.tex
+
+
+% Acoustic Energy Density section:
+\newcommand{\Iv}{\underline{I}} % vector intensity
+\newcommand{\nv}{\underline{n}} % normal vector
+
+% 421/Reverb/
+\newcommand{\Pu}{\Pmtx_{\uv}}
+
+% 421/StateSpace/
+\newcommand{\deltav}{\underline{\delta}}
+
+% delay-fx (from /k/l/doppler/macros.tex):
+%FIXME: Consider ``\overrightarrow'' instead of underline
+%\newcommand{\vvec}{\underline{v}}
+\newcommand{\zv}{\underline{0}}
+\newcommand{\vvecs}{\vvec_s}
+%\newcommand{\vs}{v_s}
+%\newcommand{\vsl}{v_{sl}}
+\newcommand{\vl}{v_l}
+\newcommand{\vls}{v_{ls}}
+\newcommand{\vvecl}{\vvec_l}
+\newcommand{\vvecsl}{\vvec_{sl}}
+\newcommand{\vmsl}{v_{sl}}
+\newcommand{\vvecls}{\vvec_{ls}}
+\newcommand{\vmls}{v_{ls}}
+%\newcommand{\xv}{\underline{x}}
+\newcommand{\xvs}{\xv_s}
+\newcommand{\xvl}{\xv_l}
+\newcommand{\xvsl}{\xv_{sl}}
+\newcommand{\xvls}{\xv_{ls}}
+\newcommand{\yvec}{{\underline{y}}}
+%Does nothing:\newcommand{\makeboldmath}[1]{\mbox{\boldmath$#1$}}
+\newcommand{\makeboldmath}[1]{\mbox{${\mybm #1}$}}
+\newcommand{\hmtx}{{\mathbf{h}}}
+\newcommand{\amtx}{\makeboldmath{\alpha}}
+\newcommand{\bmtx}{{\mathbf{b}}}
+\newcommand{\gammtx}{\makeboldmath{\gamma}}
+\newcommand{\gmtx}{{\mathbf{g}}}
+\newcommand{\wmtx}{{\mathbf{w}}}
+\newcommand{\emtx}{{\mathbf{e}}}
+%\newcommand{\onev}{\underline{1}}
+\newcommand{\wm}{\omega_m}
+\newcommand{\ws}{\omega_s}
+\newcommand{\wl}{\omega_l}
+\newcommand{\Dtd}{{\dot D_t}}
+
+% for doppler.tex integration:
+\newcommand{\figwidth}{0.9\textwidth} % was \textwidth (4.5), and 5in earlier
+% web images must be less than 680px = 4.113 inches wide
+
+% fbr.tex:
+\newcommand{\noitemskip}{\vspace{-0.2cm}}
+
+% lumped stuff:
+%\newcommand{\mysection}[1]{\section{#1}}
+%\newcommand{\mysubsection}[1]{\subsection{#1}}
+%\newcommand{\mysubsubsection}[1]{\subsubsection{#1}}
+%\newcommand{\mysubsubsubsection}[1]{\paragraph{#1:}}
+
+% wgo.tex (max-mathews.tex):
+\newcommand{\bt}{\tilde{b}}
+\newcommand{\cp}{c} % formerly c^\prime
+\newcommand{\xp}{\xtilde} % formerly x^\prime}}
+\newcommand{\lami}{{\lambda_i}}
+
+% laplace-insides.tex
+\newcommand{\xdot}{{\dot x}}
+\newcommand{\xddot}{{\ddot x}}
+\newcommand{\wz}{{\omega_0}}
+
+% prf.tex
+\newcommand{\rhotozero}{{\rho \to  0}}
+\newcommand{\neb}{ \frac{1-r}{1+r}}
+\newcommand{\Rejphi}{R\,e^{j\phi}}
+\newcommand{\rhoejpsi}{\rho\,e^{j\psi}}  
+\newcommand{\zmn}{z^{-\nu}}
+%\input ./filtermath.tex:
+\newcommand{\pole}{p}
+\newcommand{\zero}{q}
+\newcommand{\zp}{z^\prime}
+\newcommand{\at}[1]{\abstext{#1}}
+%\newcommand{\ejo}{e^{j\omega}}
+%\newcommand{\emjo}{e^{-j\omega}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\biglp}{\left(}
+\newcommand{\bigrp}{\right)}
+
+% wgo.tex:
+\newcommand{\rcs}{k}
+\newcommand{\ri}{\R_i}
+\newcommand{\rz}{\R_0}
+\newcommand{\ro}{\R_1}
+\newcommand{\rt}{\R_2}
+\newcommand{\rth}{\R_3}
+\newcommand{\ptilde}{\tilde{p}}
+\newcommand{\pop}{p_1^+}
+\newcommand{\pom}{p_1^-}
+\newcommand{\pops}{(\pop)^2}
+\newcommand{\poms}{(\pom)^2}
+\newcommand{\popn}{\pop(n)}
+\newcommand{\pomn}{\pom(n)}
+\newcommand{\popns}{\lb\popn\rb^2}
+\newcommand{\pomns}{\lb\pomn\rb^2}
+\newcommand{\Cn}{C(n)}
+\newcommand{\cn}{c_n}
+\newcommand{\sn}{s_n}
+\newcommand{\ibox}[1]{{\mbox{\small #1}}} % or so
+
+% 8.5x11: \newcommand{\wasfivein}{5in}
+% \newcommand{\wassixpfivein}{6.5in}
+% 6x8: 
+%FIXME: This was changed to 'default' AFTER the Dec. 10 DeHarts version 
+% \renewcommand{\wasfivein}{\textwidth}
+
+\newcommand{\whichbook}{third}
+\newcommand{\beforebooks}{\cite{MDFT} and \cite{JOSFP}}
+
+\newcommand{\Nsc}{\textsc{n}}
+\newcommand{\Esc}{\textsc{e}}
+\newcommand{\Wsc}{\textsc{w}}
+\newcommand{\Ssc}{\textsc{s}}
+
+\newcommand{\statespaceref}{\cite[Appendix E]{JOSFP}}
+
+\newcommand{\vin}[1]{\mbox{in}_{#1}}
+
+\newcommand{\kz}{\kappa_0}
+
+% wgfdtd
+\newcommand{\xK}{\xv_K}
+\newcommand{\xW}{\xv_W}
+%\newcommand{\T}{\mathcal{T}}
+%\newcommand{\T}{\mathfrak{T}}
+%\newcommand{\T}{\mathbb{T}} % blackboard
+\newcommand{\Tm}{\mathbf{T}}
+\newcommand{\Tmi}{\Tm^{-1}}
+%\newcommand{\A}{\mathbf{A}}
+%%\newcommand{\B}{{\bm{B}}
+%\newcommand{\B}{\mathbf{B}}
+%\newcommand{\C}{\mathbf{C}}
+%\newcommand{\D}{\mathbf{D}}
+%\newcommand{\AK}{\A_K}
+%\newcommand{\AKt}{\tilde{\A}_K}
+\newcommand{\AK}{\Amtx_K}
+\newcommand{\AKt}{\tilde{\Amtx}_K}
+
+\newcommand{\nacc}[2]{\mbox{$\stackrel{{\scriptscriptstyle #1}}{#2}$}}
+\newcommand{\Att}{\nacc{\vdash}{\Amtx}}
+\newcommand{\AKtt}{\Att_K}
+\newcommand{\AWtt}{\Att_W}
+\newcommand{\AKttt}{\nacc{\vdash\!\!\dashv}{\Amtx}_K}
+\newcommand{\AWttt}{\nacc{\vdash\!\!\dashv}{\Amtx}_W}
+\newcommand{\AKtttt}{\nacc{\rightleftharpoons}{\Amtx}_K}
+\newcommand{\AWtttt}{\nacc{\rightleftharpoons}{\Amtx}_W}
+
+\newcommand{\BK}{\Bmtx_K}
+\newcommand{\CK}{\Cmtx_K}
+\newcommand{\DK}{\Dmtx_K}
+\newcommand{\AW}{\Amtx_W}
+\newcommand{\AWt}{\tilde{\Amtx}_W}
+\newcommand{\BW}{{\Bmtx_W}}
+\newcommand{\CW}{\Cmtx_W}
+\newcommand{\DW}{\Dmtx_W}
+
+%FAILS (see \Gmtx above):\newcommand{\Db}{\mathbf{\Delta}}
+\newcommand{\Deltab}{{\mybm\Delta}} % works! Uses bm.sty
+\newcommand{\deltab}{{\mybm\delta}}
+\newcommand{\Db}{{\mathbf D}} % works! Uses bm.sty
+\newcommand{\db}{{\mathbf d}}
+
+% pasp/refs.tex
+\newcommand{\topic}[1]{\subsubsection*{#1}}
+
+% pasp/app-physics.tex
+\newcommand{\cm}{\mbox{ cm}}
+\newcommand{\meters}{\mbox{ m}}
+\newcommand{\kg}{\mbox{ kg}}
+\newcommand{\Newtons}{\mbox{ N}}
+\newcommand{\dynes}{\mbox{ dynes}}
+\newcommand{\grams}{\mbox{ g}}
+\newcommand{\seconds}{\mbox{ s}}
+\newcommand{\joules}{\mbox{ J}}
+\newcommand{\ergs}{\mbox{ erg}}
+\newcommand{\ergsns}{\mbox{erg}}
+
+% pasp/app-history.tex
+\newcommand{\beqnl}[1]{\begin{equation}\label{eq:#1}}
+\newcommand{\eeqnl}{\end{equation}}
+
+% Number all equations:
+% FIXME: THINK ABOUT THIS:
+% THIS HACK SEEMS TO WORK IN LATEX, BUT IT CONFUSES L2H:
+%\renewcommand{\[}{\begin{equation}}
+%\renewcommand{\]}{\end{equation}}
+
+%\newcommand{\localonly}[1]{} % too bad
+
+\newcommand{\Rho}{\hat{\rho}}
+\newcommand{\Tau}{\hat{\tau}}
+
+\newcommand{\Rhot}{\hat{\tilde{\rho}}}
+
+% in amsmath?
+%\newcommand{\degrees}{\ensuremath{{\null^\circ}}}
+
+% vector wave number
+\newcommand{\kv}{\underline{k}}
+\newcommand{\kvi}{\kv_i}
+\newcommand{\kvr}{\kv_r}
+\newcommand{\kvt}{\kv_t}
+
+\newcommand{\rv}{\underline{r}}
+
+%\newcommand{\faustlabstr}[1]{\htmladdnormallinkfoot{#1}{http://ccrma.stanford.edu/realsimple/faust/}}
+\newcommand{\faustintrofoot}{\cite{SmithFaustIntro07}\footnote{\htmladdnormallink{\texttt{http://ccrma.stanford.edu/realsimple/faust/}}{http://ccrma.stanford.edu/realsimple/faust/}}}
+
+% app-faust-strings
+\newcommand{\wn}{\tilde{\omega_1}}
+\newcommand{\HL}{H_{L,\omega_1}}
+\newcommand{\biquad}{biquad} % was BiQuad
+\newcommand{\biquadsp}{biquad\ }
+
+\newcommand{\positionURL}[1]{\latexhtml{\\ \mbox{\hspace{3em}}{\texttt{\small #1}}}{ \texttt{#1}}}
+\newcommand{\positionURLSL}[1]{\qsp\latexhtml{\texttt{\small #1}}{ \texttt{#1}}}
+
+% pasp/frmatch.tex
+\newcommand{\fmax}{f_{\mbox{\tiny max}}}
+\newcommand{\omax}{\omega_{\mbox{\tiny max}}}
+\newcommand{\Nb}{{N_b}}
+\newcommand{\Nah}{{\hat{N}_a}}
+\newcommand{\Nbh}{{\hat{N}_b}}
+\newcommand{\don}{\frac{d\omega}{2\pi}}
+\newcommand{\thh}{\hat{\theta}}
+\newcommand{\Thh}{\hat{\Theta}} 
+\newcommand{\Hha}{\hat{H}^\ast}
+
+% pasp/intro.tex (diagonalized state space notation)
+%   copied from ../filters/filtermath.tex
+\newcommand{\Em}{E}
+\newcommand{\Emi}{E^{-1}}
+\newcommand{\Bt}{{\tilde B}}
+\newcommand{\Ct}{{\tilde C}}
+\newcommand{\Dt}{{\tilde D}}
+
+% stksetup.tex
+\newcommand{\bmquote}{}
+\newcommand{\emquote}{}
+
+% cones.tex
+% From icmc91.macros (conical waveguides):
+\newcommand{\x}{x}
+\renewcommand{\u}{u}
+\newcommand{\X}{X}
+%\newcommand{\xsubp}{p_\x}
+\newcommand{\xz}{x_0}
+%\newcommand{\xsubpx}{\xsubp'}
+%\newcommand{\xsubpxx}{\xsubp''}
+% Already in use by LaTeX or someone: \newcommand{\xsubpt}{{\dot \xsubp}}
+%\newcommand{\xsubptt}{{\ddot \xsubp}}
+\newcommand{\ptt}{\ddot{p}}
+\newcommand{\pt}{\dot{p}}
+%newcommand{\xsubptx}{\xsubp(t,\x)}
+%\newcommand{\p}{p}
+% \newcommand{\P}{P} % Already defined as the ``new paragraph'' symbol
+\newcommand{\Pee}{P}
+\newcommand{\Pofs}{\Pee(s)}
+\newcommand{\Pps}{\Pee^+(s)}
+\newcommand{\Pms}{\Pee^-(s)}
+\newcommand{\Ppms}{\Pee^\pm(s)}
+\newcommand{\pprime}{p'}
+\newcommand{\pdot}{\dot{p}}
+%\newcommand{\ptx}{\p(t,\x)}
+\newcommand{\Psx}{\Pee(s,\x)}
+\newcommand{\pprimetx}{p'(t,\x)}
+\newcommand{\pplus}{p^+}
+%\newcommand{\pminus}{\p^-}
+
+% Property (formerly Theorem) numbers in /w/pasp/prf.tex
+\newcommand{\Tang}{1}
+\newcommand{\Tinv}{2}
+\newcommand{\Tanal}{3}
+
+% /l/l420/WaveDigitalFilters/WaveDigitalFilters.tex
+% /l/mt/wdf.tex
+\newcommand{\rr}{s} % Using R for impedance, so can't use it for reflectance
+\newcommand{\RR}{S} % Using R for impedance, so can't use it for reflectance
+\newcommand{\RRt}{\tilde{S}}
