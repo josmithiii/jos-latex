@@ -1,0 +1,32 @@
+% This file is included by each lecture
+
+\newcommand{\runningcitation}{``\theTitle, ''
+J.O. Smith, adapted from Music 320/420/421 Lecture Overheads, CCRMA, Stanford University}
+
+\input{../jos-latex/styles/stdlechdr.tex}
+%\input{../../stdwebhdr.tex}
+\input{../jos-latex/styles/stdmath.tex}
+% \input{../pdfhdr.tex}
+\input{../jos-latex/styles/cktdefs.tex}
+\input{../jos-latex/styles/operators.tex}
+
+\title{\theTitle}
+% \latex{\title{\theTitle}\thanks{\runningcitation}}
+
+\author{\otherFirstAuthors \ccrmahomepage{Julius O. Smith III}{jos}
+(\josemail)
+\otherTrailingAuthors \\
+\htmladdnormallink{Center for Computer Research in Music
+	and Acoustics (CCRMA)}{http://ccrma.stanford.edu/} \\
+\htmladdnormallink{Department of Music}{http://www.stanford.edu/group/Music/},
+	\htmladdnormallink{Stanford University}{http://www.stanford.edu/} \\
+Stanford, California 94305}
+
+\renewcommand{\fixme}[1]{}
+\renewcommand{\FIXME}[1]{}
+
+\renewcommand{\bookonly}[1]{} % book only; override stdcommon
+\renewcommand{\leconly}[1]{#1} % lecture overheads (or reader) only (not book)
+\renewcommand{\lcite}[1]{} % Suppress citation for lecture overheads
+\renewcommand{\lcitepp}[2]{}
+\renewcommand{\lecbook}[2]{#1}

@@ -1,0 +1,211 @@
+% cktdefs.tex
+
+% THIS VERSION ASSUMES stdmath.tex IS INCLUDED
+
+% MADE FROM THE MASTER SET OF DEFS FOR ALL OF EE101, 102, 103.
+% math symbols and operators
+
+\newcommand{\eqbydef}{\mathrel{\stackrel{\Delta}{=}}}
+%\newcommand{\reals}{{\bf R}} % defined in stdmath.tex
+%\newcommand{\ints}{{\bf Z}}
+%\newcommand{\complex}{{\bf C}}
+%\newcommand{\CN}{\complex^N}
+\renewcommand{\Re}{\mbox{Re}}
+\renewcommand{\Im}{\mbox{Im}}
+\newcommand{\RMS}{\mbox{RMS}}
+
+\renewcommand{\lg}{\mbox{lg}}
+
+% some electrical units
+\newcommand{\volt}{\mbox{\rm V}}
+\newcommand{\microvolt}{\mbox{$\mu {\rm V}$}}
+\newcommand{\millivolt}{\mbox{\rm mV}}
+\newcommand{\kilovolt}{\mbox{\rm kV}}
+\newcommand{\megavolt}{\mbox{\rm MV}}
+
+\newcommand{\amp}{\mbox{\rm A}}
+\newcommand{\picoamp}{\mbox {\rm pA}}
+\newcommand{\nanoamp}{\mbox {\rm nA}}
+\newcommand{\microamp}{\mu \mbox{\rm A}}
+\newcommand{\milliamp}{\mbox{\rm mA}}
+\newcommand{\kiloamp}{\mbox{\rm kA}}
+
+\newcommand{\coul}{\mbox{coul}}
+
+\newcommand{\ohm}{\mbox{$\Omega$}}
+\newcommand{\megohm}{\mbox{{\rm M}$\Omega$}}
+\newcommand{\kilohm}{\mbox{{\rm k}$\Omega$}}
+
+\newcommand{\farad}{\mbox{\rm F}}
+\newcommand{\picofarad}{\mbox{\rm pF}}
+\newcommand{\nanofarad}{\mbox{\rm nF}}
+\newcommand{\microfarad}{\mu \mbox{\rm F}}
+\newcommand{\millifarad}{\mbox{\rm mF}}
+
+\newcommand{\henry}{\mbox{\rm H}}
+\newcommand{\microhenry}{\mu \mbox{\rm H}}
+\newcommand{\millihenry}{\mbox{\rm mH}}
+
+\newcommand{\watt}{\mbox{\rm W}}
+\newcommand{\picowatt}{\mbox{\rm pW}}
+\newcommand{\microwatt}{\mu \mbox{\rm W}}
+\newcommand{\milliwatt}{\mbox{\rm mW}}
+\newcommand{\kilowatt}{\mbox{\rm kW}}
+\newcommand{\megawatt}{\mbox{\rm MW}}
+\newcommand{\gigawatt}{\mbox{\rm GW}}
+
+\newcommand{\gram}{\mbox{\rm g}}
+\newcommand{\kilogram}{\mbox{\rm kg}}
+\newcommand{\newton}{\mbox{\rm N}}
+\newcommand{\kilonewton}{\mbox{\rm kN}}
+\newcommand{\joule}{\mbox{\rm J}}
+\newcommand{\kilojoule}{\mbox{\rm kJ}}
+
+\newcommand{\degK}{\mbox{${}^{\circ}$\rm K}}
+\newcommand{\degC}{\mbox{${}^{\circ}$\rm C}}
+\newcommand{\degF}{\mbox{${}^{\circ}$\rm F}}
+
+\newcommand{\foot}{\mbox{\rm ft}}
+
+\newcommand{\mins}{\mbox{min}} %to prevent confusion with \min, the minimum operator
+\newcommand{\maxs}{\mbox{max}}
+
+\renewcommand{\sec}{\mbox{sec}}
+\newcommand{\millisec}{\mbox{msec}}
+\newcommand{\microsec}{\mu\mbox{sec}}
+\newcommand{\nanosec}{\mbox{nsec}}
+
+\newcommand{\rad}{\mbox{rad}}
+\newcommand{\hertz}{\mbox{Hz}}
+\newcommand{\kilohertz}{\mbox{kHz}}
+\newcommand{\megahertz}{\mbox{MHz}}
+\newcommand{\dB}{\mbox{dB}}
+
+
+\newcommand{\rms}{\mbox{RMS}}
+\newcommand{\avg}{\mbox{AVG}}
+
+\newcommand{\eqmaybe}{\mathrel{\stackrel{?}{=}}}
+
+% others moved to stdmath.h
+\newcommand{\BEAL}{\begin{eqnarray}}
+\newcommand{\EEAL}{\end{eqnarray}}
+
+\newcommand{\XXX}[1]{\marginpar{\raggedright \footnotesize #1}}
+
+\newtheorem{remark}{Remark}
+
+
+% Usage: \rawFigure{figure.eps}
+%\def\figureskip{\parskip}
+\def\figureskip{0pt} % deferred evaluation
+\def\rawFigure#1{%
+    \vskip\figureskip\nobreak
+    \hbox to \hsize{\epsfbox{#1}\hfil}
+    \vskip\figureskip
+}
+
+\setlength{\parskip}{2ex plus 0.5ex minus 0.5ex }
+
+% Call this after \maketitle, and possibly also after any outline and after
+% \makenavtoc (stdcommon.tex)
+%begin{latexonly}
+\newcommand{\setlecfont}{
+  \sffamily\LARGE
+  \raggedright
+}
+%end{latexonly}
+
+\begin{htmlonly}
+\newcommand{\setlecfont}{
+% Creates large italics for some reason in HTML case.
+}
+\end{htmlonly}
+
+%begin{latexonly}
+\newcommand{\oursection}[1]{
+\clearpage
+\begin{center}
+{\Huge\bfseries #1}
+\end{center}
+\vspace*{0.15cm}
+\hrule height.3mm
+\bigskip
+}
+\newcommand{\oursectionncp}[1]{
+\begin{center}
+{\Huge\bfseries #1}
+\end{center}
+\vspace*{0.15cm}
+\hrule height.3mm
+\bigskip
+}
+%end{latexonly}
+
+\begin{htmlonly}
+\newcommand{\oursection}[1]{
+%7/28/01/jos: Changed ``renew'' to ``new'' above (to clear images.log error)
+%4/9/01/jos: ``huge'' is now coming out as H1+4 --- what changed?
+%4/9/01/jos/later: I think I needed ``renew'' above.  LARGE is now H1+2
+\section*[#1]{{\LARGE\bfseries #1}} % LARGE formerly subsection heading size
+%to 4/9/01: \section*[#1]{{\huge\bfseries #1}} % NOTE DIFFERENT FONT SIZE (+3 not +4)
+%\section*[#1]{\begin{center}{\Huge\bfseries #1}\end{center}}
+%\begin{rawhtml}
+%<HR width="50\%">
+%\end{rawhtml}
+}
+\end{htmlonly}
+
+%begin{latexonly}
+\newcommand{\oursubsection}[1]{
+\begin{center}
+{\LARGE\bfseries #1}
+\end{center}
+%\vspace*{0.15cm}
+\bigskip
+}
+\newcommand{\oursubsectionsamepage}[1]{\oursubsection{#1}}
+\newcommand{\oursubsubsection}[1]{\subsubsection*{{\LARGE\bfseries #1}}
+}
+%end{latexonly}
+
+\begin{htmlonly}
+\newcommand{\oursubsection}[1]{\subsection*[#1]{{\LARGE\bfseries #1}}}
+\newcommand{\oursubsectionsamepage}[1]{{\LARGE\bfseries #1}}
+\newcommand{\oursubsubsection}[1]{{\LARGE\bfseries #1}}
+%Makes new pages in l2h - could fix with MAX_SPLIT_DEPTH:
+% \subsubsection*{{\LARGE\bfseries #1}}
+\end{htmlonly}
+
+\newcommand{\figureCenterCapSize}[4]{
+	\begin{center}
+%	\hline
+	\epsfxsize=#4
+	\leavevmode
+	\epsfbox{#2}
+%	\LARGE #3
+%	\hline
+	\end{center}
+}
+
+\newcommand{\figureCenterCap}[3]{
+	\figureCenterCapSize{#1}{#2}{#3}{7in}
+}
+
+\newcommand{\figureLongCap}[3]{
+	\figureCenterCapSize{#1}{#2}{#3}{7in}
+}
+
+\newcommand{\mysection}[1]{\oursection{#1}\message{WARNING: l2h will NOT GENERATE A NEW PAGE}}
+\newcommand{\mysubsection}[1]{\oursubsection{#1}\message{WARNING: l2h will NOT GENERATE A NEW PAGE}}
+\newcommand{\mysubsubsection}{\subsubsection}
+
+% Also in stdmath.tex
+\providecommand{\zbox}[1]{\ensuremath{\fbox{$\displaystyle #1$}}}
+
+\newcommand{\xlabelsize}{\footnotesize}
+\newcommand{\mylabelsize}{\footnotesize}
+\newcommand{\leclabelsize}{\large}
+\newcommand{\psfragsize}{\large}
+
+\newcommand{\fs}{f_s}

@@ -1,0 +1,31 @@
+% This file is included by lechdr.tex in place of stdwebhdr.tex
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage{makeidx}
+%\documentclass{prosper} % uses graphics => not compatible
+%\usepackage{PPRdefault} % New 5/19/06
+
+% no effect:
+% \setlength{\voffset}{0ex}
+% \setlength{\parskip}{2ex plus 0.5ex minus 0.5ex }
+% \setlength{\topmargin}{0ex}
+% \setlength{\headheight}{0ex}
+% \setlength{\headsep}{0ex}
+
+\input{../jos-latex/styles/stdcommon.tex}
+%\input{../../stdlecfigures.epsf.tex}
+\input{../jos-latex/styles/stdlecfigures.tex}
+
+%\usepackage{html}
+%\newcommand{\ccrmahomepage}[2]{\htmladdnormallink{#1}{http://ccrma.stanford.edu/\~{}#2}}
+%\newcommand{\credit}[1]{\latexhtml{\footnotetext{#1}}{(#1)}}
+%\newcommand{\rmk}[1]{}
+%\newcommand{\fixme}[1]{}
+%\newcommand{\BIT}{\begin{itemize}}
+%\newcommand{\EIT}{\end{itemize}}
+%\newcommand{\BNUM}{\begin{enumerate}}
+%\newcommand{\ENUM}{\end{enumerate}}
+
+% Comment out material for the reader but not the lecture overheads
+%\newenvironment{readeronly}{\begin{makebox}}{\end{makebox}}
+\htmlexcludecomment{readeronly} % Needs html.sty
