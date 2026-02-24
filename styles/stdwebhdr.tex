@@ -1,0 +1,40 @@
+%before 10/28/02: \documentclass[12pt]{article}
+%before  7/15/23: \documentclass[11pt]{article}
+\documentclass[12pt]{article}
+%begin{latexonly}
+\usepackage{fullpage}
+% FIXME: fullpage incompatible with fancyheadings as of Fedora Core 2:
+% \usepackage{fancyheadings} % must appear after changes to \textwidth
+% \pagestyle{fancy}
+% \setlength{\headrulewidth}{0pt}
+% \setlength{\footrulewidth}{0.4pt}
+% %\lhead[\rm Page \thepage]{\leftmark}  % Usage: \lhead[LH-even]{LH-odd}
+% %\rhead[\rightmark]{\rm Page \thepage}
+% \cfoot{} % Suppress page numbering at bottom
+% \lfoot{{\small\runningcitation}}
+%end{latexonly}
+
+\input{../jos-latex/styles/stdcommon.tex}
+
+%begin{latexonly}
+\input{../jos-latex/styles/stdfigs-latex.tex}
+%end{latexonly}
+
+\begin{htmlonly}
+\input{../jos-latex/styles/stdfigs-html.tex}
+\end{htmlonly}
+
+% Alternate:
+% \lhead{\runningcitation}
+
+% Goes after abstract:
+% HTML case suppressed since it generates redundant contents page
+\newcommand{\articlecontents}{
+	\begin{latexonly}
+	\vfill
+	\tableofcontents
+	\vfill
+	\clearpage
+	\end{latexonly}
+	\makenavtoc % Navigation contents (HTML only) - see stdcommon.tex
+}
