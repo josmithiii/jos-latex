@@ -159,6 +159,19 @@ EXCLUDE_SET = {
     "smileyface",  # mixed mode, tricky
 }
 
+# Macros to include in MathJax JavaScript config ONLY.
+# These must NOT get do_cmd_* Perl wrappers or %mathjax_protected_cmds
+# entries, because LaTeX2HTML has built-in text-mode handlers that we
+# must not shadow.  (They're needed in MathJax for math-mode usage.)
+MATHJAX_ONLY_SET = {
+    "emph",          # l2h: <em>...</em>
+    "ensuremath",    # l2h: passes through
+    "index",         # l2h: index processing
+    "sc",            # l2h: small-caps handling
+    "textunderscore",  # l2h: literal underscore
+    "texttilde",     # l2h: literal tilde
+}
+
 
 def extract_macros(filepath: Path) -> dict[str, tuple[int, str]]:
     """Extract macro definitions from a .tex file.
@@ -507,10 +520,12 @@ def main() -> None:
     lines.append("")
 
     # %mathjax_protected_cmds hash
+    # Skip MATHJAX_ONLY_SET: those must use l2h's built-in text-mode handlers
     lines.append("# Prevent l2h from expanding these via \\newcommand")
     lines.append("%mathjax_protected_cmds = (")
     for name in sorted(math_macros):
-        lines.append(f"    '{name}' => 1,")
+        if name not in MATHJAX_ONLY_SET:
+            lines.append(f"    '{name}' => 1,")
     lines.append(");")
     lines.append("")
 
@@ -574,11 +589,14 @@ def main() -> None:
     lines.append("")
 
     # Generate do_cmd_* wrappers
+    # Skip MATHJAX_ONLY_SET: those must use l2h's built-in text-mode handlers
     lines.append("# ============================================================")
     lines.append("# Compact do_cmd_* wrappers")
     lines.append("# ============================================================")
     lines.append("")
     for name in sorted(math_macros):
+        if name in MATHJAX_ONLY_SET:
+            continue
         nargs, body = math_macros[name]
         if nargs == 0:
             lines.append(

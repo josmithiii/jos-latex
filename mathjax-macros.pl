@@ -2,7 +2,7 @@
 # DO NOT EDIT — regenerate with:
 #   python3 /w/jos-latex/tools/generate_mathjax_macros.py
 #
-# 951 math macros from 6 style files
+# 953 math macros from 6 style files
 
 # MathJax macro definitions
 %MATHJAX_MACROS = (
@@ -139,6 +139,8 @@
     'Interp' => '\\oper{Interp}',
     'Iscr' => '\\mathcal{I}',
     'Iv' => '\\underline{I}',
+    'Jmtx' => '\\mathbf{J}',
+    'Kmtx' => '\\mathbf{K}',
     'LBCF' => ['\\text{LBCF}_{#1}^{\\,#2,\\,#3}', 3],
     'Lamm' => '{\\boldsymbol \\Lambda}',
     'Laplace' => '\\mathcal{L}',
@@ -1120,6 +1122,8 @@
     'Interp' => 1,
     'Iscr' => 1,
     'Iv' => 1,
+    'Jmtx' => 1,
+    'Kmtx' => 1,
     'LBCF' => 1,
     'Lamm' => 1,
     'Laplace' => 1,
@@ -1388,9 +1392,7 @@
     'emjok' => 1,
     'emjokT' => 1,
     'emjon' => 1,
-    'emph' => 1,
     'emtx' => 1,
-    'ensuremath' => 1,
     'env' => 1,
     'eps' => 1,
     'eqbydef' => 1,
@@ -1508,7 +1510,6 @@
     'imagparttext' => 1,
     'impliesq' => 1,
     'impliess' => 1,
-    'index' => 1,
     'intrange' => 1,
     'intrangefour' => 1,
     'intrangethree' => 1,
@@ -1697,7 +1698,6 @@
     'rz' => 1,
     'sR' => 1,
     'sample' => 1,
-    'sc' => 1,
     'scale' => 1,
     'sec' => 1,
     'seconds' => 1,
@@ -1715,8 +1715,6 @@
     'tauv' => 1,
     'tdelta' => 1,
     'testtilde' => 1,
-    'texttilde' => 1,
-    'textunderscore' => 1,
     'thh' => 1,
     'threebyone' => 1,
     'threebyonenp' => 1,
@@ -2134,6 +2132,8 @@ sub do_cmd_Imtx { _mathjax_pass0('Imtx', @_) }
 sub do_cmd_Interp { _mathjax_pass0('Interp', @_) }
 sub do_cmd_Iscr { _mathjax_pass0('Iscr', @_) }
 sub do_cmd_Iv { _mathjax_pass0('Iv', @_) }
+sub do_cmd_Jmtx { _mathjax_pass0('Jmtx', @_) }
+sub do_cmd_Kmtx { _mathjax_pass0('Kmtx', @_) }
 sub do_cmd_LBCF { _mathjax_passN('LBCF', 3, @_) }
 sub do_cmd_Lamm { _mathjax_pass0('Lamm', @_) }
 sub do_cmd_Laplace { _mathjax_pass0('Laplace', @_) }
@@ -2402,9 +2402,7 @@ sub do_cmd_emjoT { _mathjax_pass0('emjoT', @_) }
 sub do_cmd_emjok { _mathjax_pass0('emjok', @_) }
 sub do_cmd_emjokT { _mathjax_pass0('emjokT', @_) }
 sub do_cmd_emjon { _mathjax_pass1('emjon', @_) }
-sub do_cmd_emph { _mathjax_pass1('emph', @_) }
 sub do_cmd_emtx { _mathjax_pass0('emtx', @_) }
-sub do_cmd_ensuremath { _mathjax_pass1('ensuremath', @_) }
 sub do_cmd_env { _mathjax_pass0('env', @_) }
 sub do_cmd_eps { _mathjax_pass0('eps', @_) }
 sub do_cmd_eqbydef { _mathjax_pass0('eqbydef', @_) }
@@ -2522,7 +2520,6 @@ sub do_cmd_imagpart { _mathjax_pass1('imagpart', @_) }
 sub do_cmd_imagparttext { _mathjax_pass1('imagparttext', @_) }
 sub do_cmd_impliesq { _mathjax_pass0('impliesq', @_) }
 sub do_cmd_impliess { _mathjax_pass0('impliess', @_) }
-sub do_cmd_index { _mathjax_pass1('index', @_) }
 sub do_cmd_intrange { _mathjax_pass2('intrange', @_) }
 sub do_cmd_intrangefour { _mathjax_passN('intrangefour', 4, @_) }
 sub do_cmd_intrangethree { _mathjax_passN('intrangethree', 3, @_) }
@@ -2711,7 +2708,6 @@ sub do_cmd_rv { _mathjax_pass0('rv', @_) }
 sub do_cmd_rz { _mathjax_pass0('rz', @_) }
 sub do_cmd_sR { _mathjax_pass0('sR', @_) }
 sub do_cmd_sample { _mathjax_pass0('sample', @_) }
-sub do_cmd_sc { _mathjax_pass1('sc', @_) }
 sub do_cmd_scale { _mathjax_pass0('scale', @_) }
 sub do_cmd_sec { _mathjax_pass0('sec', @_) }
 sub do_cmd_seconds { _mathjax_pass0('seconds', @_) }
@@ -2729,8 +2725,6 @@ sub do_cmd_str { _mathjax_pass0('str', @_) }
 sub do_cmd_tauv { _mathjax_pass0('tauv', @_) }
 sub do_cmd_tdelta { _mathjax_pass0('tdelta', @_) }
 sub do_cmd_testtilde { _mathjax_pass1('testtilde', @_) }
-sub do_cmd_texttilde { _mathjax_pass1('texttilde', @_) }
-sub do_cmd_textunderscore { _mathjax_pass0('textunderscore', @_) }
 sub do_cmd_thh { _mathjax_pass0('thh', @_) }
 sub do_cmd_threebyone { _mathjax_passN('threebyone', 3, @_) }
 sub do_cmd_threebyonenp { _mathjax_passN('threebyonenp', 3, @_) }
