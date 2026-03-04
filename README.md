@@ -15,7 +15,8 @@ This repository contains the build system, LaTeX style files, tools, and shared 
 ```
 jos-latex/
 ├── Makefile.tex          # Master build rules (include from book Makefile)
-├── styles/               # LaTeX style files
+├── styles/               # LaTeX style files and CSS
+│   ├── jos.css           # Base CSS for HTML output
 │   ├── stdcommon.tex     # Common packages and settings
 │   ├── stddefs.tex       # Macro definitions
 │   ├── stdmath.tex       # Math macros
@@ -85,6 +86,43 @@ source jos-latex/setup.sh
 ```bash
 git clone https://github.com/josmithiii/l2hmj.git
 cd l2hmj && ./configure && make install
+```
+
+## MathJax
+
+HTML output uses MathJax 3 with SVG rendering for correct math layout
+across all browsers.  To enable MathJax in your project, add to your
+`.latex2html-init`:
+
+```perl
+require "$initdir/jos-latex/l2h-mathjax-init.pl";
+```
+
+This sets `$USE_MATHJAX = 1`, loads macro definitions from your style
+files, and configures SVG output with a global font cache.
+
+## CSS Styling
+
+The base stylesheet `styles/jos.css` is linked into every HTML build
+automatically (`make html` creates a `jos.css` symlink in the book
+directory).
+
+### Customizing styles
+
+To add project-specific CSS overrides on top of `jos.css`, set
+`$EXTRA_STYLESHEET` in your project's `.latex2html-init` or `.l2h` file:
+
+```perl
+$EXTRA_STYLESHEET = "../mystyle.css";
+```
+
+This emits a second `<LINK>` tag after `jos.css`, so your rules take
+precedence via normal CSS cascade.  No need to copy or modify `jos.css`.
+
+To replace `jos.css` entirely, override `$STYLESHEET` instead:
+
+```perl
+$STYLESHEET = "../mystyle.css";
 ```
 
 ## Common Make Targets
