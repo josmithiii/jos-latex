@@ -473,6 +473,23 @@ ttest: test
 	$(MAKE) test
 
 # ============================================================================
+# MathJax Macro Generation (from style files)
+# ============================================================================
+
+MATHJAX_MACROS_PL ?= $(JOS_LATEX)/mathjax-macros.pl
+MATHJAX_GENERATOR ?= $(JOS_LATEX)/tools/generate_mathjax_macros.py
+MATHJAX_STYLE_DEPS = \
+    $(JOS_LATEX)/styles/stdmath.tex \
+    $(JOS_LATEX)/styles/cktdefs.tex \
+    $(JOS_LATEX)/styles/operators.tex \
+    $(JOS_LATEX)/styles/stddefs.tex \
+    $(JOS_LATEX)/styles/stdcommon.tex \
+    $(JOS_LATEX)/styles/wgtmac.tex
+
+$(MATHJAX_MACROS_PL): $(MATHJAX_STYLE_DEPS) $(MATHJAX_GENERATOR)
+	python3 $(MATHJAX_GENERATOR)
+
+# ============================================================================
 # HTML Generation (via latex2html)
 # ============================================================================
 
@@ -485,7 +502,7 @@ thtml:
 htmlo ho: .HTML-TIMESTAMP
 	$(OHTML) $(HTMLDIR)/$(NAME).html
 
-.HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h
+.HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h $(MATHJAX_MACROS_PL)
 	mkdir -p $(HTMLDIR)
 	@echo "Using: $(L2H)"
 	time $(L2H) -dir $(HTMLDIR) -init_file $(NAME).l2h $(NAME).tex
