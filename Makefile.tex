@@ -233,7 +233,7 @@ all2up 2upall: 2up 2uppdf
 
 4up $(NAME)_4up.ps: $(NAME).ps
 	-/bin/rm -f $(NAME)_4up.ps
-	psnup -pletter -n 4 $(NAME).ps > $(NAME)_4up.ps
+	psnup -pletter -4 $(NAME).ps > $(NAME)_4up.ps
 
 4upp 4uppdf pdf4up pdf4 $(NAME)_4up.pdf: $(NAME)_4up.ps
 	-/bin/rm -f $(NAME)_4up.pdf
