@@ -504,6 +504,7 @@ htmlo ho: .HTML-TIMESTAMP
 
 .HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h $(MATHJAX_MACROS_PL)
 	mkdir -p $(HTMLDIR)
+	@ln -sf $(JOS_LATEX)/styles/jos.css jos.css
 	@echo "Using: $(L2H)"
 	time $(L2H) -dir $(HTMLDIR) -init_file $(NAME).l2h $(NAME).tex
 	@if grep -q 'Overfull \\vbox' $(HTMLDIR)/images.log 2>/dev/null; then \
