@@ -1,0 +1,98 @@
+/*
+<!-- old API gone in HTML5 -->
+<!-- <BODY background="greybackground.gif"> -->
+<!-- <BODY bgcolor="A0A0A0"> -->
+<!-- <BODY bgcolor="000000"> -->
+*/
+
+:root {
+    color-scheme: light dark;
+    --title-color: #000040;
+    --background-color: #FFFFFF;
+    --text-color: #000;
+    --border-color: black;
+    --link-color: #000088;
+    --visited-color: gray;
+    --active-color: blue;
+    --hover-color: red;
+    --rule-color: blue;
+    --image-inversion: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --title-color: #FFFFBF;
+        --background-color: #111122; /* need full black to match images */
+        --text-color: #ffffff;
+        --link-color: #CCAAEE;
+        --visited-color: gray;
+        --active-color: pink;
+        --hover-color: red;
+        --rule-color: lightgreen;
+        --image-inversion: 1;
+    }
+}
+
+img {
+    -webkit-filter: invert(var(--image-inversion));
+    filter: invert(var(--image-inversion));
+}
+
+img.rounded-corners {
+    border-radius: 40%;
+}
+
+body {
+    background: var(--background-color);
+    color: var(--text-color);
+    font-size:12pt;
+    font-family:"Times New Roman", serif;
+}
+/* font-family:"Lucida Grande", sans-serif; */
+/* more sans-serif: Verdana,Arial */
+
+tt { font-size:12pt; }
+pre { font-size:12pt; }
+
+.textit { font-style: italic; }
+.textbf { font-weight: bold; }
+
+IMG.inline {vertical-align:middle;}
+/* IMG.inline {border:solid blue 1px;} */ /* testing 1 2 */ 
+
+A:link {text-decoration: none; color:var(--link-color)}
+A:visited {text-decoration: none; color:var(--visited-color)}
+A:active {text-decoration: none; color:var(--active-color)}
+A:hover {text-decoration: underline; color:var(--hover-color)}
+
+/* horizontal rule - to improve using an image, see 
+   http://www.sovavsiti.cz/css/hr.html
+ */
+hr {
+    border: 1px outset var(--rule-color); /* was 2px */
+    width: 100%;
+    height: 0px; /* was 4px */
+    margin: 10px auto 0 0;
+    text-align: left;
+    }   
+
+title {color: var(--title-color)}
+
+/* http://notjustahatrack.com/posts/styling-the-sup-tag/ */
+suphide {
+    height: 0;
+    line-height: 1;
+    position: relative;
+    top: -0.6em;
+    vertical-align: baseline !important;
+    vertical-align: bottom;
+}
+
+/* Compensate somewhat for math images with large blank space beneath
+   (anything with descenders such as \rho) */
+p { line-height: 1.5; }
+mjx-container { line-height: normal; }
+caption { line-height: 1.5; }
+
+/* H0 { background-color: black; } */
+/* div { margin: 0; padding: 0; } */
