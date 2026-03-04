@@ -220,7 +220,7 @@ qpso: qps
 
 2up $(NAME)_2up.ps:: $(NAME).ps
 	-/bin/rm -f $(NAME)_2up.ps
-	psnup -pletter -n 2 $(NAME).ps > $(NAME)_2up.ps
+	psnup -pletter -2 $(NAME).ps > $(NAME)_2up.ps
 
 2upp 2uppdf pdf2up pdf2 $(NAME)_2up.pdf: $(NAME)_2up.ps
 	-/bin/rm -f $(NAME)_2up.pdf
@@ -632,12 +632,12 @@ qpsto: qpst
 # ============================================================================
 
 book1 $(NAME)_book1.ps: $(NAME).ps
-	psnup -pletter -r -n 2 $(NAME).ps > $(NAME)_2upr.ps
+	psnup -pletter -r -2 $(NAME).ps > $(NAME)_2upr.ps
 	psbook $(NAME)_2upr.ps $(NAME)_book.ps
 
 book $(NAME)_book.ps: $(NAME).ps
 	psbook $(NAME).ps $(NAME)_tmp.ps
-	psnup -pletter -l -n 2 $(NAME)_tmp.ps > $(NAME)_book.ps
+	psnup -pletter -l -2 $(NAME)_tmp.ps > $(NAME)_book.ps
 	/bin/rm -f $(NAME)_tmp.ps
 
 # ============================================================================
