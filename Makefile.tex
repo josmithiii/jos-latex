@@ -39,6 +39,8 @@ ifeq ($(UNAME_S),Darwin)
     OHTML ?= open
     CPOPTR ?= -R
     DVIV ?= open
+    PREVIEW ?= open -a Preview.app
+    ACROBAT ?= open -a "Adobe Acrobat"
 else
     # Linux/other
     PDFV ?= xpdf
@@ -46,6 +48,8 @@ else
     OHTML ?= xdg-open
     CPOPTR ?= -rpdf
     DVIV ?= xdvi
+    PREVIEW ?= $(PDFV)
+    ACROBAT ?= $(PDFV)
 endif
 
 # PS2PDF options
@@ -77,10 +81,19 @@ DICTIONARY ?= $(OTHER_DICTS) $(LOCALDICT)
 
 # Build tools
 FILTERBBL ?= $(JOS_LATEX)/tools/filterbbl
+PDFLATEX ?= pdflatex -file-line-error -recorder
 
 # Derived paths
 HTMLDIR ?= $(NAME)HTML
 LOCALINSTDIR ?= $(NAME)INST
+ARCHIVE_PDF ?= $(NAME)0.pdf
+ANIMATIONS_PDF ?= animations.pdf
+
+# Figure conversion defaults for project-local asset pipelines.
+PNMTOPS_PNG_OPTS ?= -turn -turn
+PNMTOPS_JPG_OPTS ?=
+PNMTOPS_JPEG_OPTS ?=
+PNMTOPS_GIF_OPTS ?= -noturn
 
 # Source files
 SRCS_NOMAKE = $(NAME).tex $(OTHER_SRCS) $(NAME).l2h
@@ -111,6 +124,7 @@ L2H ?= latex2html
 .PHONY: il ilo ilw oq installo io ql qil
 .PHONY: unlink unprv linkdiffs localdict localdictf ld ldf
 .PHONY: print lpr p2up print2up print_2up p4up print4up print_4up printq pq
+.PHONY: quicklook poa opv pop r ra
 .PHONY: help oldhelp
 # Naming: f=fresh, i=install, l=links, w=web, o=open
 .PHONY: fil filo filw fi fiw fio
@@ -184,6 +198,21 @@ pb bookpdf: $(NAME).bookpdf
 
 pbo: pb
 	$(PDFV) $(NAME).pdf
+
+quicklook:
+	$(PDFLATEX) $(NAME).tex && $(PDFV) $(NAME).pdf
+
+poa: $(NAME).pdf
+	$(ACROBAT) $(NAME).pdf
+
+opv pop: $(NAME).pdf
+	$(PREVIEW) $(NAME).pdf
+
+r:
+	/bin/mv $(NAME).pdf $(ARCHIVE_PDF)
+
+ra:
+	/bin/mv $(NAME).pdf $(ANIMATIONS_PDF)
 
 # ============================================================================
 # Products Target
@@ -521,6 +550,16 @@ htgzl: .HTML-TIMESTAMP
 htgz: .HTML-TIMESTAMP
 	$(TAR) -cvhf - $(HTMLDIR) | gzip > $(HTMLDIR).tgz
 
+%.mmdtex: %.mmd
+	mmd2beamer $<
+
+%.html: %.mmdtex
+	latexmk $<
+	makeglossaries $<
+	pdflatex $<
+	pdflatex $<
+	latexmk -c $<
+
 # ============================================================================
 # Source Archiving
 # ============================================================================
@@ -692,6 +731,18 @@ book $(NAME)_book.ps: $(NAME).ps
 
 .pn.eps:
 	pnmtops < $< > $@
+
+eps/%.eps: png/%.png
+	pngtopnm $< | pnmtops $(PNMTOPS_PNG_OPTS) > $@
+
+eps/%.eps: jpg/%.jpg
+	jpegtopnm $< | pnmtops $(PNMTOPS_JPG_OPTS) > $@
+
+eps/%.eps: jpg/%.jpeg
+	jpegtopnm $< | pnmtops $(PNMTOPS_JPEG_OPTS) > $@
+
+eps/%.eps: gif/%.gif
+	giftopnm $< | pnmtops $(PNMTOPS_GIF_OPTS) > $@
 
 # ============================================================================
 # EPS Figures from FIG files
