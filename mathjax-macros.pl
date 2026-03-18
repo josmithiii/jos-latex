@@ -76,7 +76,7 @@
     'Dt' => '{\\tilde D}',
     'Dtd' => '{\\dot D_t}',
     'Dtmtx' => '\\tilde{\\Dmtx}',
-    'E' => ['\\Escr\\left\\{#1\\right\\}', 1],
+    'E' => ['\\Escr\\left\\lbrace#1\\right\\rbrace', 1],
     'EDC' => '\\text{EDC}',
     'EDR' => '\\text{EDR}',
     'Eh' => '\\hat E',
@@ -89,7 +89,7 @@
     'Energy' => '\\oper{E}',
     'Esc' => '\\text{e}',
     'Escr' => '\\mathcal{E}',
-    'Ev' => ['\\mathcal{E}\\left\\{#1\\right\\}', 1],
+    'Ev' => ['\\mathcal{E}\\left\\lbrace#1\\right\\rbrace', 1],
     'FBCF' => ['\\text{FBCF}_{#1}^{\\,#2}', 2],
     'FFCF' => ['\\text{FFCF}_{#1}^{\\,#2}', 2],
     'FFT' => '\\oper{FFT}',
@@ -289,7 +289,7 @@
     'Us' => '\\U(s)',
     'V' => 'V',
     'Va' => 'V_a',
-    'Var' => ['\\text{Var}\\left\\{#1\\right\\}', 1],
+    'Var' => ['\\text{Var}\\left\\lbrace#1\\right\\rbrace', 1],
     'Vb' => 'V_b',
     'Vd' => 'V_d',
     'Vht' => '\\hat{\\Vt}',
@@ -473,12 +473,12 @@
     'fs' => 'f_s',
     'ft' => '\\dot f',
     'ftt' => '\\ddot f',
-    'funcalign' => ['\\left\\{\\begin{array}{ll}
+    'funcalign' => ['\\left\\lbrace\\begin{array}{ll}
 	#1, & #2 \\\\[5pt]
 	#3, & #4 \\\\
 	\\end{array}
 	\\right.', 4],
-    'funcalignthree' => ['\\left\\{\\begin{array}{ll}
+    'funcalignthree' => ['\\left\\lbrace\\begin{array}{ll}
 	#1, & #2 \\\\[5pt]
 	#3, & #4 \\\\[5pt]
 	#5, & #6 \\\\
@@ -532,9 +532,9 @@
     'idtft' => '\\oper{IDTFT}',
     'iffs' => '\\;\\Leftrightarrow\\;',
     'ifft' => '\\oper{IFFT}',
-    'imagPart' => ['\\text{im}\\left\\{#1\\right\\}', 1],
-    'imagPartSq' => ['\\text{im}^2\\left\\{#1\\right\\}', 1],
-    'imagpart' => ['\\text{im{\\left\\{#1\\right\\}}}', 1],
+    'imagPart' => ['\\text{im}\\left\\lbrace#1\\right\\rbrace', 1],
+    'imagPartSq' => ['\\text{im}^2\\left\\lbrace#1\\right\\rbrace', 1],
+    'imagpart' => ['\\text{im{\\left\\lbrace#1\\right\\rbrace}}', 1],
     'imagparttext' => ['\\text{im{\\{#1\\}}}', 1],
     'impliesq' => '\\implies\\quad',
     'impliess' => '\\,\\,\\Rightarrow\\,\\,',
@@ -571,7 +571,7 @@
     'lam' => '\\lambda',
     'lami' => '{\\lambda_i}',
     'lb' => '\\left[',
-    'lbr' => '\\left\\{',
+    'lbr' => '\\left\\lbrace',
     'ldotss' => '\\ldots\\,',
     'lg' => '\\text{lg}',
     'ln' => '\\text{ln}',
@@ -700,14 +700,14 @@
     'rad' => '\\text{rad}',
     'rair' => '\\rho',
     'rb' => '\\right]',
-    'rbr' => '\\right\\}',
+    'rbr' => '\\right\\rbrace',
     'rc' => 'k',
     'rci' => '\\rc_i',
     'rcs' => 'k',
     'real' => '\\Re',
-    'realPart' => ['\\text{re}\\left\\{#1\\right\\}', 1],
-    'realPartSq' => ['\\text{re}^2\\left\\{#1\\right\\}', 1],
-    'realpart' => ['\\text{re{\\left\\{#1\\right\\}}}', 1],
+    'realPart' => ['\\text{re}\\left\\lbrace#1\\right\\rbrace', 1],
+    'realPartSq' => ['\\text{re}^2\\left\\lbrace#1\\right\\rbrace', 1],
+    'realpart' => ['\\text{re{\\left\\lbrace#1\\right\\rbrace}}', 1],
     'realparttext' => ['\\text{re{\\{#1\\}}}', 1],
     'reals' => '\\mathbb{R}',
     'relop' => ['\\,#1\\,', 1],
@@ -732,7 +732,7 @@
     'sec' => '\\text{sec}',
     'seconds' => '\\text{ s}',
     'select' => '\\oper{Downsample}',
-    'set' => ['\\left\\{#1\\right\\}', 1],
+    'set' => ['\\left\\lbrace#1\\right\\rbrace', 1],
     'shah' => '\\,\\raisebox{0.8em}{\\rotatebox{-90}{\\resizebox{1em}{1em}{{\\exists}}}}',
     'shift' => '\\oper{Shift}',
     'si' => 's_i',
