@@ -10,6 +10,7 @@ use Cwd qw(abs_path);
 my $_jl_dir = dirname(abs_path(__FILE__));
 
 $USE_MATHJAX = 1;
+$MATHJAX_EXTERNAL_CONFIG = 1;  # write shared mathjax-config.js; browser caches it across pages
 require "$_jl_dir/mathjax-macros.pl";
 
 # Expand environment-abbreviation macros from stddefs.tex before
