@@ -4,6 +4,7 @@
 \providecommand{\captionwidth}{0.9\textwidth}
 \providecommand{\theight}{\textheight}
 
+\usepackage{graphicx}
 \usepackage{epsfig}
 
 % Simplified figure macros
@@ -15,7 +16,7 @@
 % Usage: \myFigure{num}{caption}
 \newcommand{\myFigure}[2]{
 	\begin{center}
-	\epsfig{file=eps/#1.eps} \\
+	\includegraphics{eps/#1.eps} \\
 	  #2
 	\end{center}
 }
@@ -24,7 +25,7 @@
 \newcommand{\myFigureRotate}[3]{
 	\begin{makeimage}
 	\begin{center}
-	\epsfig{file=eps/#1.eps,angle=#2} \\
+	\includegraphics[angle=#2]{eps/#1.eps} \\
 	     #3
 	\end{center}
 	\end{makeimage}
@@ -34,7 +35,7 @@
 \newcommand{\myFigureRotateToWidth}[4]{
 	\begin{makeimage}
 	\begin{center}
-	\epsfig{file=eps/#1.eps,angle=#2,width=#3} \\
+	\includegraphics[angle=#2,width=#3]{eps/#1.eps} \\
 	     #4
 	\end{center}
 	\end{makeimage}
@@ -45,8 +46,8 @@
 	\begin{makeimage}
 	\begin{center}
         \minipage{\twidth}
-	  \epsfig{file=eps/#1.eps,angle=#3,width=#4}
-	  \epsfig{file=eps/#2.eps,angle=#3,width=#4} \\
+	  \includegraphics[angle=#3,width=#4]{eps/#1.eps}
+	  \includegraphics[angle=#3,width=#4]{eps/#2.eps} \\
 	     #5 % caption
         \endminipage
 	%\resizebox{0.5 #4}{!}{\rotatebox{#3}{\includegraphics{\figdir/#1\figdotext}}}
@@ -68,7 +69,7 @@
 \newcommand{\myFigureRotateToBoxFIXME}[5]{
 	\begin{makeimage}
 	\begin{center}
-	\epsfig{file=eps/#1.eps,angle=#2,width=#3,height=#4} \\
+	\includegraphics[angle=#2,width=#3,height=#4]{eps/#1.eps} \\
 	     #5 % caption
 	\end{center}
 	\end{makeimage}
@@ -79,7 +80,7 @@
 \newcommand{\myFigureToWidth}[3]{
     \begin{makeimage}
     \begin{center}
-    \epsfig{file=eps/#1.eps,width=#2} \\
+    \includegraphics[width=#2]{eps/#1.eps} \\
 	#3
     \end{center}
     \end{makeimage}
@@ -88,7 +89,7 @@
 \newcommand{\myFigureToBox}[4]{
     \begin{makeimage}
     \begin{center}
-    \epsfig{file=eps/#1.eps,width=#2,height=#3} \\
+    \includegraphics[width=#2,height=#3]{eps/#1.eps} \\
 	#4
     \end{center}
     \end{makeimage}
@@ -99,14 +100,14 @@
 % Usage: \myFigureToWidth{num}{width}{caption}
 \newcommand{\myFigureToWidth}[3]{
 	\begin{center}
-	\epsfig{file=eps/#1.eps,width=#2} \\
+	\includegraphics[width=#2]{eps/#1.eps} \\
 	  #3
 	\end{center}
 }
 % Usage: \myFigureToBox{num}{width}{height}{caption}
 \newcommand{\myFigureToBox}[4]{
 	\begin{center}
-	\epsfig{file=eps/#1.eps,width=#2,height=#3} \\
+	\includegraphics[width=#2,height=#3]{eps/#1.eps} \\
 	  #4
 	\end{center}
 }
@@ -157,7 +158,7 @@
 % Usage: \myFigureScale{name}{scaleFactor}{caption}
 \newcommand{\myFigureScale}[3]{
 	\begin{center}
-	\epsfbox{eps/#1.eps} \\
+	\includegraphics{eps/#1.eps} \\
 	     #3
 	\end{center}
 }
@@ -166,7 +167,7 @@
 \newcommand{\myFigureScaleURL}[4]{
 	\begin{center}
 	\htmlimage{map=../typical.map}
-	\epsfbox{eps/#1.eps} \\
+	\includegraphics{eps/#1.eps} \\
 	     #3
 	\end{center}
 }
@@ -176,13 +177,11 @@
 	\begin{figure}[htbp]
 	\centering
 	\subfigure[#4]{ % Top figure = first figure
-	   \epsfxsize=#3
-	   \epsfbox{eps/#1.eps}
+	   \includegraphics[width=#3]{eps/#1.eps}
 %  	   \label{fig:#1}
 	}
 	\subfigure[#5]{ % Bot figure = 2nd figure
-	   \epsfxsize=#3
-	   \epsfbox{eps/#2.eps}
+	   \includegraphics[width=#3]{eps/#2.eps}
 %  	   \label{fig:#2}
 	}
 %	\caption{#6}
@@ -194,15 +193,11 @@
 	\begin{figure}[htbp]
 	\centering
 	\subfigure[#5]{ % Top figure = first figure
-	   \epsfxsize=#3
-	   \epsfysize=#4
-	   \epsfbox{eps/#1.eps}
+	   \includegraphics[width=#3,height=#4]{eps/#1.eps}
   	   \label{fig:#1}
 	}
 	\subfigure[#6]{ % Bot figure = 2nd figure
-	   \epsfxsize=#3
-	   \epsfysize=#4
-	   \epsfbox{eps/#2.eps}
+	   \includegraphics[width=#3,height=#4]{eps/#2.eps}
   	   \label{fig:#2}
 	}
 %	\caption{#7}
