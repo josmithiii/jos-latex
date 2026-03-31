@@ -398,6 +398,7 @@
     'e' => '\\epsilon',
     'eb' => '\\mathbf{e}',
     'eh' => '\\hat e',
+    'elabel' => ['\\label{eq:#1}', 1],
     'ejo' => 'e^{j\\omega}',
     'ejoT' => 'e^{j\\omega T}',
     'ejok' => 'e^{j\\ok}',
@@ -1381,6 +1382,7 @@
     'e' => 1,
     'eb' => 1,
     'eh' => 1,
+    'elabel' => 1,
     'ejo' => 1,
     'ejoT' => 1,
     'ejok' => 1,
@@ -2391,6 +2393,7 @@ sub do_cmd_dynes { _mathjax_pass0('dynes', @_) }
 sub do_cmd_e { _mathjax_pass0('e', @_) }
 sub do_cmd_eb { _mathjax_pass0('eb', @_) }
 sub do_cmd_eh { _mathjax_pass0('eh', @_) }
+sub do_cmd_elabel { _mathjax_pass1('elabel', @_) }
 sub do_cmd_ejo { _mathjax_pass0('ejo', @_) }
 sub do_cmd_ejoT { _mathjax_pass0('ejoT', @_) }
 sub do_cmd_ejok { _mathjax_pass0('ejok', @_) }
