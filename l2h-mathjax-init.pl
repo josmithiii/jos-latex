@@ -32,4 +32,23 @@ sub pre_pre_process {
     s/\\ENUMC\b/\\end{enumerate}/g;
 }
 
+# HTML handlers for JOS author/contact macros from lechdr.tex / stddefs.tex
+
+sub do_cmd_ccrmahomepage {
+    local($_) = @_;
+    local($name, $user);
+    $name = &missing_braces unless (
+        (s/$next_pair_pr_rx/$name = $2;''/eo)
+        ||(s/$next_pair_rx/$name = $2;''/eo));
+    $user = &missing_braces unless (
+        (s/$next_pair_pr_rx/$user = $2;''/eo)
+        ||(s/$next_pair_rx/$user = $2;''/eo));
+    join('', "<A HREF=\"http://ccrma.stanford.edu/&#126;${user}\">${name}</A>", $_);
+}
+
+sub do_cmd_josemail {
+    local($_) = @_;
+    join('', 'jos at ccrma', $_);
+}
+
 1;
