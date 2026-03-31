@@ -516,6 +516,7 @@
     'hb' => '\\h_b',
     'hbm' => '\\hb^\\tminus',
     'hbp' => '\\hb^\\tplus',
+    'hbox' => ['\\mbox{#1}', 1],
     'hd' => '\\h_\\tdelta',
     'hdc' => '\\hd^c',
     'hdp' => '\\hd^\\tplus',
@@ -1492,6 +1493,7 @@
     'hd' => 1,
     'hdc' => 1,
     'hdp' => 1,
+    'hbox' => 1,
     'henry' => 1,
     'hertz' => 1,
     'hh' => 1,
@@ -2503,6 +2505,7 @@ sub do_cmd_hbp { _mathjax_pass0('hbp', @_) }
 sub do_cmd_hd { _mathjax_pass0('hd', @_) }
 sub do_cmd_hdc { _mathjax_pass0('hdc', @_) }
 sub do_cmd_hdp { _mathjax_pass0('hdp', @_) }
+sub do_cmd_hbox { _mathjax_pass1('hbox', @_) }
 sub do_cmd_henry { _mathjax_pass0('henry', @_) }
 sub do_cmd_hertz { _mathjax_pass0('hertz', @_) }
 sub do_cmd_hh { _mathjax_pass0('hh', @_) }
