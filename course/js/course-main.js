@@ -198,21 +198,60 @@ class MDFTCourse {
   }
 
   extractPageContent() {
-    // Get page title
-    const title = document.querySelector('h1')?.textContent?.trim() || document.title;
+    // Get section title from first heading, stripping anchor junk
+    const heading = document.querySelector('h1, h2');
+    const title = heading?.textContent?.trim()?.replace(/\s+/g, ' ') || document.title;
 
-    // Get main content - try to find the content area
-    // latex2html typically puts content in the body, between navigation
-    const body = document.body.cloneNode(true);
+    // Detect book title from the ADDRESS footer (latex2html convention:
+    //   ``<A HREF="...">Book Title</A>'' by Author)
+    const addressLink = document.querySelector('ADDRESS H5 A');
+    const bookTitle = addressLink?.textContent?.trim() || CONFIG.bookTitle || document.title;
 
-    // Remove sidebar, scripts, navigation, and style elements
-    body.querySelectorAll('.course-sidebar, script, style, .navigation, hr').forEach(el => el.remove());
+    // --- Extract main article body via innerHTML string surgery ---
+    // This is more robust than DOM comment-node walking, which can fail
+    // when browsers restructure the DOM during parsing.
+    let html = document.body.innerHTML;
+
+    // Strip comment-delimited regions (navigation panels, child-link TOCs)
+    const stripRegion = (h, startMarker, endMarker) => {
+      let result = h;
+      while (true) {
+        const s = result.indexOf(startMarker);
+        if (s === -1) break;
+        const e = result.indexOf(endMarker, s);
+        if (e === -1) break;
+        result = result.substring(0, s) + result.substring(e + endMarker.length);
+      }
+      return result;
+    };
+    html = stripRegion(html, '<!--Navigation Panel-->', '<!--End of Navigation Panel-->');
+    html = stripRegion(html, '<!--Table of Child-Links-->', '<!--End of Table of Child-Links-->');
+
+    // Parse the cleaned HTML into a detached container
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    // Remove remaining junk elements:
+    // - ADDRESS: copyright/citation footer
+    // - STRONG at top level that only contains nav links (safety net)
+    // - HR: section separators
+    // - script/style: code
+    // - .course-sidebar: our own sidebar
+    // - wz_tooltip.js creates hidden divs with id="tOoLtIp<N><N>"
+    //   containing tooltip text for every onmouseover link on the page.
+    //   These pollute textContent with "Click for ..." junk.
+    container.querySelectorAll(
+      'ADDRESS, script, style, hr, .course-sidebar, .navigation, ' +
+      '[id^="tOoLtIp"], [id^="TTiEiFrM"]'
+    ).forEach(el => el.remove());
 
     // Replace MathJax-rendered elements with original TeX source.
     // MathJax 3 (SVG or CHTML) wraps output in <mjx-container> and
     // stores the original TeX in a circular linked list at
-    // MathJax.startup.document.math.list. We collect the TeX strings,
-    // then replace the corresponding <mjx-container> elements in the clone.
+    // MathJax.startup.document.math.list.  We collect TeX strings in
+    // document order from the ORIGINAL page, then match them 1:1 with
+    // <mjx-container> elements in our container (same order, since we
+    // only removed non-math regions).
     if (window.MathJax && MathJax.startup && MathJax.startup.document) {
       const texSources = [];
       const sentinel = MathJax.startup.document.math.list;
@@ -224,49 +263,143 @@ class MDFTCourse {
         }
         node = node.next;
       }
-      const cloneContainers = body.querySelectorAll('mjx-container');
+      const mjxEls = container.querySelectorAll('mjx-container');
       let ti = 0;
-      cloneContainers.forEach(mjx => {
+      mjxEls.forEach(mjx => {
         if (ti < texSources.length) {
           mjx.replaceWith(texSources[ti++]);
         }
       });
     }
 
-    // Get text content, clean up whitespace
-    let text = body.textContent || '';
-    text = text.replace(/\s+/g, ' ').trim();
+    // Replace footnote links with a space (they point to footnode.html
+    // and produce artifacts like "geometry.3.8Applying" in textContent).
+    container.querySelectorAll('a[href*="footnode"]').forEach(el => {
+      el.replaceWith(' ');
+    });
+
+    // Preserve paragraph structure: insert newlines around block elements
+    // before extracting textContent (which otherwise collapses everything).
+    container.querySelectorAll('p, div, br, h1, h2, h3, h4, h5, h6, li, tr, blockquote')
+      .forEach(el => {
+        el.insertAdjacentText('afterend', '\n');
+        if (el.matches('h1, h2, h3, h4, h5, h6, p, div')) {
+          el.insertAdjacentText('beforebegin', '\n');
+        }
+      });
+
+    // Normalize custom JOS LaTeX macros and environments to standard
+    // LaTeX so general-purpose LLMs can parse the math cleanly.
+    // Macro definitions sourced from jos-latex/styles/.
+    const normalizeTex = (s) => {
+      let t = s;
+
+      // --- Environment normalization ---
+      // Strip environment wrappers (the outer \[...\] delimiters are
+      // already provided by the MathJax TeX extraction step).
+      t = t.replace(/\\begin\{equation\}([\s\S]*?)\\end\{equation\}/g,
+        (_, body) => body.trim());
+      // eqnarray/eqnarray*: strip environment AND & alignment markers
+      t = t.replace(/\\begin\{eqnarray\*?\}([\s\S]*?)\\end\{eqnarray\*?\}/g,
+        (_, body) => body.replace(/&/g, '').trim());
+
+      // --- Mixed text-in-math cleanup ---
+      // \hbox{...} and \mbox{...} → just the content
+      t = t.replace(/\\[hm]box\{([^}]*)\}/g, '$1');
+
+      // --- Custom macros ---
+      // \zbox{...} → just the content (match balanced braces one level deep)
+      t = t.replace(/\\zbox\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '$1');
+      // \reals, \complex, \CN
+      t = t.replace(/\\reals\b/g, '\\mathbb{R}');
+      t = t.replace(/\\complex\b/g, '\\mathbb{C}');
+      t = t.replace(/\\CN\b/g, '\\mathbb{C}^N');
+      // \isdef → ≜
+      t = t.replace(/\\isdef\b/g, '\\triangleq');
+      t = t.replace(/\\isdeftext\b/g, '\\triangleq');
+      // \nnr → \\ (nonumber + newline in eqnarray)
+      t = t.replace(/\\nnr\b/g, '\\\\');
+      // \relop{X} → X (spacing wrapper)
+      t = t.replace(/\\relop\{([^}]*)\}/g, '$1');
+      // \elabel{...} → remove (internal cross-ref label)
+      t = t.replace(/\\elabel\{[^}]*\}/g, '');
+      // \ip{...} → \langle ... \rangle
+      t = t.replace(/\\ip\{([^}]*)\}/g, '\\langle $1\\rangle');
+      t = t.replace(/\\iptext\{([^}]*)\}/g, '\\langle $1\\rangle');
+      // \conj{...} → \overline{...}
+      t = t.replace(/\\conj\{([^}]*)\}/g, '\\overline{$1}');
+      // \abs{...} → |...|
+      t = t.replace(/\\abs\{([^}]*)\}/g, '\\left|$1\\right|');
+      t = t.replace(/\\abstext\{([^}]*)\}/g, '|$1|');
+      // Vectors: \xv, \uv, \vv
+      t = t.replace(/\\xv\b/g, '\\underline{x}');
+      t = t.replace(/\\uv\b/g, '\\underline{u}');
+      t = t.replace(/\\vv\b/g, '\\underline{v}');
+      // \Ts, \Fs
+      t = t.replace(/\\Ts\b/g, 'T');
+      t = t.replace(/\\Fs\b/g, 'f_s');
+      // \projop
+      t = t.replace(/\\projop\b/g, '\\mathbf{P}');
+      // \Flip
+      t = t.replace(/\\Flip\b/g, '\\operatorname{Flip}');
+      // Clean up TeX spacing commands (replace with single space).
+      // Use lookahead instead of \b since \qquad may abut text after
+      // \hbox removal (e.g. "\qquadfor all" from "\qquad\hbox{for all}").
+      t = t.replace(/\\qquad(?:\\!)?/g, ' ');
+      t = t.replace(/\\quad(?!rature)/g, ' ');
+
+      return t;
+    };
+
+    // Extract text and normalize whitespace while preserving line structure
+    let text = container.textContent || '';
+    text = normalizeTex(text);
+
+    // Split multi-line display equations (\[...\] containing \\) into
+    // separate \[...\] blocks.  This is safer for LLM parsing than \\
+    // line breaks inside plain display math.
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, (match, body) => {
+      if (!body.includes('\\\\')) return match;
+      return body.split('\\\\')
+        .map(p => p.trim())
+        .filter(p => p.length > 0)
+        .map(p => '\\[' + p + '\\]')
+        .join('\n\n');
+    });
+
+    text = text.replace(/[ \t]+/g, ' ');        // collapse horizontal whitespace
+    text = text.replace(/\n[ \t]+/g, '\n');      // trim leading spaces on lines
+    text = text.replace(/[ \t]+\n/g, '\n');      // trim trailing spaces on lines
+    text = text.replace(/\n{3,}/g, '\n\n');      // max two consecutive newlines
+    text = text.trim();
 
     // Truncate if too long (keep it reasonable for clipboard)
     const maxLen = 8000;
     if (text.length > maxLen) {
-      text = text.substring(0, maxLen) + '... [truncated]';
+      text = text.substring(0, maxLen) + '\n... [truncated]';
     }
 
-    return { title, text };
+    return { title, text, bookTitle };
   }
 
   async askAI(provider) {
     const statusEl = this.sidebar.querySelector('.course-ai-status');
-    const { title, text } = this.extractPageContent();
+    const { title, text, bookTitle } = this.extractPageContent();
 
     // Build the prompt
-    const prompt = `I'm studying "Spectral Audio Signal Processing" by Julius O. Smith III.
+    const prompt = `I'm studying "${bookTitle}" by Julius O. Smith III.
 
 I'm currently reading the section: "${title}"
 
-Here's the page content:
----
+Here is the relevant content:
+
 ${text}
----
 
 Please help me understand this material. You can:
 - Explain concepts I'm confused about
 - Work through examples
 - Answer questions about the math
-- Connect this to other topics in signal processing
-
-What would you like to know about this section?`;
+- Connect this to other topics in signal processing`;
 
     // Copy to clipboard
     try {
@@ -281,6 +414,10 @@ What would you like to know about this section?`;
       console.error('Clipboard error:', err);
       return;
     }
+
+    // Brief delay so the system clipboard fully propagates before the
+    // new tab reads it (some AI sites auto-read clipboard on load).
+    await new Promise(r => setTimeout(r, 200));
 
     // Open AI in new tab
     const urls = {
