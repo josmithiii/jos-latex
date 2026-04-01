@@ -601,6 +601,7 @@
     'millivolt' => '\\mathrm{mV}',
     'milliwatt' => '\\mathrm{mW}',
     'mins' => '\\text{min}',
+    'multicolumn' => ['#3', 3],
     'mndx' => 'm',
     'mod' => ['\\lp\\text{mod}\\;#1\\rp', 1],
     'ms' => '{m_s}',
@@ -1576,6 +1577,7 @@
     'mins' => 1,
     'mndx' => 1,
     'mod' => 1,
+    'multicolumn' => 1,
     'ms' => 1,
     'muTsste' => 1,
     'mumTsste' => 1,
@@ -2588,6 +2590,7 @@ sub do_cmd_milliwatt { _mathjax_pass0('milliwatt', @_) }
 sub do_cmd_mins { _mathjax_pass0('mins', @_) }
 sub do_cmd_mndx { _mathjax_pass0('mndx', @_) }
 sub do_cmd_mod { _mathjax_pass1('mod', @_) }
+sub do_cmd_multicolumn { _mathjax_passN('multicolumn', 3, @_) }
 sub do_cmd_ms { _mathjax_pass0('ms', @_) }
 sub do_cmd_muTsste { _mathjax_pass0('muTsste', @_) }
 sub do_cmd_mumTsste { _mathjax_pass0('mumTsste', @_) }
