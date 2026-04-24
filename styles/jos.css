@@ -102,6 +102,20 @@ body {
     color: var(--hover-color);
 }
 
+.theme-toggle:focus {
+    outline: none;
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--rule-color);
+    outline-offset: 1px;
+}
+
+.theme-toggle:has(.sun) {
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+
 .theme-toggle .sun {
     color: #f5b800;
 }
