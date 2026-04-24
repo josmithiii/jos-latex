@@ -38,6 +38,12 @@ img {
     filter: invert(var(--image-inversion));
 }
 
+img.no-invert,
+.no-invert img {
+    -webkit-filter: none !important;
+    filter: none !important;
+}
+
 img.rounded-corners {
     border-radius: 40%;
 }
