@@ -531,16 +531,27 @@ thtml:
 htmlo ho: .HTML-TIMESTAMP
 	$(OHTML) $(HTMLDIR)/$(NAME).html
 
+THEME_SCRIPT_SRC ?= ../theme-toggle.js
+
 .HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h $(MATHJAX_MACROS_PL)
 	mkdir -p $(HTMLDIR)
 	@ln -sf $(JOS_LATEX)/styles/jos.css jos.css
+	@ln -sf $(JOS_LATEX)/styles/theme-toggle.js theme-toggle.js
 	@echo "Using: $(L2H)"
 	time $(L2H) -dir $(HTMLDIR) -init_file $(NAME).l2h $(NAME).tex
 	@if grep -q 'Overfull \\vbox' $(HTMLDIR)/images.log 2>/dev/null; then \
 		echo "*** FATAL OVERFULL VBOX IN L2H $(HTMLDIR)/images.log ***"; exit 1; \
 	fi
+	python3 $(JOS_LATEX)/tools/inject-theme-toggle.py --dest $(HTMLDIR) --script-src $(THEME_SCRIPT_SRC)
 	touch .HTML-TIMESTAMP
 	@echo 'Now say make htmlo'
+
+.PHONY: theme-inject theme-remove
+theme-inject:
+	python3 $(JOS_LATEX)/tools/inject-theme-toggle.py --dest $(HTMLDIR) --script-src $(THEME_SCRIPT_SRC)
+
+theme-remove:
+	python3 $(JOS_LATEX)/tools/inject-theme-toggle.py --dest $(HTMLDIR) --remove
 
 # Tarfile of HTML directory (with links preserved)
 htgzl: .HTML-TIMESTAMP

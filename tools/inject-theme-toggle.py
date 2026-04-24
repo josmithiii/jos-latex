@@ -29,20 +29,29 @@ from pathlib import Path
 
 
 INJECTION_MARKER = "<!-- THEME-TOGGLE -->"
-INJECTION_BLOCK = f"""{INJECTION_MARKER}
-<script>try{{var t=localStorage.getItem('jos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}}catch(e){{}}</script>
-<script defer src="../theme-toggle.js"></script>
-<!-- /THEME-TOGGLE -->
-"""
+INJECTION_END_MARKER = "<!-- /THEME-TOGGLE -->"
+
+
+def injection_block(script_src: str) -> str:
+    return (
+        f"{INJECTION_MARKER}\n"
+        "<script>try{var t=localStorage.getItem('jos-theme');"
+        "if(t==='light'||t==='dark')"
+        "document.documentElement.setAttribute('data-theme',t)}"
+        "catch(e){}</script>\n"
+        f'<script defer src="{script_src}"></script>\n'
+        f"{INJECTION_END_MARKER}\n"
+    )
+
 
 HEAD_CLOSE_RE = re.compile(r"</head>", re.IGNORECASE)
 BLOCK_RE = re.compile(
-    re.escape(INJECTION_MARKER) + r".*?<!-- /THEME-TOGGLE -->\n?",
+    re.escape(INJECTION_MARKER) + r".*?" + re.escape(INJECTION_END_MARKER) + r"\n?",
     re.DOTALL,
 )
 
 
-def inject(path: Path, dry_run: bool) -> bool:
+def inject(path: Path, script_src: str, dry_run: bool) -> bool:
     content = path.read_text(encoding="utf-8", errors="replace")
     if INJECTION_MARKER in content:
         return False
@@ -50,7 +59,8 @@ def inject(path: Path, dry_run: bool) -> bool:
     if not match:
         print(f"  Warning: no </head> in {path.name}", file=sys.stderr)
         return False
-    new_content = content[: match.start()] + INJECTION_BLOCK + content[match.start() :]
+    block = injection_block(script_src)
+    new_content = content[: match.start()] + block + content[match.start() :]
     if dry_run:
         print(f"  Would inject: {path.name}")
     else:
@@ -73,6 +83,11 @@ def remove(path: Path, dry_run: bool) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dest", required=True, help="HTML directory to process")
+    parser.add_argument(
+        "--script-src",
+        default="../theme-toggle.js",
+        help="Value for the <script src=...> attribute (default: ../theme-toggle.js)",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--remove", action="store_true")
     args = parser.parse_args()
@@ -82,7 +97,6 @@ def main() -> int:
         print(f"Error: {dest} is not a directory", file=sys.stderr)
         return 1
 
-    action = remove if args.remove else inject
     verb = "Removing from" if args.remove else "Injecting into"
     print(f"{verb} {dest}{' (dry run)' if args.dry_run else ''}")
 
@@ -90,7 +104,11 @@ def main() -> int:
     scanned = 0
     for path in sorted(dest.glob("*.html")):
         scanned += 1
-        if action(path, args.dry_run):
+        if args.remove:
+            ok = remove(path, args.dry_run)
+        else:
+            ok = inject(path, args.script_src, args.dry_run)
+        if ok:
             modified += 1
 
     print(f"  {scanned} files scanned, {modified} modified")
