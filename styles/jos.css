@@ -102,6 +102,16 @@ body {
     color: var(--hover-color);
 }
 
+.theme-toggle .sun {
+    color: #f5b800;
+}
+
+.theme-toggle .moon {
+    color: #1e3a8a;
+    font-weight: bold;
+    -webkit-text-stroke: 0.5px currentColor;
+}
+
 tt { font-size:12pt; }
 pre { font-size:12pt; }
 
