@@ -116,7 +116,7 @@ class MDFTCourse {
         </svg>
       </button>
       <div class="course-sidebar-header">
-        <h3>SASP Course</h3>
+        <h3>${CONFIG.title || 'Course'}</h3>
       </div>
       <div class="course-sidebar-tabs">
         <button class="course-sidebar-tab active" data-tab="progress">Progress</button>

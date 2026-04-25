@@ -116,6 +116,18 @@ body {
     padding-bottom: 0.1em;
 }
 
+/* When the course sidebar is mounted, slide the toggle left of it so it
+   isn't hidden behind the (z-index:1000) panel. The CSS variables
+   --course-sidebar-width / --course-sidebar-collapsed are declared in
+   course.css; we fall back to 0px when course.css isn't loaded. */
+body.course-active .theme-toggle {
+    right: calc(var(--course-sidebar-width, 0px) + 0.5em);
+}
+
+body.course-active.sidebar-collapsed .theme-toggle {
+    right: calc(var(--course-sidebar-collapsed, 0px) + 0.5em);
+}
+
 .theme-toggle .sun {
     color: #f5b800;
 }

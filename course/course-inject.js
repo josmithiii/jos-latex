@@ -35,13 +35,26 @@
   js.src = BASE + '/js/course-main.js';
   js.type = 'module';
 
+  // Derive a per-book title from the URL path. e.g. /~jos/mdft/foo.html -> "MDFT Course".
+  // Books can override by setting window.JOS_COURSE_TITLE before this script runs.
+  function deriveTitle() {
+    if (typeof window.JOS_COURSE_TITLE === 'string' && window.JOS_COURSE_TITLE) {
+      return window.JOS_COURSE_TITLE;
+    }
+    const segments = window.location.pathname.split('/').filter(s => s && !/\.html?$/i.test(s));
+    const book = segments[segments.length - 1];
+    if (!book) return 'Course';
+    return book.toUpperCase() + ' Course';
+  }
+
   // Pass configuration to main script
   window.MDFT_COURSE_CONFIG = {
     base: BASE,
     isW3K: isW3K,
     isCCRMA: isCCRMA,
     isLocal: isLocal,
-    page: window.location.pathname.split('/').pop() || 'index.html'
+    page: window.location.pathname.split('/').pop() || 'index.html',
+    title: deriveTitle()
   };
 
   // Wait for DOM ready before injecting
