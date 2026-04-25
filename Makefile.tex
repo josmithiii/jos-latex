@@ -425,8 +425,8 @@ unlink unprv:
 installh: $(DESTROOT)/$(NAME) .HTML-TIMESTAMP .LINK-TIMESTAMP
 	$(MAKE) copy-html-to-dest
 
-# Quick install of HTML only
-qih qinstallh: $(DESTROOT)/$(NAME)
+# Quick install of HTML only — builds HTML first if missing/stale.
+qih qinstallh: $(DESTROOT)/$(NAME) .HTML-TIMESTAMP
 	$(MAKE) copy-html-to-dest
 
 # Quick install of all products EXCEPT HTML
