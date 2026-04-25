@@ -26,8 +26,9 @@ class MDFTCourse {
     // Fix viewport for iOS safe-area-insets
     this.fixViewportForIOS();
 
-    // Detect dark mode from page
+    // Detect dark mode from page, then watch for theme-toggle changes.
     this.detectDarkMode();
+    this.watchThemeChanges();
 
     // Load page metadata
     await this.loadPageMetadata();
@@ -98,12 +99,28 @@ class MDFTCourse {
       this.isDarkMode = false;
     }
 
-    // Add class to body so CSS variables apply to all course elements
-    if (this.isDarkMode) {
-      document.body.classList.add('course-dark-mode');
-    }
+    // Toggle class based on current state (handles light->dark AND dark->light).
+    document.body.classList.toggle('course-dark-mode', this.isDarkMode);
+  }
 
-    console.log('SASP Course: Dark mode detected:', this.isDarkMode);
+  // Re-run detectDarkMode whenever the theme toggle button (or anything else)
+  // mutates <html data-theme>. Computed background color updates synchronously
+  // when the attribute changes, so getComputedStyle inside detectDarkMode
+  // returns the new color.
+  watchThemeChanges() {
+    if (!window.MutationObserver) return;
+    const observer = new MutationObserver(() => this.detectDarkMode());
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    // Also watch the OS-level preference for users who have no stored choice.
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener(
+        'change',
+        () => this.detectDarkMode()
+      );
+    }
   }
 
   createSidebar() {

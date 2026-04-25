@@ -633,6 +633,24 @@ fiw: fi
 fio: fi oq
 
 # ============================================================================
+# Lightweight web deploy: copy already-built HTML to DESTROOT, ship the
+# tarball, and extract it on CCRMA. Doesn't trigger latex2html. Useful
+# when you only want to redeploy already-injected HTML or apply asset
+# updates (jos.css, theme-toggle.js, course assets) to a book that does
+# not define its own `cw`/`wiac` targets.
+# ============================================================================
+
+.PHONY: web wiac webupd
+
+webupd:
+	$(WEBUPD) $(NAME)
+
+wiac web-install-at-ccrma:
+	ssh ccrma-gate.stanford.edu webinst $(NAME)
+
+web: ch webupd wiac
+
+# ============================================================================
 # Local Dictionary (for automatic linking)
 # ============================================================================
 
