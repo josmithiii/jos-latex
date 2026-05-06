@@ -1,13 +1,23 @@
-// SASP Course Enhancement - Main Entry Point
-// Initializes all course features
+// JOS Course Enhancement - Main Entry Point
+// Initializes all course features. Shared by all books (mdft, sasp, ...).
+// CONFIG.NAME (e.g. "mdft", "sasp") selects per-book filenames and
+// localStorage keys; it is set by course-inject.js based on URL path.
 
 const CONFIG = window.MDFT_COURSE_CONFIG || {
   base: 'course',
   isW3K: false,
   isCCRMA: false,
   isLocal: true,
-  page: 'index.html'
+  page: 'index.html',
+  NAME: ''
 };
+
+if (!CONFIG.NAME) {
+  // Fail loudly: per-book exercise file and progress keys depend on NAME.
+  throw new Error('*** Course config: CONFIG.NAME is not set. Expected lowercase book name (e.g. "mdft", "sasp"). Set window.JOS_COURSE_NAME before course-inject.js, or check that the URL path contains a book directory.');
+}
+
+const COURSE_LOG_PREFIX = CONFIG.NAME.toUpperCase() + ' Course:';
 
 class MDFTCourse {
   constructor() {
@@ -21,7 +31,7 @@ class MDFTCourse {
   }
 
   async init() {
-    console.log('SASP Course: Initializing...', CONFIG);
+    console.log(COURSE_LOG_PREFIX, 'Initializing...', CONFIG);
 
     // Fix viewport for iOS safe-area-insets
     this.fixViewportForIOS();
@@ -48,7 +58,7 @@ class MDFTCourse {
     // Add course-active class to body
     document.body.classList.add('course-active');
 
-    console.log('SASP Course: Ready');
+    console.log(COURSE_LOG_PREFIX, 'Ready');
   }
 
   fixViewportForIOS() {
@@ -189,7 +199,7 @@ class MDFTCourse {
     });
 
     // Load collapsed state
-    if (localStorage.getItem('sasp-sidebar-collapsed') === 'true') {
+    if (localStorage.getItem(`${CONFIG.NAME}-sidebar-collapsed`) === 'true') {
       sidebar.classList.add('collapsed');
       document.body.classList.add('sidebar-collapsed');
     }
@@ -451,7 +461,7 @@ Please help me understand this material. You can:
   toggleSidebar() {
     const isCollapsed = this.sidebar.classList.toggle('collapsed');
     document.body.classList.toggle('sidebar-collapsed', isCollapsed);
-    localStorage.setItem('sasp-sidebar-collapsed', isCollapsed);
+    localStorage.setItem(`${CONFIG.NAME}-sidebar-collapsed`, isCollapsed);
   }
 
   switchTab(tabName) {
@@ -544,7 +554,7 @@ Please help me understand this material. You can:
 
   async loadExercises() {
     try {
-      const response = await fetch(`${CONFIG.base}/data/exercises/sasp-exercises.json`);
+      const response = await fetch(`${CONFIG.base}/data/exercises/${CONFIG.NAME}-exercises.json`);
       if (!response.ok) return;
 
       const data = await response.json();
@@ -557,7 +567,7 @@ Please help me understand this material. You can:
       }
     } catch (e) {
       // Exercises not available yet - that's okay
-      console.log('SASP Course: No exercises loaded', e.message);
+      console.error(COURSE_LOG_PREFIX, `*** Failed to load ${CONFIG.NAME}-exercises.json:`, e.message);
     }
   }
 
@@ -570,10 +580,10 @@ Please help me understand this material. You can:
       this.pageMetadata = this.allMetadata[this.currentPage] || null;
 
       if (this.pageMetadata) {
-        console.log('SASP Course: Page metadata loaded', this.pageMetadata);
+        console.log(COURSE_LOG_PREFIX, 'Page metadata loaded', this.pageMetadata);
       }
     } catch (e) {
-      console.log('SASP Course: No page metadata loaded', e.message);
+      console.log(COURSE_LOG_PREFIX, 'No page metadata loaded', e.message);
     }
   }
 
@@ -617,10 +627,10 @@ Please help me understand this material. You can:
 
       // Initialize visualization
       new ComplexPlaneViz(container);
-      console.log('SASP Course: Complex plane visualization loaded');
+      console.log(COURSE_LOG_PREFIX, 'Complex plane visualization loaded');
 
     } catch (e) {
-      console.log('SASP Course: Could not load visualization', e.message);
+      console.log(COURSE_LOG_PREFIX, 'Could not load visualization', e.message);
     }
   }
 
@@ -729,8 +739,11 @@ Please help me understand this material. You can:
 
   showFeedback(div, message, type) {
     const feedback = div.querySelector('.course-feedback');
-    feedback.textContent = message;
+    feedback.innerHTML = message;
     feedback.className = `course-feedback visible ${type}`;
+    if (window.MathJax?.typesetPromise) {
+      window.MathJax.typesetPromise([feedback]).catch(() => {});
+    }
   }
 
   showNextHint(div) {
@@ -763,14 +776,14 @@ Please help me understand this material. You can:
   // Progress tracking
   loadProgress() {
     try {
-      return JSON.parse(localStorage.getItem('sasp-progress') || '{}');
+      return JSON.parse(localStorage.getItem(`${CONFIG.NAME}-progress`) || '{}');
     } catch {
       return {};
     }
   }
 
   saveProgress() {
-    localStorage.setItem('sasp-progress', JSON.stringify(this.progress));
+    localStorage.setItem(`${CONFIG.NAME}-progress`, JSON.stringify(this.progress));
   }
 
   markPageVisited() {
@@ -806,7 +819,7 @@ Please help me understand this material. You can:
 
   resetProgress() {
     if (confirm('Reset all progress? This will clear your page visits and exercise completions.')) {
-      localStorage.removeItem('sasp-progress');
+      localStorage.removeItem(`${CONFIG.NAME}-progress`);
       this.progress = {};
       this.updateProgressPanel();
     }

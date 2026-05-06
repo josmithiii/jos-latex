@@ -11,14 +11,28 @@
                   window.location.hostname === '127.0.0.1' ||
                   window.location.protocol === 'file:';
 
+  // Derive a per-book short name (lowercase, e.g. "mdft", "sasp") from the URL
+  // path: /~jos/mdft/foo.html -> "mdft". Used for per-book filenames and
+  // localStorage keys so books don't share state. Books can override by
+  // setting window.JOS_COURSE_NAME before this script runs.
+  function deriveName() {
+    if (typeof window.JOS_COURSE_NAME === 'string' && window.JOS_COURSE_NAME) {
+      return window.JOS_COURSE_NAME;
+    }
+    const segments = window.location.pathname.split('/').filter(s => s && !/\.html?$/i.test(s));
+    const book = segments[segments.length - 1];
+    return book ? book.toLowerCase() : '';
+  }
+  const NAME = deriveName();
+
   // Base path for course assets
   let BASE;
   if (isLocal || isCCRMA) {
     // Relative path - course/ is sibling to HTML files
     BASE = 'course';
   } else if (isW3K) {
-    // Full server-side support
-    BASE = '/courses/mdft/course';
+    // Full server-side support; per-book directory under /courses/
+    BASE = `/courses/${NAME}/course`;
   } else {
     // Fallback to relative
     BASE = 'course';
@@ -41,10 +55,8 @@
     if (typeof window.JOS_COURSE_TITLE === 'string' && window.JOS_COURSE_TITLE) {
       return window.JOS_COURSE_TITLE;
     }
-    const segments = window.location.pathname.split('/').filter(s => s && !/\.html?$/i.test(s));
-    const book = segments[segments.length - 1];
-    if (!book) return 'Course';
-    return book.toUpperCase() + ' Course';
+    if (!NAME) return 'Course';
+    return NAME.toUpperCase() + ' Course';
   }
 
   // Pass configuration to main script
@@ -54,6 +66,7 @@
     isCCRMA: isCCRMA,
     isLocal: isLocal,
     page: window.location.pathname.split('/').pop() || 'index.html',
+    NAME: NAME,
     title: deriveTitle()
   };
 
