@@ -32,23 +32,13 @@ sub pre_pre_process {
     s/\\ENUMC\b/\\end{enumerate}/g;
 }
 
-# HTML handlers for JOS author/contact macros from lechdr.tex / stddefs.tex
-
-sub do_cmd_ccrmahomepage {
-    local($_) = @_;
-    local($name, $user);
-    $name = &missing_braces unless (
-        (s/$next_pair_pr_rx/$name = $2;''/eo)
-        ||(s/$next_pair_rx/$name = $2;''/eo));
-    $user = &missing_braces unless (
-        (s/$next_pair_pr_rx/$user = $2;''/eo)
-        ||(s/$next_pair_rx/$user = $2;''/eo));
-    join('', "<A HREF=\"http://ccrma.stanford.edu/&#126;${user}\">${name}</A>", $_);
-}
-
-sub do_cmd_josemail {
-    local($_) = @_;
-    join('', 'jos at ccrma', $_);
-}
+# NOTE: Earlier versions of this file defined do_cmd_ccrmahomepage and
+# do_cmd_josemail to render those macros for HTML output. They were
+# removed because they conflict with the \newcommand definitions in
+# jos-latex/styles/stddefs.tex: latex2html warns "previous meaning will
+# be lost" and then renders neither the perl handler nor the \newcommand
+# expansion, producing the garbled "Julius O. Smith IIIjos" on title
+# pages and an empty rendering for \josemail. The stddefs.tex
+# \newcommand definitions handle both PDF and HTML output on their own.
 
 1;
