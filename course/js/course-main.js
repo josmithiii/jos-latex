@@ -645,11 +645,28 @@ Please help me understand this material. You can:
   }
 
   injectExercises() {
-    // Find the end of content (before the bottom navigation panel)
-    const navPanels = document.querySelectorAll('hr');
-    if (navPanels.length < 2) return;
+    // Find the bottom navigation panel via its latex2html marker comment
+    // (more reliable than counting <HR>s, since the footer can have inline
+    // HRs that throw off length-based indexing). The latex2html template
+    // emits two `<!-- Navigation Panel -->` comments per page (top + bottom);
+    // we want the LAST one. Insert exercises just before the HR that
+    // precedes that comment, so the natural rendering order becomes:
+    //   content -> exercises -> bottom nav -> footer.
+    const iter = document.createNodeIterator(document.body, NodeFilter.SHOW_COMMENT);
+    let bottomNavComment = null;
+    let n;
+    while ((n = iter.nextNode())) {
+      if (n.nodeValue.trim() === 'Navigation Panel') bottomNavComment = n;
+    }
+    if (!bottomNavComment) return;
 
-    const insertPoint = navPanels[navPanels.length - 2];
+    // Walk backward over text nodes to the preceding HR (the visual separator).
+    let insertPoint = bottomNavComment.previousSibling;
+    while (insertPoint && !(insertPoint.nodeType === Node.ELEMENT_NODE && insertPoint.tagName === 'HR')) {
+      insertPoint = insertPoint.previousSibling;
+    }
+    // Fall back to inserting before the comment itself if no preceding HR.
+    if (!insertPoint) insertPoint = bottomNavComment;
 
     const container = document.createElement('div');
     container.className = 'course-exercises-container';
