@@ -117,7 +117,7 @@ L2H ?= latex2html
 .PHONY: 4up 4upp 4uppdf pdf4up pdf4 all4up 4upall 4upo
 .PHONY: clean rclean hclean tclean distclean tc tco fresh freshq
 .PHONY: b bt bibtex index indextoc test ttest
-.PHONY: html h thtml htmlo ho htmldo
+.PHONY: html h thtml htmlo ho htmldo test-html th
 .PHONY: htgzl htgz ascii
 .PHONY: install installh qih qinstallh qi inh installnh mi rmi mih
 .PHONY: ch copy-html-to-dest installsrc srctar
@@ -445,8 +445,11 @@ mih:
 # Main installation
 install: .INSTALL-TIMESTAMP
 
-# Use order-only prerequisite (|) for dest dir to avoid rebuild when dir timestamp changes
-ch copy-html-to-dest: | $(DESTROOT)/$(NAME)
+# Use order-only prerequisite (|) for dest dir to avoid rebuild when dir timestamp changes.
+# test-html scans the generated HTML for MathJax problem signatures (e.g.
+# `\begin{tabular}` inside `\(...\)`); if any are found it exits non-zero and
+# stops the publish chain before broken HTML reaches DESTROOT.
+ch copy-html-to-dest: test-html | $(DESTROOT)/$(NAME)
 	@echo "Copy $(HTMLDIR)/* to $(DESTROOT)/$(NAME)"
 	(cd $(HTMLDIR); tar -cf - .) | (cd $(DESTROOT)/$(NAME); tar -xpf -)
 
@@ -552,6 +555,12 @@ theme-inject:
 
 theme-remove:
 	python3 $(JOS_LATEX)/tools/inject-theme-toggle.py --dest $(HTMLDIR) --remove
+
+# Scan generated HTML for MathJax problem signatures (e.g. \begin{tabular}
+# inside \(...\)).  Depends on .HTML-TIMESTAMP so it rebuilds HTML if stale.
+# Exits non-zero on any problem, so it can gate downstream targets.
+test-html th: .HTML-TIMESTAMP
+	python3 $(JOS_LATEX)/tools/test-html.py --dir $(HTMLDIR)
 
 # Tarfile of HTML directory (with links preserved)
 htgzl: .HTML-TIMESTAMP

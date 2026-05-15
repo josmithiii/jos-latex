@@ -13,6 +13,23 @@ $USE_MATHJAX = 1;
 $MATHJAX_EXTERNAL_CONFIG = 1;  # write shared mathjax-config.js; browser caches it across pages
 require "$_jl_dir/mathjax-macros.pl";
 
+# Undo l2hconf.pm's image-mode registration of text-mode commands that
+# have native do_cmd_* handlers in mathjax-macros.pl.  l2hconf.pm is
+# loaded by `use l2hconf` very early in latex2html -- well before this
+# init file -- and registers e.g. \fbox via process_commands_in_tex,
+# creating a wrap_cmd_fbox that latex2html's wrap_raw_arg_cmds then
+# dispatches to in preference to do_cmd_fbox.  That wraps \fbox{...}
+# in a tex2html_wrap environment, which (in MathJax mode) emerges as
+# `\(\fbox{...}\)` and fails when the contents include text-mode
+# constructs MathJax cannot parse (\begin{tabular}, etc).  Removing
+# wrap_cmd_fbox and the raw_arg_cmds entry lets \fbox fall through to
+# normal translate_commands dispatch and reach do_cmd_fbox.
+for my $cmd ('fbox') {
+    next unless (defined &{"main::do_cmd_$cmd"});
+    undef &{"main::wrap_cmd_$cmd"} if (defined &{"main::wrap_cmd_$cmd"});
+    delete $main::raw_arg_cmds{$cmd};
+}
+
 # Expand environment-abbreviation macros from stddefs.tex before
 # latex2html's environment parser runs (fixes long-standing l2h issue
 # noted in stddefs.tex line 143: "l2h gets fouled up on \BIT").
