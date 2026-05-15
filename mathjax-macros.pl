@@ -2,7 +2,7 @@
 # DO NOT EDIT — regenerate with:
 #   python3 /w/jos-latex/tools/generate_mathjax_macros.py
 #
-# 954 math macros from 6 style files
+# 955 math macros from 6 style files
 
 # MathJax macro definitions
 %MATHJAX_MACROS = (
@@ -983,6 +983,7 @@
     'zmt' => 'z^{-2}',
     'zoh' => 'z^{1/2}',
     'zp' => 'z^\\prime',
+    'ztr' => 'Z transform',
     'zv' => '\\underline{0}',
     'zvec' => '\\underline{z}',
     'zvv' => '\\underline{\\zeev}',
@@ -1935,6 +1936,7 @@
     'zmt' => 1,
     'zoh' => 1,
     'zp' => 1,
+    'ztr' => 1,
     'zv' => 1,
     'zvec' => 1,
     'zvv' => 1,
@@ -1995,26 +1997,6 @@ sub _mathjax_passN {
         return "\\\@#\@\@$cmd$argstr" . $_;
     }
     $_;
-}
-
-# ============================================================
-# Text-mode commands that must NOT be wrapped in MathJax delimiters
-# ============================================================
-
-# \fbox{X}: render as a CSS-bordered inline-block in HTML, leaving the
-# content X to be processed by latex2html's normal pipeline (so embedded
-# \begin{tabular}, math, etc. are handled correctly).  Without this
-# handler, latex2html's MathJax pipeline wraps \fbox{...} in \(...\),
-# which fails when the contents include text-mode constructs that
-# MathJax cannot parse (e.g. \begin{tabular}).  PDF rendering is
-# unaffected since this hook is only consulted by latex2html.
-sub do_cmd_fbox {
-    local($_) = @_;
-    my $arg = '';
-    s/$next_pair_pr_rx/$arg = $2;''/eo
-        || s/$next_pair_rx/$arg = $2;''/eo
-        || ($arg = &missing_braces);
-    return qq{<span class="fbox" style="border:1px solid; padding:0.25em 0.5em; display:inline-block">$arg</span>} . $_;
 }
 
 # ============================================================
@@ -2966,6 +2948,7 @@ sub do_cmd_zmoh { _mathjax_pass0('zmoh', @_) }
 sub do_cmd_zmt { _mathjax_pass0('zmt', @_) }
 sub do_cmd_zoh { _mathjax_pass0('zoh', @_) }
 sub do_cmd_zp { _mathjax_pass0('zp', @_) }
+sub do_cmd_ztr { _mathjax_pass0('ztr', @_) }
 sub do_cmd_zv { _mathjax_pass0('zv', @_) }
 sub do_cmd_zvec { _mathjax_pass0('zvec', @_) }
 sub do_cmd_zvv { _mathjax_pass0('zvv', @_) }
