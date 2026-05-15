@@ -2,7 +2,7 @@
 # DO NOT EDIT — regenerate with:
 #   python3 /w/jos-latex/tools/generate_mathjax_macros.py
 #
-# 953 math macros from 6 style files
+# 954 math macros from 6 style files
 
 # MathJax macro definitions
 %MATHJAX_MACROS = (
@@ -76,7 +76,7 @@
     'Dt' => '{\\tilde D}',
     'Dtd' => '{\\dot D_t}',
     'Dtmtx' => '\\tilde{\\Dmtx}',
-    'E' => ['\\Escr\\left\\lbrace#1\\right\\rbrace', 1],
+    'E' => ['\\Escr\\left\\{#1\\right\\}', 1],
     'EDC' => '\\text{EDC}',
     'EDR' => '\\text{EDR}',
     'Eh' => '\\hat E',
@@ -89,7 +89,7 @@
     'Energy' => '\\oper{E}',
     'Esc' => '\\text{e}',
     'Escr' => '\\mathcal{E}',
-    'Ev' => ['\\mathcal{E}\\left\\lbrace#1\\right\\rbrace', 1],
+    'Ev' => ['\\mathcal{E}\\left\\{#1\\right\\}', 1],
     'FBCF' => ['\\text{FBCF}_{#1}^{\\,#2}', 2],
     'FFCF' => ['\\text{FFCF}_{#1}^{\\,#2}', 2],
     'FFT' => '\\oper{FFT}',
@@ -105,15 +105,16 @@
     'Fscr' => '\\mathcal{F}',
     'Fv' => '\\underline{F}',
     'G' => '\\Gamma',
-    'Gb' => '\\Gmtx',
+    'Gamm' => '{\\boldsymbol \\Gamma}',
+    'Gb' => '\\Gamm',
     'Geemtx' => '{\\boldsymbol G}',
     'Gh' => '{\\hat G}',
-    'Gmtx' => '{\\boldsymbol \\Gamma}',
+    'Gmtx' => '\\mathbf{G}',
     'Gt' => '\\tilde{\\Gamma}',
     'Gtv' => '\\tilde{\\Gb}',
     'Gtvt' => '\\tilde{\\Gb}^T',
-    'Gv' => '{\\Gmtx}',
-    'Gvt' => '\\Gmtx^T',
+    'Gv' => '{\\Gamm}',
+    'Gvt' => '\\Gamm^T',
     'Gz' => '\\G_0',
     'HL' => 'H_{L,\\omega_1}',
     'Hb' => 'H_b',
@@ -289,7 +290,7 @@
     'Us' => '\\U(s)',
     'V' => 'V',
     'Va' => 'V_a',
-    'Var' => ['\\text{Var}\\left\\lbrace#1\\right\\rbrace', 1],
+    'Var' => ['\\text{Var}\\left\\{#1\\right\\}', 1],
     'Vb' => 'V_b',
     'Vd' => 'V_d',
     'Vht' => '\\hat{\\Vt}',
@@ -398,7 +399,6 @@
     'e' => '\\epsilon',
     'eb' => '\\mathbf{e}',
     'eh' => '\\hat e',
-    'elabel' => ['\\label{eq:#1}', 1],
     'ejo' => 'e^{j\\omega}',
     'ejoT' => 'e^{j\\omega T}',
     'ejok' => 'e^{j\\ok}',
@@ -474,12 +474,12 @@
     'fs' => 'f_s',
     'ft' => '\\dot f',
     'ftt' => '\\ddot f',
-    'funcalign' => ['\\left\\lbrace\\begin{array}{ll}
+    'funcalign' => ['\\left\\{\\begin{array}{ll}
 	#1, & #2 \\\\[5pt]
 	#3, & #4 \\\\
 	\\end{array}
 	\\right.', 4],
-    'funcalignthree' => ['\\left\\lbrace\\begin{array}{ll}
+    'funcalignthree' => ['\\left\\{\\begin{array}{ll}
 	#1, & #2 \\\\[5pt]
 	#3, & #4 \\\\[5pt]
 	#5, & #6 \\\\
@@ -516,7 +516,6 @@
     'hb' => '\\h_b',
     'hbm' => '\\hb^\\tminus',
     'hbp' => '\\hb^\\tplus',
-    'hbox' => ['\\mbox{#1}', 1],
     'hd' => '\\h_\\tdelta',
     'hdc' => '\\hd^c',
     'hdp' => '\\hd^\\tplus',
@@ -573,7 +572,7 @@
     'lam' => '\\lambda',
     'lami' => '{\\lambda_i}',
     'lb' => '\\left[',
-    'lbr' => '\\left\\lbrace',
+    'lbr' => '\\left\\{',
     'ldotss' => '\\ldots\\,',
     'lg' => '\\text{lg}',
     'ln' => '\\text{ln}',
@@ -601,7 +600,6 @@
     'millivolt' => '\\mathrm{mV}',
     'milliwatt' => '\\mathrm{mW}',
     'mins' => '\\text{min}',
-    'multicolumn' => ['#3', 3],
     'mndx' => 'm',
     'mod' => ['\\lp\\text{mod}\\;#1\\rp', 1],
     'ms' => '{m_s}',
@@ -703,7 +701,7 @@
     'rad' => '\\text{rad}',
     'rair' => '\\rho',
     'rb' => '\\right]',
-    'rbr' => '\\right\\rbrace',
+    'rbr' => '\\right\\}',
     'rc' => 'k',
     'rci' => '\\rc_i',
     'rcs' => 'k',
@@ -1091,6 +1089,7 @@
     'Fscr' => 1,
     'Fv' => 1,
     'G' => 1,
+    'Gamm' => 1,
     'Gb' => 1,
     'Geemtx' => 1,
     'Gh' => 1,
@@ -1384,7 +1383,6 @@
     'e' => 1,
     'eb' => 1,
     'eh' => 1,
-    'elabel' => 1,
     'ejo' => 1,
     'ejoT' => 1,
     'ejok' => 1,
@@ -1494,7 +1492,6 @@
     'hd' => 1,
     'hdc' => 1,
     'hdp' => 1,
-    'hbox' => 1,
     'henry' => 1,
     'hertz' => 1,
     'hh' => 1,
@@ -1577,7 +1574,6 @@
     'mins' => 1,
     'mndx' => 1,
     'mod' => 1,
-    'multicolumn' => 1,
     'ms' => 1,
     'muTsste' => 1,
     'mumTsste' => 1,
@@ -2002,6 +1998,26 @@ sub _mathjax_passN {
 }
 
 # ============================================================
+# Text-mode commands that must NOT be wrapped in MathJax delimiters
+# ============================================================
+
+# \fbox{X}: render as a CSS-bordered inline-block in HTML, leaving the
+# content X to be processed by latex2html's normal pipeline (so embedded
+# \begin{tabular}, math, etc. are handled correctly).  Without this
+# handler, latex2html's MathJax pipeline wraps \fbox{...} in \(...\),
+# which fails when the contents include text-mode constructs that
+# MathJax cannot parse (e.g. \begin{tabular}).  PDF rendering is
+# unaffected since this hook is only consulted by latex2html.
+sub do_cmd_fbox {
+    local($_) = @_;
+    my $arg = '';
+    s/$next_pair_pr_rx/$arg = $2;''/eo
+        || s/$next_pair_rx/$arg = $2;''/eo
+        || ($arg = &missing_braces);
+    return qq{<span class="fbox" style="border:1px solid; padding:0.25em 0.5em; display:inline-block">$arg</span>} . $_;
+}
+
+# ============================================================
 # Compact do_cmd_* wrappers
 # ============================================================
 
@@ -2104,6 +2120,7 @@ sub do_cmd_Fs { _mathjax_pass0('Fs', @_) }
 sub do_cmd_Fscr { _mathjax_pass0('Fscr', @_) }
 sub do_cmd_Fv { _mathjax_pass0('Fv', @_) }
 sub do_cmd_G { _mathjax_pass0('G', @_) }
+sub do_cmd_Gamm { _mathjax_pass0('Gamm', @_) }
 sub do_cmd_Gb { _mathjax_pass0('Gb', @_) }
 sub do_cmd_Geemtx { _mathjax_pass0('Geemtx', @_) }
 sub do_cmd_Gh { _mathjax_pass0('Gh', @_) }
@@ -2397,7 +2414,6 @@ sub do_cmd_dynes { _mathjax_pass0('dynes', @_) }
 sub do_cmd_e { _mathjax_pass0('e', @_) }
 sub do_cmd_eb { _mathjax_pass0('eb', @_) }
 sub do_cmd_eh { _mathjax_pass0('eh', @_) }
-sub do_cmd_elabel { _mathjax_pass1('elabel', @_) }
 sub do_cmd_ejo { _mathjax_pass0('ejo', @_) }
 sub do_cmd_ejoT { _mathjax_pass0('ejoT', @_) }
 sub do_cmd_ejok { _mathjax_pass0('ejok', @_) }
@@ -2507,7 +2523,6 @@ sub do_cmd_hbp { _mathjax_pass0('hbp', @_) }
 sub do_cmd_hd { _mathjax_pass0('hd', @_) }
 sub do_cmd_hdc { _mathjax_pass0('hdc', @_) }
 sub do_cmd_hdp { _mathjax_pass0('hdp', @_) }
-sub do_cmd_hbox { _mathjax_pass1('hbox', @_) }
 sub do_cmd_henry { _mathjax_pass0('henry', @_) }
 sub do_cmd_hertz { _mathjax_pass0('hertz', @_) }
 sub do_cmd_hh { _mathjax_pass0('hh', @_) }
@@ -2590,7 +2605,6 @@ sub do_cmd_milliwatt { _mathjax_pass0('milliwatt', @_) }
 sub do_cmd_mins { _mathjax_pass0('mins', @_) }
 sub do_cmd_mndx { _mathjax_pass0('mndx', @_) }
 sub do_cmd_mod { _mathjax_pass1('mod', @_) }
-sub do_cmd_multicolumn { _mathjax_passN('multicolumn', 3, @_) }
 sub do_cmd_ms { _mathjax_pass0('ms', @_) }
 sub do_cmd_muTsste { _mathjax_pass0('muTsste', @_) }
 sub do_cmd_mumTsste { _mathjax_pass0('mumTsste', @_) }
