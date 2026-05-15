@@ -158,14 +158,169 @@ sub text1 {
 my $skipping = 0;
 my $in_math = 0;  # Track nesting depth in MATH/MATHDISPLAY elements
 
+# Inline formatting tags whose markup should be transparent for key matching:
+# i.e., text inside them concatenates with surrounding text so that a key
+# like "z transform" can match across "<I>z</I> transform" boundaries.
+my %transparent = map { $_ => 1 } qw(i b em strong tt font sub sup u small big);
+
+# Buffer of events accumulated across transparent inline tags. Each entry is
+# [type, html, plain] where type is one of 'tag_start', 'tag_end_transparent',
+# 'tag_end', 'text', 'default'. For text events, plain == html (the text);
+# otherwise plain is undef.
+my @pending = ();
+my $pending_plain = "";
+
+# flush_pending: run pass-2 match logic on the accumulated plain text in
+# @pending, then walk through the buffered events emitting them with
+# <A HREF=...>...</A> insertions spliced in at the match positions.
+sub flush_pending {
+    return if !@pending;
+
+    my @opens  = ();   # [plain_offset, html]
+    my @closes = ();   # [plain_offset, html]
+
+    if ($pending_plain =~ /\w/ && !$skipping) {
+        my @claimed = ();   # [start, end] ranges already matched in this buffer
+        for (my $i = 0; $i < @keymatch; $i++) {
+            next if $firstonly && $keydone[$i];
+            my $key = $keymatch[$i];
+            my $def = $defmatch[$i];
+            my $url = $urlmatch[$i];
+            my $nkey = main::normalize2($key);
+            my @keywords = split ' ', $nkey;
+            my $sp2 = main::search_pattern(2, \@keywords);
+
+            my $search_pos = 0;
+            while ($search_pos <= length($pending_plain)) {
+                pos($pending_plain) = $search_pos;
+                last unless $pending_plain =~ m/$sp2/igc;
+                my $s = $-[2];
+                my $e = $+[2];
+
+                # Skip if this match overlaps an already-claimed range
+                my $overlap = 0;
+                for my $c (@claimed) {
+                    if (!($e <= $c->[0] || $s >= $c->[1])) {
+                        $overlap = 1; last;
+                    }
+                }
+                if ($overlap) {
+                    $search_pos = ($e > $search_pos) ? $e : $search_pos + 1;
+                    next;
+                }
+
+                my $linkmatch = substr($pending_plain, $s, $e - $s);
+                my $localdef  = $def;
+                $localdef = encode_entities($localdef) if $localdef;
+                my $u = $url;
+                if ($u =~ m/^\s*\?\s*$/) {
+                    my $sk = $linkmatch;
+                    $sk =~ s/\s+/\+/g;
+                    $u = "http://www.google.com/search?q=$sk";
+                    print STDERR "\t'?' URL converted to '$u'\n";
+                }
+                $localdef = ($localdef // "") . " &nbsp;&#8212;&nbsp; " if $localdef;
+                $localdef = ($localdef // "") . "Click for $u";
+                my $openhtml = "<A HREF=\"$u\"" .
+                    ($localdef ? " onMouseover=\"return escape(\'$localdef\')\"" : "") . ">";
+
+                push @opens,   [$s, $openhtml];
+                push @closes,  [$e, "</A>"];
+                push @claimed, [$s, $e];
+
+                $keydone[$i] = 1;
+                last if $firstonly;
+                $search_pos = ($e > $search_pos) ? $e : $search_pos + 1;
+            }
+        }
+    }
+
+    # Combine insertions; sort so that at the same offset, 'close' comes before
+    # 'open' (one match ends before another begins).
+    my @ins = ();
+    push @ins, map { [$_->[0], $_->[1], 'close'] } @closes;
+    push @ins, map { [$_->[0], $_->[1], 'open']  } @opens;
+    @ins = sort { $a->[0] <=> $b->[0] || $a->[2] cmp $b->[2] } @ins;
+
+    my $plain_pos = 0;
+    my $next_ins  = 0;
+    for my $ev (@pending) {
+        my ($type, $html, $plain) = @$ev;
+        if (defined $plain) {
+            # Text event: splice in any insertions that fall inside this chunk
+            my $event_start = $plain_pos;
+            my $event_end   = $plain_pos + length($plain);
+            my $local = 0;
+            my $emit  = '';
+            while ($next_ins < @ins && $ins[$next_ins][0] < $event_end) {
+                my $abs = $ins[$next_ins][0];
+                my $rel = $abs - $event_start;
+                $rel = 0 if $rel < 0;
+                if ($rel > $local) {
+                    $emit .= substr($plain, $local, $rel - $local);
+                    $local = $rel;
+                }
+                $emit .= $ins[$next_ins][1];
+                $next_ins++;
+            }
+            $emit .= substr($plain, $local);
+            print $emit;
+            $plain_pos = $event_end;
+        } else {
+            # Tag or default event. Emit pending insertions at the current
+            # boundary, with two exceptions that yield cleaner nesting:
+            #   - 'close' insertions at the boundary of a transparent inline
+            #     END tag are emitted AFTER the tag (link wraps the inline).
+            #   - 'open' insertions at the boundary of a non-transparent
+            #     (block-level) START tag are emitted AFTER the tag (link
+            #     sits inside the block container, not wrapping it).
+            my $is_trans_end     = ($type eq 'tag_end_transparent');
+            my $is_nontrans_start = ($type eq 'tag_start');
+            my @deferred = ();
+            while ($next_ins < @ins && $ins[$next_ins][0] <= $plain_pos) {
+                if ($ins[$next_ins][0] == $plain_pos) {
+                    if ($is_trans_end && $ins[$next_ins][2] eq 'close') {
+                        push @deferred, $ins[$next_ins];
+                        $next_ins++;
+                        next;
+                    }
+                    if ($is_nontrans_start && $ins[$next_ins][2] eq 'open') {
+                        push @deferred, $ins[$next_ins];
+                        $next_ins++;
+                        next;
+                    }
+                }
+                print $ins[$next_ins][1];
+                $next_ins++;
+            }
+            my $h = $html;
+            $h =~ s/\&nbsp;//g if $type eq 'default';
+            print $h;
+            for my $d (@deferred) {
+                print $d->[1];
+            }
+        }
+    }
+    # Emit any trailing insertions (closes at end-of-buffer).
+    while ($next_ins < @ins) {
+        print $ins[$next_ins][1];
+        $next_ins++;
+    }
+
+    @pending = ();
+    $pending_plain = "";
+}
+
 sub start {
     my $tagname = shift;
     my $text = shift;
-#   my $tokens = shift;
     print STDERR "\n\nPASS 2: START: TAG NAME = '$tagname'\n" if $debug;
     print STDERR "PASS 2: START: text = '$text'\n" if $debug;
-#   print STDERR "PASS 2: START: TOKENS = $tokens = '" . join(" ",@$tokens) . "'\n" ;# if $debug;
-    print $text;
+    # Non-transparent start tags (block-level, anchors, math, etc.) end the
+    # current matching buffer: flush it before queueing the tag.
+    flush_pending() if !$transparent{$tagname};
+    my $stype = $transparent{$tagname} ? 'tag_start_transparent' : 'tag_start';
+    push @pending, [$stype, $text, undef];
     if (
 	$tagname eq "a"
 	|$tagname eq "h1"
@@ -188,8 +343,9 @@ sub end {
     my $tagname = shift;
     my $text = shift;
     print STDERR "\n\nPASS 2: END: TAG NAME = '$tagname'\n" if $debug;
-#    print "</$tagname>";
-    print $text;
+    flush_pending() if !$transparent{$tagname};
+    my $etype = $transparent{$tagname} ? 'tag_end_transparent' : 'tag_end';
+    push @pending, [$etype, $text, undef];
     if (
 	$tagname eq "a"
 	|$tagname eq "h1"
@@ -210,143 +366,19 @@ sub end {
 
 sub text2 {
     my $text = shift;
+    print STDERR "\n\nPASS 2:---Input Text = '$text'\n" if $debug;
+    # Buffer text; the actual key-matching happens in flush_pending() so that
+    # phrases broken across transparent inline tags (e.g. "<I>z</I> transform")
+    # can still match against the combined plain text.
+    push @pending, ['text', $text, $text];
+    $pending_plain .= $text;
+}
 
-    if ($text =~ /\w/ & ! $skipping) {
-	print STDERR "\n\nPASS 2:---Input Text = '$text'\n" if $debug;
-	my $ptext = $text; # used to detect change in $text
-
-	my($key,$def,$url,$dsc);
-	if ($debug) {
-	    for (my $i=0; $i<@keymatch; $i++) {
-		print STDERR "%*%*% keydone[$i] = '$keydone[$i]'\n";
-	    }
-	}
-	my @matches;  # Array of match replacements
-	my $m = -1;
-	for (my $i=0; $i<@keymatch; $i++) {
-	    print STDERR "\n*** i = $i\n" if $debug;
-	    if ($firstonly && $keydone[$i]) { 
-		print STDERR "Key '$keydone[$i]' already done\n" if $debug;
-	    } else {
-		$key = $keymatch[$i];
-		$def = $defmatch[$i];
-		$url = $urlmatch[$i];
-		print STDERR "keymatch[$i] = '$key'\n" if $debug;
-		print STDERR "def[$i] = '$def'\n" if $debug;
-		my $nkey = &main::normalize2($key);
-		print STDERR "NORMALIZED KEY = '$nkey'\n" if $debug;
-		my @keywords = split ' ', $nkey;
-		my $sp2 = &main::search_pattern(2,\@keywords);
-		print STDERR "PASS 2 search pattern = '$sp2'\n" if $debug;
-		# FIXME: NEED TO DETECT QUALIFIED CONTEXT PATH HERE
-		# AND USE THE SPECIFIED CONTEXT (AGGREGATE) DICTIONARY 
-		# FOR SUCH ESCAPES.
-		my $rtn = 0;
-# '/' = &#8260;
-		$rtn = ($text =~ m{$sp2}i); # NOTE: CANNOT HAVE CURLIES IN TEXT
-#		my $pdebug = $debug; $debug = 1;
-#		print STDERR "Search/Replace Match 1 = '$1'\n" ;# if ($debug && $1);
-		print STDERR "Search/Replace Match 2 = '$2'\n" if ($debug && $2); 
-		print STDERR "\tEnding Match 3 = '$3'\n" if ($debug && $3); 
-		print STDERR "\tMatch 4 = '$4'\n" if ($debug && $4); 
-		print STDERR "\tMatch 5 = '$5'\n" if ($debug && $5); 
-#		$debug = $pdebug;
-		if (!$rtn) {
-		    print STDERR "--- NO MATCH ---\n\n" if $debug;
-		}
-		next if !$rtn;
-
-		if ($def) { 
-		    print STDERR "Found DEF '$def' for KEY '$key'\n" if ($debug); 
-		    # FIXME: Encode entities here or in dutil
-		    # Javascript strings delimited by ''
-		    # Use &quot; instead? &apos; is said not to work in IE
-		    # $def =~ s/'/&quot;/g;
-		    # $def =~ s/'/\'/g;
-		    # $def =~ s/'/\\'/g; # emits two backslashes to HTML here
-		    #                      but only 1 in ~/.latex2html-init !
-		    $def = encode_entities($def); # new 2007/2/2
-		}
-#		$def = "Click for $url" if (not $def);
-#		$def = $def . "<HR>" if ($def);
-#		$def = $def . " &nbsp;&emdash;&nbsp; " if ($def);
-		my $prematch = $1;
-		my $linkmatch = $2;
-		if ($url =~ m/^\s*\?\s*$/) { # No URL yet known, make up a search
-		    # This will be a Google search.
-		    # To get a jos site search, say 'URL = search' instead of 'URL = ?'
-		    my $searchkey = $linkmatch;
-		    $searchkey =~ s/\s+/\+/g; # Convert each whitespace run to one '+'
-		    $url = "http://www.google.com/search?q=$searchkey";
-		    print STDERR "\t'?' URL converted to '$url'\n"; # if ($debug && $5); 
-		}
-		# remap to dsprelated.com where needed:
-		if (0 && $url =~ 
-		    m!^http://ccrma.stanford.edu/~jos/(mdft|filters|pasp|sasp)/(.*)$!) {
-		    my $book = $1;
-		    my $page = $2;
-		    $url = "http://www.dsprelated.com/dspbooks/$book/$page";
-		    print STDERR "\tJOS BOOK URL converted to '$url'\n"; # if ($debug && $5); 
-		}
-		$def = $def . " &nbsp;&#8212;&nbsp; " if ($def);
-		$def = $def . "Click for $url";
-		my $matchtext = "$prematch<A HREF=\"$url\"" . 
-	 	 ($def? " onMouseover=\"return escape(\'$def\')\"":"") . 
-		 ">$linkmatch<\/A>";
-		print STDERR "Match text = '$matchtext'\n" if ($debug);
-		push(@matches,$matchtext); $m++;
-		print STDERR "PRETEXT = $text\n" if ($debug && $i==0);
-		my $matchtag = "&&&MATCH-TAG-$m-&&&";
-		if ($firstonly) {
-		    $rtn = ($text =~ s/$sp2/$matchtag/i);
-		} else {
-		    $rtn = ($text =~ s/$sp2/$matchtag/ig);
-		}
-		print STDERR "POSTTEXT = $text\n" if ($debug && $i==0);
-		if ($rtn) {
-		    $keydone[$i] = 1;
-		    print STDERR "&*&*&*& SET KEYDONE[$i] (= '$key') TO 1\n" if $debug;
-		}
-		if ($debug && ($ptext ne $text)) {
-		    print STDERR "New text = '$text'\n\n" if $debug;
-		}
-	    }
-	} # $i iteration over keymatches
-
-	print STDERR "\n********** Loop finished\n\n" if $debug;
-
-	# Now install the final replacement text.
-	# This has to occur in a second pass because otherwise
-	# anchor text installed for some $i can get replaced by replacements for larger $i.
-	# See /w/kpt/test.html for a failing example: "CCRMA DSP Seminar"
-	# Question: can we relax this requirement for tooltips?
-
-	for (my $i=0; $i<@matches; $i++) {
-	    if ($firstonly) { # test of $firstonly is merely an optimization
-		$text =~ s/&&&MATCH-TAG-$i-&&&/$matches[$i]/;
-	    } else {
-		$text =~ s/&&&MATCH-TAG-$i-&&&/$matches[$i]/g;
-	    }
-	    print STDERR "POSTTEXT FINAL = $text\n" if ($debug && $i==0);
-	} # $i iteration over keymatches
-	if ($debug && ($ptext ne $text)) {
-	    print STDERR "\nNew text = '$text'\n\n" if $debug;
-	}
-    } else {
-	print STDERR "*** No word chars --- goto EXIT\n" if ($debug>1);
-    }
-  EXIT:
-# PROBLEM: Angle brackets in <A HREF=...> converted also!
-#   $self->SUPER::text(encode_entities($text)); 
-    # PROBLEM: the text 'for (n=0;n<N;n++)' in a code listing causes remainder of listing
-    # to be slurped up into a 'tag'.  WE MUST ENCODE ENTITIES, but
-    # without encoding the HTML tags we've inserted.  However, note that
-    # the text 'for (n=0;n<2*N;n++)' or 'for (n=0;n < N;n++)' does NOT fool
-    # the browser (at least not Mozilla).
-# MAYBE NEED TO WORK WITH ENCODED TEXT => SEARCH STRINGS MUST BE ENCODED
-# MAYBE NEED TO PARTIALLY DECODE, E.G., TO CONVERT &nbsp; TO SPACE
-# HOW ABOUT HAVING TO ENCODING CONVENTIONS?
-    print $text;
+sub default2 {
+    my $text = shift;
+    # Buffer comments / declarations / processing instructions so that they
+    # don't break key matching across transparent inline content.
+    push @pending, ['default', $text, undef];
 }
 
 package main;
@@ -478,7 +510,7 @@ my $mf2 = HTML::Parser->new(api_version   => 3,
                     start_h => [\&start, "tagname, text"],
                     end_h   => [\&end,   "tagname, text"],
 		    text_h     => [\&text2,   "text"],
-		    default_h     => [\&justprint,   "text"],
+		    default_h     => [\&default2,   "text"],
 #		    nolinks_h     => [\&justprint,   "text"],
 			    );
 # Event is one of "text", "start", "end", "declaration", "comment",
@@ -492,6 +524,7 @@ my $mf2 = HTML::Parser->new(api_version   => 3,
 #script style nolinks
 
 $mf2->parse_file($ihname);
+flush_pending();   # emit any trailing buffered events
 
 # Detect failed matches (presumably due to phrase straddling buffers):
 for (my $i=0; $i<@keymatch; $i++) {
