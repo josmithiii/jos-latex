@@ -2905,7 +2905,8 @@ URL = https://ccrma.stanford.edu/~jos/pasp/Characteristic_Polynomial_Equation.ht
 KEY = Matched Z Transformation | Matched Z
 URL = https://ccrma.stanford.edu/~jos/pasp/Finite_Differences.html
 
-KEY =  Z Transform
+KEY = z transform
+DEF = The <i>z transform</i> maps a sequence of real or complex numbers to a polynomial in the complex variable <i>z</i> with real or complex coefficients.  Example: [1,5,3] maps to 1 + 5 z<sup>-1</sup> + 3 z<sup>-2</sup>.
 URL = https://ccrma.stanford.edu/~jos/filters/Z_Transform.html 
 
 KEY = Laplace Transform | Laplace Analysis
