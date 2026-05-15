@@ -534,6 +534,10 @@ thtml:
 htmlo ho: .HTML-TIMESTAMP
 	$(OHTML) $(HTMLDIR)/$(NAME).html
 
+# hlo = html + install + links + open (like ho, but installs links first)
+hlo: .LINK-TIMESTAMP
+	$(OHTML) file:$(DESTROOT)/$(NAME)/index.html
+
 THEME_SCRIPT_SRC ?= ../theme-toggle.js
 
 .HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h $(MATHJAX_MACROS_PL)
