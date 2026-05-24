@@ -55,6 +55,8 @@ for my $cmd ('fbox') {
 # latex2html's environment parser runs (fixes long-standing l2h issue
 # noted in stddefs.tex line 143: "l2h gets fouled up on \BIT").
 # Uses the pre_pre_process hook called at the top of pre_process().
+# pre_process is also called on the .aux file, so we use this same hook
+# to strip "on page \pageref{...}" tails (see comment below).
 sub pre_pre_process {
     s/\\BIT\b/\\begin{itemize}/g;
     s/\\EIT\b/\\end{itemize}/g;
@@ -68,6 +70,25 @@ sub pre_pre_process {
     s/\\EITC\b/\\end{itemize}/g;
     s/\\BNUMC\b/\\begin{enumerate}/g;
     s/\\ENUMC\b/\\end{enumerate}/g;
+
+    # Strip "on page \pageref{...}" / "starting on page \pageref{...}" /
+    # ", p. \pageref{...}" patterns.  stddefs.tex defines \fpref, \Fpref,
+    # \Fbpref, \epref, \spref, \cpref, \cprefs, \prefp etc. all as
+    #     \Xref{ref}  \latex{ on \Xpageref{ref} }
+    # In a PDF build, LaTeX expands the \latex{...} part (since
+    # \newcommand{\latex}[1]{#1}) and writes the full "Fig. N on page P"
+    # text into .aux.  In the HTML build, latex2html's html.perl puts
+    # \latex in its ignore-commands list, so the body's \fpref expands to
+    # just "Fig. N" -- but the .aux still has the long form.  l2h's
+    # caption-matching code sanitizes both and compares them as hash keys;
+    # if the keys diverge, the figure loses its number ("Figure:" instead
+    # of "Figure 2.9:").  Stripping the LaTeX-side page-ref tail here (on
+    # the raw .aux line, before \pageref gets resolved) aligns the keys
+    # while leaving the visible HTML output unchanged.  The body never
+    # carries an "on page X" tail in this position (the \latex{...} arg is
+    # discarded by l2h), so this is a no-op on the document body.
+    s/\s*(?:starting\s+)?on\s+page(?:\{\}|~|\\\@|\s|\\,)\s*\\pageref\s*\{[^}]*\}//g;
+    s/\s*,\s*p\.\s*(?:\\qsp|\\,)?\s*\\pageref\s*\{[^}]*\}//g;
 }
 
 # NOTE: Earlier versions of this file defined do_cmd_ccrmahomepage and
