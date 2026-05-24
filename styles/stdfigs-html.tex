@@ -13,9 +13,12 @@
 \newcommand{\mlfigwidth}{\twidth} % matlab figures too large initially
 
 % See stdfigs-latex.tex for explanation.
-% Use the HTML-specific variant (no \parbox/\small) so latex2html renders
-% the caption as text under the figure instead of a wide inline image:
-\input{jos-latex/styles/mycaptionparlabel-html.tex}
+% NOTE: dropping the \parbox here (i.e. inputting mycaptionparlabel-html.tex)
+% breaks latex2html caption-matching: figures lose their numbers ("Figure:"
+% instead of "Figure 2.9:"), and cross-refs go stale.  So we keep the parbox
+% version; the figure layout itself (below) forces the caption onto its own
+% line so it appears under the figure rather than to its right.
+\input{jos-latex/styles/mycaptionparlabel.tex}
 
 \newcommand{\stdFigScale}{0.8} % Good full-page scaling for Matlab plots
 \newcommand{\stdSmallFigScale}{0.5} % Good for little by-the-way figures
@@ -27,6 +30,8 @@
 \newcommand{\myFigure}[2]{
 	\begin{figure}[htbp]
 	\includegraphics{eps/#1} % the figure
+	% <br> forces caption (rendered as parbox image) below the figure:
+	\begin{rawhtml}<br>\end{rawhtml}
 	%\caption{#2}\label{fig:#1}
         \centering
         \mycaptionparlabel{#2}{fig:#1}
@@ -47,6 +52,9 @@
 % latex2html / graphicx.perl will cut them off on the right and top.
 %	\resizebox{#2}{!}{\includegraphics{eps/#1}}
 	\includegraphics[width=#2]{eps/#1}
+	% Raw <br> forces latex2html to put the (parbox-image) caption on a
+	% new line below the figure instead of flowing inline to its right.
+	\begin{rawhtml}<br>\end{rawhtml}
 	%\caption{#3}\label{fig:#1}
         \mycaptionparlabel{#3}{fig:#1}
 	\end{figure}
@@ -91,20 +99,22 @@
 }
 
 % Usage: \myFigureToBox{name}{width}{height}{caption}
-\newcommand{\myFigureToBox}[4]{ 
+\newcommand{\myFigureToBox}[4]{
 	\begin{figure}[htbp]
 %prv:	\resizebox{#2}{#3}{\includegraphics{eps/#1}}
 	\includegraphics[width=#2,height=#3]{eps/#1}
+	\begin{rawhtml}<br>\end{rawhtml}
 	%\caption{#4}\label{fig:#1}
         \mycaptionparlabel{#4}{fig:#1}
 	\end{figure}
 }
 
 % Usage: \myFigureScale{name}{scaleFactor}{caption}
-\newcommand{\myFigureScale}[3]{ 
+\newcommand{\myFigureScale}[3]{
 	\begin{figure}[htbp]
 %prv:	\scalebox{#2}{\includegraphics{eps/#1}}
 	\includegraphics[scale=#2]{eps/#1}
+	\begin{rawhtml}<br>\end{rawhtml}
 	%\caption{#3}\label{fig:#1}
         \mycaptionparlabel{#3}{fig:#1}
 	\end{figure}
@@ -288,6 +298,7 @@ myFourFiguresToWidth{#1}{#2}{#3}{#4}{#5}{#9}
 \newcommand{\myTexFigurePRV}[2]{
     \begin{figure}[tb]
     \input{fig/#1.pstex_t}
+    \begin{rawhtml}<br>\end{rawhtml}
     %\caption{\protect #2}\label{fig:#1}
     \mycaptionparlabel{#2}{fig:#1}
     \end{figure}
