@@ -27,14 +27,16 @@
 % =================== POSTSCRIPT FIGURE SUPPORT ==================
 
 % Usage: \myFigure{num}{caption}
+% Bare \caption (instead of \mycaptionparlabel) makes latex2html render the
+% caption as a real <CAPTION ALIGN="BOTTOM"><STRONG>Figure N:</STRONG>...
+% </CAPTION> element instead of a standalone parbox-image (whose ALT text has
+% no "Figure N:" prefix).  \protect\small matches the .aux entry written by
+% the LaTeX-build counterpart so caption-matching finds a number.
 \newcommand{\myFigure}[2]{
 	\begin{figure}[htbp]
 	\includegraphics{eps/#1} % the figure
-	% <br> forces caption (rendered as parbox image) below the figure:
-	\begin{rawhtml}<br>\end{rawhtml}
-	%\caption{#2}\label{fig:#1}
         \centering
-        \mycaptionparlabel{#2}{fig:#1}
+	\caption{\protect\small #2}\label{fig:#1}
 	\end{figure}
 }
 
@@ -52,11 +54,7 @@
 % latex2html / graphicx.perl will cut them off on the right and top.
 %	\resizebox{#2}{!}{\includegraphics{eps/#1}}
 	\includegraphics[width=#2]{eps/#1}
-	% Raw <br> forces latex2html to put the (parbox-image) caption on a
-	% new line below the figure instead of flowing inline to its right.
-	\begin{rawhtml}<br>\end{rawhtml}
-	%\caption{#3}\label{fig:#1}
-        \mycaptionparlabel{#3}{fig:#1}
+	\caption{\protect\small #3}\label{fig:#1}
 	\end{figure}
 }
 
@@ -81,7 +79,7 @@
 %new:	\includegraphics[angle=#2,width=#3]{eps/#1}
 %kludge:
 	\includegraphics[width=#3]{eps/#1}
-	\caption{#4 --- [FIXME: Cannot do both rotation and scaling in latex2html graphicx support]}\label{fig:#1}
+	\caption{\protect\small #4 --- [FIXME: Cannot do both rotation and scaling in latex2html graphicx support]}\label{fig:#1}
 	\end{figure}
 }
 
@@ -94,7 +92,7 @@
 %new:	\includegraphics[angle=#2,width=#3]{eps/#1}
 %kludge:
 	\includegraphics[width=#3,height=#4]{eps/#1}
-	\caption{#5 --- [FIXME: Cannot do both rotation and scaling in latex2html graphicx support]}\label{fig:#1}
+	\caption{\protect\small #5 --- [FIXME: Cannot do both rotation and scaling in latex2html graphicx support]}\label{fig:#1}
 	\end{figure}
 }
 
@@ -103,9 +101,7 @@
 	\begin{figure}[htbp]
 %prv:	\resizebox{#2}{#3}{\includegraphics{eps/#1}}
 	\includegraphics[width=#2,height=#3]{eps/#1}
-	\begin{rawhtml}<br>\end{rawhtml}
-	%\caption{#4}\label{fig:#1}
-        \mycaptionparlabel{#4}{fig:#1}
+	\caption{\protect\small #4}\label{fig:#1}
 	\end{figure}
 }
 
@@ -114,9 +110,7 @@
 	\begin{figure}[htbp]
 %prv:	\scalebox{#2}{\includegraphics{eps/#1}}
 	\includegraphics[scale=#2]{eps/#1}
-	\begin{rawhtml}<br>\end{rawhtml}
-	%\caption{#3}\label{fig:#1}
-        \mycaptionparlabel{#3}{fig:#1}
+	\caption{\protect\small #3}\label{fig:#1}
 	\end{figure}
 }
 
@@ -301,8 +295,6 @@ myFourFiguresToWidth{#1}{#2}{#3}{#4}{#5}{#9}
 \newcommand{\myTexFigurePRV}[2]{
     \begin{figure}[tb]
     \input{fig/#1.pstex_t}
-    \begin{rawhtml}<br>\end{rawhtml}
-    %\caption{\protect #2}\label{fig:#1}
-    \mycaptionparlabel{#2}{fig:#1}
+    \caption{\protect\small #2}\label{fig:#1}
     \end{figure}
 }
