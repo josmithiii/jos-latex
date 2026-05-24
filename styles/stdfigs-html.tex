@@ -225,12 +225,15 @@ myFourFiguresToWidth{#1}{#2}{#3}{#4}{#5}{#9}
 %======================== TABLE SUPPORT ========================
 
 % Usage: \myTable{Num[table prefix added]}{MultiLineCaption.}{table}
+% \protect\small matches the .aux entry written by the LaTeX-build counterpart
+% (\mycaptionparlabel wraps the caption in \protect\small), so latex2html
+% caption-matching succeeds and tables get numbers ("Table B.1:" not "Table:").
 \newcommand{\myTable}[3]{
 	\begin{table}[htbp]
 	\begin{center}
 	#3
 	\end{center}
-	\caption{#2}
+	\caption{\protect\small #2}
 	\label{table:#1} % MUST GO AFTER CAPTION OR INSIDE ITS ARGUMENT
 	\end{table}
 }
@@ -241,7 +244,7 @@ myFourFiguresToWidth{#1}{#2}{#3}{#4}{#5}{#9}
 	\begin{center}
 	#2
 	\end{center}
-	\caption{#1}
+	\caption{\protect\small #1}
 	\end{table}
 }
 
