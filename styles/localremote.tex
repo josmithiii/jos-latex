@@ -22,7 +22,9 @@
 \iftoggle{local}{%
   % See also /w/latex/stdprescommon.tex:617
   \message{*** COMPILING IN LOCAL MODE for ACROBAT READER ***}
-  \newcommand{\maybepause}{\pause}
+  % \relax stops powerdot's \pause from swallowing a following [...] (e.g. an
+  % editorial note) as its optional overlay-count argument:
+  \newcommand{\maybepause}{\pause\relax}
   \renewcommand{\soundpathroot}{/w/s/}
 }{
   % See also /w/latex/stdprescommon.tex:617
