@@ -212,6 +212,14 @@ class MDFTCourse {
       document.body.classList.add('sidebar-collapsed');
     }
 
+    // Restore the previously selected tab (persists across page navigation).
+    // Skip if it no longer exists (e.g. Outline on a book without an outline).
+    const savedTab = localStorage.getItem(`${CONFIG.NAME}-active-tab`);
+    if (savedTab && savedTab !== 'progress'
+        && sidebar.querySelector(`.course-sidebar-tab[data-tab="${savedTab}"]`)) {
+      this.switchTab(savedTab);
+    }
+
     // Bind reset progress button
     this.bindResetButton();
 
@@ -473,6 +481,7 @@ Please help me understand this material. You can:
   }
 
   switchTab(tabName) {
+    localStorage.setItem(`${CONFIG.NAME}-active-tab`, tabName);
     this.sidebar.querySelectorAll('.course-sidebar-tab').forEach(t => {
       t.classList.toggle('active', t.dataset.tab === tabName);
     });
