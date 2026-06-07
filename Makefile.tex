@@ -664,6 +664,170 @@ wiac web-install-at-ccrma:
 web: ch webupd wiac
 
 # ============================================================================
+# Course Enhancements (shared by all books: mdft, filters, pasp, sasp)
+# Right-side course panel: Progress / Outline / Exercises / Help.
+# Shared code & helpers live in $(JOS_LATEX)/course/ (js, css, py) and are
+# symlinked into each book; inject-course.py and generate-page-metadata.py are
+# likewise symlinks. Generated data (page-metadata.json, outline.json) is local
+# per book and gitignored. A book may override COURSE_PORT / COURSE_TEST_PAGE
+# and add its own viz targets.
+# Naming: f=fresh, i=install, l=links, c=course, w=web, o=open
+# ============================================================================
+
+.PHONY: page-metadata pm page-metadata-force pmf
+.PHONY: course-inject course ci course-dry course-preview
+.PHONY: course-remove course-uninject course-serve cs htmloc
+.PHONY: course-open co course-clean cc course-data-clean cdc
+.PHONY: course-distclean cdist course-fresh cf course-rebuild crb
+.PHONY: course-validate cval timestamp-analysis tsa
+.PHONY: course-install cid course-installed-open cido
+.PHONY: ilc ilcw ilco filc filcw filco cw help-course hc
+
+COURSE_PORT ?= 8000
+PAGE_METADATA ?= course/data/page-metadata.json
+COURSE_OUTLINE ?= course/data/outline.json
+# Page opened by course-serve/course-open/course-installed-open. Default to the
+# book's front page; a book may override (e.g. mdft: Complex_Plane.html).
+COURSE_TEST_PAGE ?= index.html
+
+# --- HTML generation (latex2html, slow) ------------------------------------
+
+# Build the HTML if it is missing (course targets do not force a rebuild;
+# use `make html` or the fil chain for that).
+$(HTMLDIR)/index.html:
+	$(MAKE) html
+
+# --- Data generation -------------------------------------------------------
+
+# (Re)generate page metadata + outline.json from the built HTML. The helper
+# derives the book name from the HTML dir (e.g. mdftHTML -> mdft).
+$(PAGE_METADATA): $(HTMLDIR)/index.html generate-page-metadata.py
+	python3 generate-page-metadata.py --html-dir $(HTMLDIR) --output $(PAGE_METADATA)
+
+page-metadata pm: $(PAGE_METADATA)
+
+# Force regenerate even if up-to-date.
+page-metadata-force pmf:
+	python3 generate-page-metadata.py --html-dir $(HTMLDIR) --output $(PAGE_METADATA)
+
+# --- Local testing (injects into $(HTMLDIR)/) ------------------------------
+
+course-inject course ci: $(PAGE_METADATA)
+	python3 inject-course.py --dest $(HTMLDIR)
+
+course-dry course-preview:
+	python3 inject-course.py --dest $(HTMLDIR) --dry-run
+
+course-remove course-uninject:
+	-python3 inject-course.py --dest $(HTMLDIR) --remove
+
+course-serve cs:
+	@echo "Starting server at http://localhost:$(COURSE_PORT)/$(COURSE_TEST_PAGE)"
+	@echo "Press Ctrl+C to stop"
+	cd $(HTMLDIR) && python3 -m http.server $(COURSE_PORT)
+
+htmloc: course-inject
+	@echo "Starting server at http://localhost:$(COURSE_PORT)/"
+	@(sleep 1 && open http://localhost:$(COURSE_PORT)/index.html) &
+	cd $(HTMLDIR) && python3 -m http.server $(COURSE_PORT)
+
+course-open co:
+	open http://localhost:$(COURSE_PORT)/$(COURSE_TEST_PAGE)
+
+# --- Cleaning --------------------------------------------------------------
+
+course-clean cc:
+	-/bin/rm -rf $(HTMLDIR)/course
+	-/bin/rm -f $(HTMLDIR)/course-inject.js
+
+course-data-clean cdc:
+	-/bin/rm -f $(PAGE_METADATA) $(COURSE_OUTLINE)
+
+course-distclean cdist: course-remove course-clean course-data-clean
+	@echo "Course fully cleaned (HTML files intact)"
+
+# Course data is regenerated on each build, so wipe it on tclean.
+tclean distclean tc:: course-distclean
+
+course-fresh cf: course-remove course-inject
+	@echo "Course injection refreshed"
+
+course-rebuild crb: course-distclean course-inject
+	@echo "Course fully rebuilt from scratch"
+
+# --- Validation / debugging ------------------------------------------------
+
+course-validate cval:
+	@python3 validate-exercises.py --html-dir $(HTMLDIR)
+	@python3 -c "import json, os; f='$(PAGE_METADATA)'; print(f'Page metadata: {len(json.load(open(f)))} pages') if os.path.exists(f) else print('Page metadata: not generated yet (run make pm)')"
+
+timestamp-analysis tsa:
+	@python3 timestamp-analysis.py
+
+# --- Production install (injects into DESTROOT) ----------------------------
+
+# Regenerate fresh data, then inject course assets into the installed copy.
+course-install cid: $(PAGE_METADATA)
+	@echo "Injecting course into $(DESTROOT)/$(NAME)..."
+	python3 inject-course.py --dest $(DESTROOT)/$(NAME)
+
+course-installed-open cido:
+	open $(DESTROOT)/$(NAME)/$(COURSE_TEST_PAGE)
+
+# cw = course + web (no rebuild: just inject course and upload)
+cw: course-install
+	$(WEBUPD) $(NAME)
+
+# ilc = install + links + course
+ilc: il course-install
+	@echo "Installed to $(DESTROOT)/$(NAME) with course enhancements"
+
+ilcw: ilc
+	$(WEBUPD) $(NAME)
+
+ilco: ilc oq
+
+# filc = fresh + install + links + course
+filc: fil course-install
+	@echo "Installed to $(DESTROOT)/$(NAME) with course enhancements"
+
+filcw: filc
+	$(WEBUPD) $(NAME)
+
+filco: filc oq
+
+help-course hc:
+	@echo "Course Enhancement Targets (shared across books):"
+	@echo ""
+	@echo "Data generation:"
+	@echo "  make pm     Generate page metadata + outline (if HTML changed)"
+	@echo "  make pmf    Force regenerate metadata + outline"
+	@echo ""
+	@echo "Local development (port $(COURSE_PORT)):"
+	@echo "  make ci     Inject course into $(HTMLDIR)/"
+	@echo "  make course-remove  Remove injection from HTML files"
+	@echo "  make cs     Start local server"
+	@echo "  make htmloc Start server and open index.html"
+	@echo "  make co     Open $(COURSE_TEST_PAGE) in browser"
+	@echo ""
+	@echo "Cleaning:"
+	@echo "  make cc     Remove assets from $(HTMLDIR)/"
+	@echo "  make cdc    Remove generated data files"
+	@echo "  make cdist  Full clean (uninject + assets + data)"
+	@echo "  make cf     Uninject + re-inject"
+	@echo "  make crb    Full rebuild from scratch"
+	@echo ""
+	@echo "Validation/debugging:"
+	@echo "  make cval   Validate exercises + metadata JSON"
+	@echo "  make tsa    Show what will rebuild and why"
+	@echo ""
+	@echo "Production (f=fresh, i=install, l=links, c=course, w=web, o=open):"
+	@echo "  make cw     course + web (quick: no rebuild)"
+	@echo "  make cid    Inject into DESTROOT (after 'make il')"
+	@echo "  make ilc / ilcw / ilco    install + links + course [+ web | + open]"
+	@echo "  make filc / filcw / filco fresh + install + links + course [+ web | + open]"
+
+# ============================================================================
 # Local Dictionary (for automatic linking)
 # ============================================================================
 
