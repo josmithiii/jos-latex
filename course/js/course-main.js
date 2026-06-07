@@ -141,6 +141,7 @@ class MDFTCourse {
     const sidebar = document.createElement('div');
     sidebar.className = 'course-sidebar';
     sidebar.innerHTML = `
+      <div class="course-sidebar-resizer" title="Drag to resize · double-click to reset"></div>
       <button class="course-sidebar-toggle" aria-label="Toggle sidebar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 18l-6-6 6-6"/>
@@ -206,6 +207,15 @@ class MDFTCourse {
       });
     });
 
+    // Restore a previously dragged width (persists across page navigation)
+    const savedWidth = localStorage.getItem(`${CONFIG.NAME}-sidebar-width`);
+    if (savedWidth) {
+      document.documentElement.style.setProperty('--course-sidebar-width', savedWidth);
+    }
+
+    // Make the left edge draggable to resize the pane
+    this.bindResizer();
+
     // Load collapsed state
     if (localStorage.getItem(`${CONFIG.NAME}-sidebar-collapsed`) === 'true') {
       sidebar.classList.add('collapsed');
@@ -225,6 +235,55 @@ class MDFTCourse {
 
     // Bind Ask AI buttons
     this.bindAskAIButtons();
+  }
+
+  bindResizer() {
+    const resizer = this.sidebar.querySelector('.course-sidebar-resizer');
+    if (!resizer) return;
+
+    const MIN = 240;
+    const setWidth = (px) => {
+      const max = Math.max(MIN, window.innerWidth - 120);
+      const w = Math.min(max, Math.max(MIN, px));
+      document.documentElement.style.setProperty('--course-sidebar-width', `${w}px`);
+      return w;
+    };
+
+    let startX = 0;
+    let startWidth = 0;
+
+    const onMove = (e) => {
+      // Sidebar is anchored right, so dragging left (smaller clientX) widens it.
+      setWidth(startWidth + (startX - e.clientX));
+    };
+
+    const onUp = (e) => {
+      this.sidebar.classList.remove('resizing');
+      document.body.classList.remove('course-resizing');
+      resizer.removeEventListener('pointermove', onMove);
+      resizer.removeEventListener('pointerup', onUp);
+      try { resizer.releasePointerCapture(e.pointerId); } catch (_) {}
+      const w = getComputedStyle(this.sidebar).width;
+      localStorage.setItem(`${CONFIG.NAME}-sidebar-width`, w);
+    };
+
+    resizer.addEventListener('pointerdown', (e) => {
+      if (this.sidebar.classList.contains('collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = this.sidebar.getBoundingClientRect().width;
+      this.sidebar.classList.add('resizing');
+      document.body.classList.add('course-resizing');
+      resizer.setPointerCapture(e.pointerId);
+      resizer.addEventListener('pointermove', onMove);
+      resizer.addEventListener('pointerup', onUp);
+    });
+
+    // Double-click the handle to reset to the default width
+    resizer.addEventListener('dblclick', () => {
+      document.documentElement.style.removeProperty('--course-sidebar-width');
+      localStorage.removeItem(`${CONFIG.NAME}-sidebar-width`);
+    });
   }
 
   bindResetButton() {

@@ -65,6 +65,40 @@ body.course-dark-mode {
   display: none;
 }
 
+/* Drag-to-resize handle on the sidebar's left edge */
+.course-sidebar-resizer {
+  position: absolute;
+  left: -3px;
+  top: 0;
+  width: 7px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 1001;
+  touch-action: none;
+}
+
+.course-sidebar-resizer:hover,
+.course-sidebar.resizing .course-sidebar-resizer {
+  background: var(--course-primary);
+  opacity: 0.35;
+}
+
+.course-sidebar.collapsed .course-sidebar-resizer {
+  display: none;
+}
+
+/* Suppress width/margin easing while actively dragging so it tracks the cursor */
+.course-sidebar.resizing,
+body.course-resizing.course-active {
+  transition: none !important;
+}
+
+body.course-resizing {
+  cursor: ew-resize;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* Sidebar toggle button */
 .course-sidebar-toggle {
   position: absolute;
@@ -424,6 +458,11 @@ body.course-active.sidebar-collapsed {
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+  /* Sidebar becomes a bottom sheet; horizontal resize doesn't apply */
+  .course-sidebar-resizer {
+    display: none;
+  }
+
   .course-sidebar {
     width: 100%;
     height: 50vh; /* Fallback */
