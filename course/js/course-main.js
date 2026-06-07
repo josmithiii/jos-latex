@@ -27,6 +27,7 @@ class MDFTCourse {
     this.currentPage = CONFIG.page;
     this.pageMetadata = null;
     this.allMetadata = null;
+    this.outline = null;
     this.isDarkMode = false;
   }
 
@@ -42,6 +43,9 @@ class MDFTCourse {
 
     // Load page metadata
     await this.loadPageMetadata();
+
+    // Load book outline (numbered table of contents)
+    await this.loadOutline();
 
     // Create sidebar
     this.createSidebar();
@@ -147,6 +151,7 @@ class MDFTCourse {
       </div>
       <div class="course-sidebar-tabs">
         <button class="course-sidebar-tab active" data-tab="progress">Progress</button>
+        ${this.outline ? '<button class="course-sidebar-tab" data-tab="outline">Outline</button>' : ''}
         <button class="course-sidebar-tab" data-tab="exercises">Exercises</button>
         <button class="course-sidebar-tab" data-tab="help">Help</button>
       </div>
@@ -154,6 +159,9 @@ class MDFTCourse {
         <div class="course-tab-panel" data-panel="progress">
           ${this.renderProgressPanel()}
         </div>
+        ${this.outline ? `<div class="course-tab-panel" data-panel="outline" style="display:none">
+          ${this.renderOutlinePanel()}
+        </div>` : ''}
         <div class="course-tab-panel" data-panel="exercises" style="display:none">
           <p style="color: var(--course-text-light)">Exercises for this page will appear here.</p>
         </div>
@@ -471,6 +479,11 @@ Please help me understand this material. You can:
     this.sidebar.querySelectorAll('.course-tab-panel').forEach(p => {
       p.style.display = p.dataset.panel === tabName ? 'block' : 'none';
     });
+    // When opening the Outline, bring the current section into view.
+    if (tabName === 'outline') {
+      const cur = this.sidebar.querySelector('.course-outline-item[data-current="1"]');
+      if (cur) setTimeout(() => cur.scrollIntoView({ block: 'center' }), 0);
+    }
   }
 
   getChapterStats() {
@@ -505,6 +518,25 @@ Please help me understand this material. You can:
     return { chapters: chapterList, totalChapters, visitedChapters, totalTime };
   }
 
+  renderOutlinePanel() {
+    if (!this.outline || !this.outline.length) {
+      return '<p style="color: var(--course-text-light)">Outline unavailable.</p>';
+    }
+    const items = this.outline.map(e => {
+      const isCur = e.file === this.currentPage;
+      const indent = 10 + (Math.max(1, e.depth) - 1) * 14;
+      const num = e.num
+        ? `<span class="course-outline-num">§${e.num}</span>`
+        : '';
+      // Titles come from the HTML TOC (already entity-encoded, tags stripped).
+      return `<a class="course-outline-item${isCur ? ' current' : ''}"`
+        + ` href="${e.file}" style="padding-left:${indent}px"`
+        + `${isCur ? ' data-current="1" aria-current="page"' : ''}>`
+        + `${num}<span class="course-outline-title">${e.title}</span></a>`;
+    }).join('');
+    return `<div class="course-outline">${items}</div>`;
+  }
+
   renderProgressPanel() {
     const pagesVisited = Object.keys(this.progress.pagesVisited || {}).length;
     const totalPages = this.allMetadata ? Object.keys(this.allMetadata).length : 306;
@@ -513,6 +545,7 @@ Please help me understand this material. You can:
     const meta = this.pageMetadata;
     const readingTime = meta?.estimatedReadingMinutes;
     const chapter = meta?.chapter;
+    const sectionNumber = meta?.sectionNumber;
     const pageTitle = meta?.title || this.currentPage.replace(/_/g, ' ').replace('.html', '');
 
     // Get chapter-level stats
@@ -535,7 +568,7 @@ Please help me understand this material. You can:
       <div style="margin-top: 16px;">
         <strong style="font-size: 13px;">Current Page</strong>
         <p style="margin-top: 4px; color: var(--course-text-light); font-size: 13px;">
-          ${pageTitle}
+          ${sectionNumber ? `<span class="course-outline-num">§${sectionNumber}</span>` : ''}${pageTitle}
         </p>
         ${chapter && chapter !== pageTitle ? `<p style="margin-top: 2px; color: var(--course-text-light); font-size: 12px; opacity: 0.7;">Chapter: ${chapter}</p>` : ''}
         ${readingTime ? `<p style="margin-top: 6px; color: var(--course-text-light); font-size: 12px;">~${readingTime} min read</p>` : ''}
@@ -584,6 +617,18 @@ Please help me understand this material. You can:
       }
     } catch (e) {
       console.log(COURSE_LOG_PREFIX, 'No page metadata loaded', e.message);
+    }
+  }
+
+  async loadOutline() {
+    try {
+      const response = await fetch(`${CONFIG.base}/data/outline.json`);
+      if (!response.ok) return;
+      this.outline = await response.json();
+      console.log(COURSE_LOG_PREFIX, `Outline loaded (${this.outline.length} entries)`);
+    } catch (e) {
+      // Outline is optional; the Outline tab is hidden if it fails to load.
+      console.log(COURSE_LOG_PREFIX, 'No outline loaded', e.message);
     }
   }
 

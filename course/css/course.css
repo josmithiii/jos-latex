@@ -645,3 +645,41 @@ body.course-active.sidebar-collapsed {
   border-radius: 4px;
   font-size: 13px;
 }
+
+/* Outline (numbered table of contents) */
+.course-outline {
+  margin: -4px 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.course-outline-item {
+  display: block;
+  padding: 5px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--course-text);
+  border-left: 2px solid transparent;
+}
+
+.course-outline-item:hover {
+  background: var(--course-bg-hover);
+}
+
+.course-outline-item.current {
+  background: var(--course-bg-hover);
+  border-left-color: var(--course-primary);
+  font-weight: 600;
+}
+
+.course-outline-num {
+  display: inline-block;
+  min-width: 2.6em;
+  margin-right: 6px;
+  color: var(--course-text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.course-outline-item.current .course-outline-num {
+  color: var(--course-primary);
+}
