@@ -15,8 +15,22 @@
 # Configuration Variables
 # ============================================================================
 
-# JOS_LATEX: Path to jos-latex infrastructure (set by including Makefile)
-JOS_LATEX ?= .
+# JOS_LATEX: Path to the jos-latex infrastructure tree.
+#
+# Recommended usage -- the including Makefile sets it explicitly, typically via
+# a per-project 'jos-latex' symlink to /w/jos-latex:
+#     JOS_LATEX = jos-latex
+#     include $(JOS_LATEX)/Makefile.tex
+# See /w/mdft/Makefile for a complete example.
+#
+# Legacy usage -- a project that includes this file as '../Makefile.tex' (the
+# /w/Makefile.tex symlink) without setting JOS_LATEX. Auto-define it from this
+# file's own include path ('../' -> '../jos-latex') so infra paths resolve, and
+# nudge the maintainer toward the recommended pattern above.
+ifeq ($(origin JOS_LATEX),undefined)
+JOS_LATEX := $(dir $(lastword $(MAKEFILE_LIST)))jos-latex
+$(warning JOS_LATEX was not set; defaulting to '$(JOS_LATEX)'. Recommended include pattern: set 'JOS_LATEX = jos-latex' (a symlink to /w/jos-latex) then 'include $$(JOS_LATEX)/Makefile.tex' -- see /w/mdft/Makefile for an example.)
+endif
 
 # Paths (can be overridden)
 KROOT ?= $(HOME)/w
