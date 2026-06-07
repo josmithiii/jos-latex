@@ -72,7 +72,7 @@
 \pdsetup{
 %  lf=\theTitle --- \theEvent,
   lf=\theAuthor,
-  rf=\theEvent,
+  rf=\ifdefined\theShortEvent\theShortEvent\else\theEvent\fi,
 %  theslide=\arabic{slide}~/~\pageref*{lastslide},
 %  theslide=\arabic{slide},
 %  trans=Wipe,
