@@ -790,6 +790,16 @@ Please help me understand this material. You can:
     });
 
     insertPoint.parentNode.insertBefore(container, insertPoint);
+
+    // Exercises may contain \( ... \) math (e.g. the filters book). If
+    // MathJax has already finished its initial page typeset by the time the
+    // exercises JSON arrives, the inserted container missed it — typeset it
+    // now. If MathJax is still loading, its startup typeset will cover the
+    // container, and typesetPromise is not yet defined (window.MathJax is
+    // only the config object), so this is skipped.
+    if (window.MathJax?.typesetPromise) {
+      window.MathJax.typesetPromise([container]).catch(() => {});
+    }
   }
 
   renderExercise(exercise, index) {
