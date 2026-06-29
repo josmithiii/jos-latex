@@ -61,6 +61,20 @@ JOS_LATEX := $(dir $(lastword $(MAKEFILE_LIST)))jos-latex
 $(warning JOS_LATEX was not set; defaulting to '$(JOS_LATEX)'. Recommended include pattern: set 'JOS_LATEX = jos-latex' (a symlink to /w/jos-latex) then 'include $$(JOS_LATEX)/Makefile.tex' -- see /w/mdft/Makefile for an example.)
 endif
 
+# Default input search paths. Make the shared jos-latex style/bib trees findable
+# so a project Makefile need not export these by hand (subdir lecture trees still
+# add their own '..' paths for parent-dir source -- see lectures421/Makefile.lecture).
+#
+# These are APPENDED as a fallback, with '.' kept first: any name that already
+# resolves via a project- or environment-set path keeps resolving the same way
+# (e.g. a system html.sty still wins over styles/html.sty), and the shared trees
+# are consulted only as a last resort.  This is purely additive -- it can make
+# more files findable, never change an existing resolution.  '//' = search
+# recursively; the leading '.' ensures the project directory is searched first.
+export TEXINPUTS := .:$(TEXINPUTS):$(JOS_LATEX)/styles//:
+export BIBINPUTS := .:$(BIBINPUTS):$(JOS_LATEX)/bib//:
+export BSTINPUTS := .:$(BSTINPUTS):$(JOS_LATEX)/bib//:
+
 # Paths (can be overridden)
 KROOT ?= $(HOME)/w
 SYSIN ?= $(KROOT)/inputs
