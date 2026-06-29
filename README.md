@@ -1,14 +1,35 @@
 # jos-latex
 
-Shared LaTeX infrastructure for JOS textbooks.
+Shared LaTeX infrastructure for JOS textbooks, course handouts, and lecture overheads.
 
 ## Overview
 
-This repository contains the build system, LaTeX style files, tools, and shared resources needed to compile JOS textbooks:
+This repository contains the build system, LaTeX style files, tools, and shared
+resources needed to compile JOS textbooks, course handouts, and lecture overheads.
+Example textbooks:
 - **mdft** - Mathematics of the Discrete Fourier Transform
 - **filters** - Introduction to Digital Filters
 - **pasp** - Physical Audio Signal Processing
 - **sasp** - Spectral Audio Signal Processing
+
+## Document profiles
+
+Two kinds of document share this infrastructure. The **Makefile wiring is
+essentially the same for both** (`JOS_LATEX = jos-latex` + `include
+$(JOS_LATEX)/Makefile.tex`); they differ mainly in the header style file they
+`\input` and their latex2html (`.l2h`) configuration. When starting a new
+document, copy the `Makefile`, `.l2h`, and `dot-latex2html-init` from the
+closest matching example below.
+
+| | Publication / textbook | Class handout / lecture |
+|---|---|---|
+| Examples | `mdft`, `filters`, `pasp`, `sasp` | `/w/lectures421/*`, `/w/supercollider-tutorial-jos` |
+| Header `\input` | `jos-latex/styles/stdbookhdr.tex` | `jos-latex/styles/stdwebhdr.tex` (`stdlechdr.tex` for overheads) |
+| `.l2h` address | book vars: `$FORSALE`, `$HAVECITATION`, citation/hardcopy pages | `$ADDRESS = &make_jos_address` |
+| `dot-latex2html-init` | minimal local stub (set `TEXINPUTS`, `require` mathjax init) | fuller per-tree init with navigation/address — copy from `/w/lectures421` |
+
+Note: a per-tree `dot-latex2html-init` and the document `.l2h` both `require`
+the shared `jos-latex/l2h-mathjax-init.pl` (see MathJax section below).
 
 ## Directory Structure
 

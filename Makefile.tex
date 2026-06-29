@@ -5,11 +5,28 @@
 # Optional overrides: OTHER_DEPENDS, OTHER_SRCS, OTHER_GOODIES, OTHER_CLEANS,
 #                     INDEXSTYLE, OTHER_PRODUCTS, OTHER_DICTS, JOS_LATEX
 #
-# Example Makefile:
-#   NAME = mydocument
-#   OTHER_DEPENDS = *.tex eps/*.eps
+# A project Makefile differs only by document type (see "Document profiles" in
+# README.md). The shared wiring is just the last two lines below --
+# 'JOS_LATEX = jos-latex' and 'include $(JOS_LATEX)/Makefile.tex' -- so there is
+# no separate Makefile.common to include: this file IS the common include.
+#
+# Example Makefile -- publication / textbook (e.g. /w/mdft):
+#   NAME = mybook
+#   OTHER_DEPENDS = $(filter-out Makefile.tex,$(wildcard *.tex)) eps/*.eps
 #   JOS_LATEX = jos-latex
 #   include $(JOS_LATEX)/Makefile.tex
+#
+# Example Makefile -- class handout / lecture (e.g. /w/supercollider-tutorial-jos):
+#   NAME = myhandout
+#   OTHER_DEPENDS = $(filter-out Makefile.tex,$(wildcard *.tex)) eps/*.eps
+#   OTHER_SRCS = *.tex
+#   JOS_LATEX = jos-latex
+#   include $(JOS_LATEX)/Makefile.tex
+#
+# Lectures kept in subdirs under a shared tree DO repeat a little wiring
+# (subdir JOS_LATEX + TEXINPUTS/BIBINPUTS exports); that is already factored
+# into a per-tree common include -- see /w/lectures421/Makefile.lecture, which
+# each lecture's Makefile includes.
 
 # ============================================================================
 # Configuration Variables
@@ -21,7 +38,19 @@
 # a per-project 'jos-latex' symlink to /w/jos-latex:
 #     JOS_LATEX = jos-latex
 #     include $(JOS_LATEX)/Makefile.tex
-# See /w/mdft/Makefile for a complete example.
+#
+# Complete worked examples, by document type (see README.md "Document profiles"):
+#   - Publication / textbook:   /w/mdft/Makefile
+#       header:  \input{jos-latex/styles/stdbookhdr.tex}
+#       .l2h:    book vars ($FORSALE, $HAVECITATION, citation/hardcopy pages),
+#                minimal local dot-latex2html-init (TEXINPUTS + require mathjax)
+#   - Class handout / lecture:  /w/lectures421/<Lecture>/Makefile  (+ Makefile.lecture)
+#       also /w/supercollider-tutorial-jos for a standalone single-doc handout
+#       header:  \input{jos-latex/styles/stdwebhdr.tex}  (stdlechdr.tex for overheads)
+#       .l2h:    $ADDRESS = &make_jos_address; a fuller per-tree
+#                dot-latex2html-init (navigation/address) -- copy from lectures421
+# The Makefile wiring is nearly identical for both; the real differences are in
+# the document's \input'ed std*hdr.tex and its latex2html .l2h / init config.
 #
 # Legacy usage -- a project that includes this file as '../Makefile.tex' (the
 # /w/Makefile.tex symlink) without setting JOS_LATEX. Auto-define it from this
