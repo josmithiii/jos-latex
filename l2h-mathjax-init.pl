@@ -11,6 +11,26 @@ my $_jl_dir = dirname(abs_path(__FILE__));
 
 $USE_MATHJAX = 1;
 $MATHJAX_EXTERNAL_CONFIG = 1;  # write shared mathjax-config.js; browser caches it across pages
+
+# MathJax TeX input extensions to preload (emitted into mathjax-config.js as
+# both `loader.load: ['[tex]/NAME', ...]` and `tex.packages`).
+#
+# 'boldsymbol' is REQUIRED, not optional: many macros in mathjax-macros.pl
+# expand to \boldsymbol (\Zt, \Deltab, \Gamm, \Geemtx, \Lamm, \deltab,
+# \mybm, \makeboldmath), and \boldsymbol is NOT part of MathJax's default
+# TeX package set.  Without it here, the only thing that makes \boldsymbol
+# work is MathJax's `autoload` extension, which fetches [tex]/boldsymbol
+# from the CDN *after* it has already started parsing, then aborts and
+# retries the expression.  When that fetch is slow, blocked, or the
+# expression is typeset by a caller that does not await the retry, the
+# command is left unexpanded and MathJax renders a literal red
+# "\boldsymbol" -- e.g. in the z-transform operator \Zt on
+# filters/Transfer_Function.html.  Preloading removes the race.
+#
+# Add further extension names here if new macros start using commands from
+# MathJax's autoload set (cancel, color, enclose, bbox, html, unicode, ...).
+@MATHJAX_PACKAGES = ('ams', 'textmacros', 'boldsymbol');
+
 require "$_jl_dir/mathjax-macros.pl";
 
 # \fbox{X}: render as a CSS-bordered inline-block in HTML, leaving the
