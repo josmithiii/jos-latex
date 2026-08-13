@@ -157,6 +157,13 @@ EXCLUDE_SET = {
     # === Counters for specific references ===
     "smallmbox", "smallmboxVG",
     "smileyface",  # mixed mode, tricky
+
+    # === Text-spacing macros used in prose ===
+    # A MathJax pass-through handler destroys these in text mode: the
+    # raw \cmd survives to text_cleanup and is silently stripped, so
+    # e.g. "This \thing\qsp focuses" renders as "appendixfocuses".
+    # Left to normal \newcommand substitution they work in both modes.
+    "qsp",
 }
 
 # Macros to include in MathJax JavaScript config ONLY.
@@ -430,6 +437,13 @@ def is_math_macro(name: str, body: str, nargs: int) -> bool:
     if body.strip() == "":
         return False
 
+    # Skip macros whose body is pure spacing (\ , ~, \, \; \: \! \quad
+    # \qquad and whitespace).  They are as likely to appear in prose as
+    # in math, and a pass-through handler silently eats them in text
+    # mode, while plain \newcommand substitution works in both modes.
+    if re.fullmatch(r"(?:\\[ ,;:!]|\\quad\b|\\qquad\b|~|\s)+", body):
+        return False
+
     # Skip macros with \par or \newline
     if re.search(r"\\(par|newline)\b", body):
         return False
@@ -476,9 +490,11 @@ def main() -> None:
 
     # Filter to math-mode macros
     math_macros: dict[str, tuple[int, str]] = {}
+    raw_bodies: dict[str, str] = {}  # untransformed bodies, for runtime
     for name, (nargs, body) in sorted(all_macros.items()):
         if is_math_macro(name, body, nargs):
             math_macros[name] = (nargs, translate_body(body))
+            raw_bodies[name] = body
 
     # Add supplementary built-in LaTeX commands needed by MathJax
     # (these aren't defined in style files but appear in math sources)
@@ -526,6 +542,24 @@ def main() -> None:
     for name in sorted(math_macros):
         if name not in MATHJAX_ONLY_SET:
             lines.append(f"    '{name}' => 1,")
+    lines.append(");")
+    lines.append("")
+
+    # %mathjax_macro_rawbody hash: the ORIGINAL (untransformed) harvested
+    # bodies.  latex2html compares a document's \newcommand body against
+    # this at collision time: identical body => the macro comes from a
+    # loaded, harvested style file, keep the pass-through; different
+    # body => genuine cross-project name collision (e.g. \xtt is
+    # \ddot x in wgtmac.tex but \texttt{x} in the filters book), and
+    # the document definition wins.
+    lines.append("# Raw harvested bodies (pre-translation), keyed like")
+    lines.append("# %mathjax_protected_cmds; used by latex2html to detect")
+    lines.append("# document \\newcommand definitions that genuinely differ.")
+    lines.append("%mathjax_macro_rawbody = (")
+    for name in sorted(math_macros):
+        if name not in MATHJAX_ONLY_SET and name in raw_bodies:
+            escaped = escape_for_perl(raw_bodies[name])
+            lines.append(f"    '{name}' => '{escaped}',")
     lines.append(");")
     lines.append("")
 
