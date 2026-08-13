@@ -23,7 +23,7 @@ exercises (ported class problems) had the highest defect density.
 
 | Book | Math in exercise fields | HTML dir | Notes |
 |------|------------------------|----------|-------|
-| mdft | HTML entities ONLY (`&pi;`, `<sup>`, `<i>`) — HTML uses math images, no MathJax | mdftHTML/ | `\(...\)` would show as raw TeX |
+| mdft | HTML entities by convention (`&pi;`, `<sup>`, `<i>`) | mdftHTML/ | MathJax 3 *is* loaded (verified 2026-08-13), so `\(...\)` would render — but all 425 exercises are entity-only; keep it that way |
 | filters | MathJax `\(...\)` / `\[...\]` allowed, HTML entities also fine | filtersHTML/ | |
 | pasp | MathJax allowed (HTML loads MathJax 3) | paspHTML/ | physical modeling conventions |
 | sasp | MathJax allowed (HTML loads MathJax 3) | saspHTML/ | spectral/STFT conventions |
@@ -33,7 +33,10 @@ via `$(JOS_LATEX)/Makefile.tex`, deploy with `make cw`.
 
 The shared widget (`jos-latex/course/js/course-main.js`) typesets dynamically
 inserted exercises with MathJax when available (added 2026-06-10), so MathJax
-authoring is safe in the three MathJax books regardless of load-order races.
+authoring is safe regardless of load-order races. All four books now serve
+MathJax 3 — mdft's `make html` was found to emit it too on 2026-08-13, so the
+old "mdft renders math as images" rule is retired; mdft's entity-only style is
+now a *corpus consistency* convention, not a rendering constraint.
 
 ---
 
@@ -51,8 +54,11 @@ explanation, hints[]):
    `r'\bWait\b|\bActually\b|\bHmm\b|\bLet me\b|\bOops\b|TODO|FIXME'`
    Any hit is almost certainly a garbled explanation whose math should be
    re-derived from scratch, not patched.
-2. **Math-format check** — for mdft only, flag `r'\\[a-zA-Z]+|\$[^$]+\$'`
-   (raw LaTeX never renders there). For the MathJax books this is fine.
+2. **Math-format check** — for mdft only, flag `r'\\[a-zA-Z]+|\$[^$]+\$'`.
+   These now *would* render (MathJax is loaded), so treat hits as a style
+   inconsistency against the entity-only corpus, not a broken-rendering bug.
+   Note `$...$` is not MathJax-delimited anywhere — that one is still a real
+   defect. For the other books, `\(...\)` is fine.
 3. **Sanity** — `difficulty` an int in 1..5; answer-letter distribution
    (`Counter(e['correct'])`) not pathologically skewed per page.
 4. **Overview-page heuristic** for the placement audit (§3): flag assigned
@@ -151,7 +157,8 @@ but still keep `id`s stable out of habit.
 
 **mdft** (Mathematics of the DFT): j = imaginary unit; DFT
 X(k) = Σ_{n=0}^{N−1} x(n) e^{−j2πkn/N}, inverse has 1/N; frequencies in
-rad/sample; text fields are inline HTML entities, never LaTeX.
+rad/sample; text fields are inline HTML entities by convention (MathJax is
+available but unused in this book's exercises — match the entity style).
 
 **filters** (Introduction to Digital Filters): difference equation
 y(n) = b0 x(n) + b1 x(n−1) + ... − a1 y(n−1) − a2 y(n−2) − ... (a-coeffs
