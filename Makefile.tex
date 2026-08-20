@@ -72,7 +72,18 @@ endif
 # more files findable, never change an existing resolution.  '//' = search
 # recursively; the leading '.' ensures the project directory is searched first.
 export TEXINPUTS := .:$(TEXINPUTS):$(JOS_LATEX)/styles//:
+# Personal bibliography databases (jos.bib etc.) live in a sibling repo,
+# jos-latex-inputs, so that jos-latex itself stays usable by anyone with
+# their own .bib.  Each consuming project mounts it as a symlink next to
+# jos-latex (see /w/pasp).  It is searched FIRST, so the project's copy wins
+# over anything the shell environment may add via BIBINPUTS.
+JOS_LATEX_INPUTS ?= $(dir $(JOS_LATEX))jos-latex-inputs
+ifeq ($(wildcard $(JOS_LATEX_INPUTS)/jos.bib),)
+$(warning $(JOS_LATEX_INPUTS)/jos.bib not found -- BibTeX will see only .bib files on the environment BIBINPUTS path. Recommended: ln -s /w/jos-latex-inputs $(JOS_LATEX_INPUTS))
 export BIBINPUTS := .:$(BIBINPUTS):$(JOS_LATEX)/bib//:
+else
+export BIBINPUTS := .:$(JOS_LATEX_INPUTS)//:$(BIBINPUTS):$(JOS_LATEX)/bib//:
+endif
 export BSTINPUTS := .:$(BSTINPUTS):$(JOS_LATEX)/bib//:
 
 # Paths (can be overridden)
@@ -126,7 +137,7 @@ MAKEINDEX ?= makeindex -s $(INDEXSTYLE)
 # Installation paths
 DESTROOT ?= $(KROOT)/h/josn
 WEBUPD ?= $(KROOT)/scripts/webupd
-BIBFILE ?= $(JOS_LATEX)/bib/jos.bib
+BIBFILE ?= $(wildcard $(JOS_LATEX_INPUTS)/jos.bib)
 
 # Automatic linking (appdict)
 APPDICT ?= $(JOS_LATEX)/tools/appdict
