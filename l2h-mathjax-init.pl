@@ -27,9 +27,13 @@ $MATHJAX_EXTERNAL_CONFIG = 1;  # write shared mathjax-config.js; browser caches 
 # "\boldsymbol" -- e.g. in the z-transform operator \Zt on
 # filters/Transfer_Function.html.  Preloading removes the race.
 #
+# 'unicode' is needed by \circleR (= \textcircled{\tiny R} in stddefs.tex,
+# mapped to \unicode{x24C7} by tools/generate_mathjax_macros.py).
+#
 # Add further extension names here if new macros start using commands from
-# MathJax's autoload set (cancel, color, enclose, bbox, html, unicode, ...).
-@MATHJAX_PACKAGES = ('ams', 'textmacros', 'boldsymbol');
+# MathJax's autoload set (cancel, color, enclose, bbox, html, ...).
+# tools/mathjax-check.js reports any such use as AUTOLOAD.
+@MATHJAX_PACKAGES = ('ams', 'textmacros', 'boldsymbol', 'unicode');
 
 require "$_jl_dir/mathjax-macros.pl";
 

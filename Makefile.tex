@@ -608,7 +608,26 @@ hlo: .LINK-TIMESTAMP
 
 THEME_SCRIPT_SRC ?= ../theme-toggle.js
 
-.HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h $(MATHJAX_MACROS_PL)
+# MathJax parse check of the generated HTML (tools/mathjax-check.js): every
+# expression in $(HTMLDIR) is parsed by the real MathJax TeX input jax using
+# the tree's own mathjax-config.js, so a macro that leaks through latex2html
+# unexpanded (red "\xvnu" in the browser), a command MathJax lacks
+# (\vspace, \textcircled), or a TeX extension left to the CDN autoload race
+# fails the HTML build instead of reaching the web.  The node dependencies
+# (mathjax-full, parse5) live in $(JOS_LATEX)/tools/node_modules and are
+# installed on demand from package-lock.json.
+MATHJAX_CHECK = $(JOS_LATEX)/tools/mathjax-check.js
+MATHJAX_NODE_MODULES = $(JOS_LATEX)/tools/node_modules
+
+$(MATHJAX_NODE_MODULES): $(JOS_LATEX)/tools/package-lock.json
+	cd $(JOS_LATEX)/tools && npm ci
+	touch $@
+
+.PHONY: mathjax-check mjc
+mathjax-check mjc: $(MATHJAX_NODE_MODULES)
+	node $(MATHJAX_CHECK) $(HTMLDIR)
+
+.HTML-TIMESTAMP: .LATEX-PASS1-TIMESTAMP $(NAME).aux .BIBTEX-TIMESTAMP $(NAME).l2h $(MATHJAX_MACROS_PL) $(MATHJAX_NODE_MODULES)
 	mkdir -p $(HTMLDIR)
 	@ln -sf $(JOS_LATEX)/styles/jos.css jos.css
 	@ln -sf $(JOS_LATEX)/styles/theme-toggle.js theme-toggle.js
@@ -618,6 +637,7 @@ THEME_SCRIPT_SRC ?= ../theme-toggle.js
 		echo "*** FATAL OVERFULL VBOX IN L2H $(HTMLDIR)/images.log ***"; exit 1; \
 	fi
 	python3 $(JOS_LATEX)/tools/inject-theme-toggle.py --dest $(HTMLDIR) --script-src $(THEME_SCRIPT_SRC)
+	node $(MATHJAX_CHECK) $(HTMLDIR)
 	touch .HTML-TIMESTAMP
 	@echo 'Now say make htmlo'
 
@@ -631,8 +651,9 @@ theme-remove:
 # Scan generated HTML for MathJax problem signatures (e.g. \begin{tabular}
 # inside \(...\)).  Depends on .HTML-TIMESTAMP so it rebuilds HTML if stale.
 # Exits non-zero on any problem, so it can gate downstream targets.
-test-html th: .HTML-TIMESTAMP
+test-html th: .HTML-TIMESTAMP $(MATHJAX_NODE_MODULES)
 	python3 $(JOS_LATEX)/tools/test-html.py --dir $(HTMLDIR)
+	node $(MATHJAX_CHECK) $(HTMLDIR)
 
 # Tarfile of HTML directory (with links preserved)
 htgzl: .HTML-TIMESTAMP

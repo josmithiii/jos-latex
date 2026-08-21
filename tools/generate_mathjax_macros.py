@@ -177,6 +177,9 @@ MATHJAX_ONLY_SET = {
     "sc",            # l2h: small-caps handling
     "textunderscore",  # l2h: literal underscore
     "texttilde",     # l2h: literal tilde
+    "footnotesize",  # l2h: font-size declaration (SUPPLEMENTARY below)
+    "vspace",        # l2h: vertical space (SUPPLEMENTARY below)
+    "textcircled",   # l2h: text-mode circled char (SUPPLEMENTARY below)
 }
 
 
@@ -503,6 +506,19 @@ def main() -> None:
         "ensuremath": (1, "#1"),            # pass through in math mode
         "emph": (1, "\\textit{#1}"),        # emphasis
         "index": (1, ""),                   # consume argument, no output
+        # LaTeX-only commands that reach MathJax inside math (found by
+        # tools/mathjax-check.js).  Both are in MATHJAX_ONLY_SET: l2h
+        # handles them natively in text mode and must not be shadowed.
+        "footnotesize": (0, "\\small"),     # {\footnotesize \zbox{...}} (thm-rem.tex)
+        "vspace": (1, ""),                  # \stackrel{..}{\vspace{2pt}\mbox{..}} (readermac.tex)
+        # \circleR = \textcircled{\tiny R} (stddefs.tex; excluded above as a
+        # text macro, so l2h substitutes it and MathJax sees \textcircled,
+        # via \RM = $^{\hbox{\scriptsize\circleR}}$).  MathJax has no
+        # \textcircled; \unicode{x24C7} (CIRCLED LATIN CAPITAL LETTER R)
+        # works in both math and textmacros text mode, and the 'unicode'
+        # package is preloaded by l2h-mathjax-init.pl.  The argument is
+        # ignored: \circleR is the only \textcircled use in the corpus.
+        "textcircled": (1, "\\unicode{x24C7}"),
     }
     for name, (nargs, body) in SUPPLEMENTARY.items():
         if name not in math_macros:

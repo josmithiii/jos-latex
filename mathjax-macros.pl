@@ -2,7 +2,7 @@
 # DO NOT EDIT — regenerate with:
 #   python3 /w/jos-latex/tools/generate_mathjax_macros.py
 #
-# 953 math macros from 6 style files
+# 956 math macros from 6 style files
 
 # MathJax macro definitions
 %MATHJAX_MACROS = (
@@ -462,6 +462,7 @@
     'fofx' => 'f(t,\\x)',
     'foop' => 'x^\\tplus',
     'foot' => '\\mathrm{ft}',
+    'footnotesize' => '\\small',
     'fourbyone' => ['\\left[\\fourbyonenp{#1}{#2}{#3}{#4}\\right]', 4],
     'fourbyonenp' => ['\\begin{array}{c} #1 \\\\[2pt] #2 \\\\[2pt] #3 \\\\[2pt] #4\\end{array}', 4],
     'fp' => 'f^{\\tplus}',
@@ -746,6 +747,7 @@
     'tdelta' => '{\\Delta}',
     'testtilde' => ['
   \\ifx\\relax#1\\relax\\noexpand~\\else\\noexpand\\~#1\\fi', 1],
+    'textcircled' => ['\\unicode{x24C7}', 1],
     'textunderscore' => '_',
     'thh' => '\\hat{\\theta}',
     'threebyone' => ['\\left[\\threebyonenp{#1}{#2}{#3}\\right]', 3],
@@ -842,6 +844,7 @@
     'vslm' => '\\vsl^\\tminus',
     'vslp' => '\\vsl^\\tplus',
     'vsp' => '\\vs^\\tplus',
+    'vspace' => ['', 1],
     'vsr' => 'v_{s,r}',
     'vsrm' => '\\vsr^\\tminus',
     'vsrp' => '\\vsr^\\tplus',

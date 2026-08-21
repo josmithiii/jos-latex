@@ -1,0 +1,12 @@
+{
+  "name": "jos-latex-tools",
+  "version": "1.0.0",
+  "description": "Node dependencies for jos-latex/tools (mathjax-check.js: MathJax parse check of latex2html output)",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "mathjax-full": "^3.2.1",
+    "parse5": "^8.0.1"
+  }
+}
