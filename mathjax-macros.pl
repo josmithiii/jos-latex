@@ -2,7 +2,7 @@
 # DO NOT EDIT — regenerate with:
 #   python3 /w/jos-latex/tools/generate_mathjax_macros.py
 #
-# 956 math macros from 6 style files
+# 959 math macros from 6 style files
 
 # MathJax macro definitions
 %MATHJAX_MACROS = (
@@ -341,6 +341,7 @@
     'bigrp' => '\\right)',
     'bl' => '\\left(',
     'bmtx' => '{\\mathbf{b}}',
+    'bold' => ['\\mathbf{#1}', 1],
     'br' => '\\right)',
     'bt' => '\\tilde{b}',
     'bv' => '\\underline{\\beta}',
@@ -536,8 +537,8 @@
     'ifft' => '\\oper{IFFT}',
     'imagPart' => ['\\text{im}\\left\\lbrace#1\\right\\rbrace', 1],
     'imagPartSq' => ['\\text{im}^2\\left\\lbrace#1\\right\\rbrace', 1],
-    'imagpart' => ['\\text{im{\\left\\lbrace#1\\right\\rbrace}}', 1],
-    'imagparttext' => ['\\text{im{\\{#1\\}}}', 1],
+    'imagpart' => ['\\text{im$\\left\\lbrace#1\\right\\rbrace$}', 1],
+    'imagparttext' => ['\\text{im$\\{#1\\}$}', 1],
     'impliesq' => '\\implies\\quad',
     'impliess' => '\\,\\,\\Rightarrow\\,\\,',
     'index' => ['', 1],
@@ -575,6 +576,7 @@
     'lb' => '\\left[',
     'lbr' => '\\left\\{',
     'ldotss' => '\\ldots\\,',
+    'lefteqn' => ['\\rlap{\\displaystyle #1}', 1],
     'lg' => '\\text{lg}',
     'ln' => '\\text{ln}',
     'lowpass' => '\\oper{Lowpass}',
@@ -637,6 +639,7 @@
     'normi' => ['\\norm{#1}_\\infty', 1],
     'normtext' => [' ||\\,#1\\,|| ', 1],
     'nsixty' => 'n_{60}',
+    'null' => '{}',
     'nv' => '\\underline{n}',
     'nyq' => '\\oper{Nyquist}',
     'ohm' => '\\text{$\\Omega$}',
@@ -708,8 +711,8 @@
     'real' => '\\Re',
     'realPart' => ['\\text{re}\\left\\lbrace#1\\right\\rbrace', 1],
     'realPartSq' => ['\\text{re}^2\\left\\lbrace#1\\right\\rbrace', 1],
-    'realpart' => ['\\text{re{\\left\\lbrace#1\\right\\rbrace}}', 1],
-    'realparttext' => ['\\text{re{\\{#1\\}}}', 1],
+    'realpart' => ['\\text{re$\\left\\lbrace#1\\right\\rbrace$}', 1],
+    'realparttext' => ['\\text{re$\\{#1\\}$}', 1],
     'reals' => '\\mathbb{R}',
     'relop' => ['\\,#1\\,', 1],
     'rhoejpsi' => '\\rho\\,e^{j\\psi}',
@@ -728,13 +731,13 @@
     'rz' => '\\R_0',
     'sR' => '\\sqrt{R}',
     'sample' => '\\oper{Sample}',
-    'sc' => ['\\text{#1}', 1],
+    'sc' => ['\\textrm{#1}', 1],
     'scale' => '\\oper{Scale}',
     'sec' => '\\text{sec}',
     'seconds' => '\\text{ s}',
     'select' => '\\oper{Downsample}',
     'set' => ['\\left\\lbrace#1\\right\\rbrace', 1],
-    'shah' => '\\,\\raisebox{0.8em}{\\rotatebox{-90}{\\resizebox{1em}{1em}{{\\exists}}}}',
+    'shah' => '\\,\\unicode{x0428}',
     'shift' => '\\oper{Shift}',
     'si' => 's_i',
     'sigmav' => '\\underline{\\sigma}',

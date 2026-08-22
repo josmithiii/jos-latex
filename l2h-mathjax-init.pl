@@ -33,7 +33,8 @@ $MATHJAX_EXTERNAL_CONFIG = 1;  # write shared mathjax-config.js; browser caches 
 # Add further extension names here if new macros start using commands from
 # MathJax's autoload set (cancel, color, enclose, bbox, html, ...).
 # tools/mathjax-check.js reports any such use as AUTOLOAD.
-@MATHJAX_PACKAGES = ('ams', 'textmacros', 'boldsymbol', 'unicode');
+# 'verb' is needed by $\verb+...+$ inside math (sasp specenv.tex).
+@MATHJAX_PACKAGES = ('ams', 'textmacros', 'boldsymbol', 'unicode', 'verb');
 
 require "$_jl_dir/mathjax-macros.pl";
 

@@ -180,6 +180,9 @@ MATHJAX_ONLY_SET = {
     "footnotesize",  # l2h: font-size declaration (SUPPLEMENTARY below)
     "vspace",        # l2h: vertical space (SUPPLEMENTARY below)
     "textcircled",   # l2h: text-mode circled char (SUPPLEMENTARY below)
+    "null",          # l2h: \null is a no-op (SUPPLEMENTARY below)
+    "lefteqn",       # l2h: eqnarray layout (SUPPLEMENTARY below)
+    "bold",          # amsfonts; math-only in the corpus (SUPPLEMENTARY below)
 }
 
 
@@ -313,9 +316,56 @@ def extract_braced(text: str, pos: int) -> tuple[str | None, int]:
     return None, pos
 
 
+_TEXT_BOX_RE = re.compile(r"\\(?:mbox|hbox|text)\s*\{")
+
+
+def _ensuremath_in_text_to_dollars(s: str) -> str:
+    """Rewrite \\ensuremath{X} as $X$ when it sits inside \\mbox/\\hbox/\\text.
+
+    \\realpart = \\mbox{re\\ensuremath{\\left\\lbrace#1\\right\\rbrace}}: the
+    \\mbox becomes \\text{...} in translate_body, and inside MathJax's text
+    mode the contents must re-enter math with $...$ (textmacros supports
+    that); turning \\ensuremath{X} into a bare {X} there leaves \\left in
+    text mode ("\\left is only supported in math mode").  \\ensuremath
+    outside a text box is handled by translate_body (just {X}).
+    """
+    out: list[str] = []
+    stack: list[bool] = []  # True for a brace group opened by a text box
+    i = 0
+    n = len(s)
+    while i < n:
+        m = _TEXT_BOX_RE.match(s, i)
+        if m:
+            out.append(m.group(0))
+            stack.append(True)
+            i = m.end()
+            continue
+        if s.startswith("\\ensuremath", i) and any(stack):
+            j = i + len("\\ensuremath")
+            while j < n and s[j] in " \t\n":
+                j += 1
+            inner, end = extract_braced(s, j)
+            if inner is not None:
+                out.append("$" + inner + "$")
+                i = end
+                continue
+        ch = s[i]
+        if ch == "\\" and i + 1 < n:
+            out.append(s[i:i + 2])
+            i += 2
+            continue
+        if ch == "{":
+            stack.append(False)
+        elif ch == "}" and stack:
+            stack.pop()
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
 def translate_body(body: str) -> str:
     """Translate LaTeX-isms in macro body to MathJax-compatible forms."""
-    s = body
+    s = _ensuremath_in_text_to_dollars(body)
 
     # {\cal X} -> \mathcal{X}
     s = re.sub(r"\{\\cal\s+(\w)\}", r"\\mathcal{\1}", s)
@@ -499,10 +549,28 @@ def main() -> None:
             math_macros[name] = (nargs, translate_body(body))
             raw_bodies[name] = body
 
+    # Hand-written MathJax bodies for macros whose LaTeX bodies are pure
+    # typesetting tricks with no MathJax equivalent (found by
+    # tools/mathjax-check.js).  raw_bodies keeps the LaTeX body, which is
+    # what latex2html compares document definitions against.
+    OVERRIDES = {
+        # Shah (Dirac comb) symbol: a rotated, resized \exists built from
+        # \raisebox/\rotatebox/\resizebox -> Cyrillic capital SHA, which
+        # IS the symbol.  Needs the 'unicode' package (preloaded).
+        "shah": "\\,\\unicode{x0428}",
+    }
+    for name, mj_body in OVERRIDES.items():
+        if name not in math_macros:
+            raise SystemExit(f"*** OVERRIDES: macro \\{name} was not harvested")
+        math_macros[name] = (math_macros[name][0], mj_body)
+
     # Add supplementary built-in LaTeX commands needed by MathJax
     # (these aren't defined in style files but appear in math sources)
     SUPPLEMENTARY = {
-        "sc": (1, "\\text{#1}"),           # small caps fallback
+        # small caps fallback.  \textrm (not \text): it is legal both in
+        # math and inside MathJax's textmacros text mode, where {\sc X}
+        # ends up when a document re-defines e.g. \flip = \mbox{{\sc Flip}}.
+        "sc": (1, "\\textrm{#1}"),
         "ensuremath": (1, "#1"),            # pass through in math mode
         "emph": (1, "\\textit{#1}"),        # emphasis
         "index": (1, ""),                   # consume argument, no output
@@ -519,6 +587,9 @@ def main() -> None:
         # package is preloaded by l2h-mathjax-init.pl.  The argument is
         # ignored: \circleR is the only \textcircled use in the corpus.
         "textcircled": (1, "\\unicode{x24C7}"),
+        "null": (0, "{}"),                  # \null^{-1}, \tilde{\null}, 2\times\null (filters, pasp, sasp)
+        "lefteqn": (1, "\\rlap{\\displaystyle #1}"),  # split eqnarray lines (filters, pasp)
+        "bold": (1, "\\mathbf{#1}"),        # amsfonts \bold (sasp)
     }
     for name, (nargs, body) in SUPPLEMENTARY.items():
         if name not in math_macros:
