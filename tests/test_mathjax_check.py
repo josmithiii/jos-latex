@@ -121,6 +121,30 @@ def test_reports_undefined_autoload_env_and_parse_errors(tmp_path: Path) -> None
     assert "mathjax-check: FAIL -- 5 MathJax error(s) in 1/2 file(s)" in r.stderr
 
 
+def test_reports_bogus_tag_instead_of_crashing(tmp_path: Path) -> None:
+    # latex2html output for source text ``<x> is a rumor'': the '>' is
+    # escaped but the '<' is not, so the browser sees an element named
+    # `x&gt;` and hides the quote; MathJax's lite parser used to crash on it
+    # ("Can't find handler for document").
+    bogus_page = (
+        "<HTML><HEAD><TITLE>Bogus</TITLE></HEAD><BODY>\n"
+        "<P>line 2</P>\n"
+        "<P>``<x&gt; is a rumor in his own time.''\n"
+        "<P>``<x&gt; is a legend in his own mind.''\n"
+        "</BODY></HTML>\n"
+    )
+    tree = make_tree(tmp_path / "html", {"bogus.html": bogus_page, "clean.html": CLEAN_PAGE})
+    r = run_checker(tree)
+    assert r.returncode == 1, r.stdout + r.stderr
+    assert "could not process" not in r.stderr
+    bogus = str(tree / "bogus.html")
+    assert f"{bogus}:3: [BOGUS-TAG] <x&gt;> is not an HTML tag" in r.stdout
+    assert f"{bogus}:4: [BOGUS-TAG] <x&gt;>" in r.stdout
+    assert "rumor in his own time" in r.stdout  # source snippet shown
+    assert "BOGUS-TAG  <x&gt;>" in r.stdout  # summary table
+    assert "in 1/2 file(s)" in r.stderr  # clean.html still checked
+
+
 def test_summary_only(tmp_path: Path) -> None:
     tree = make_tree(tmp_path / "html", {"bad.html": BAD_PAGE})
     r = run_checker(tree, "--summary")

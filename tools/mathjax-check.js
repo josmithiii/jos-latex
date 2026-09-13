@@ -19,6 +19,12 @@
  * Every other MathJax parse error (missing braces, misplaced &, unknown
  * environment, \begin{tabular} inside math, ...) is reported too.
  *
+ * Also reported, as BOGUS-TAG: an element whose name is not a legal HTML
+ * tag name, e.g. `x&gt;` from source text `<x> is a rumor` that latex2html
+ * half-escaped to `<x&gt; is a rumor`.  The browser swallows it as an
+ * unknown element, so the text silently vanishes from the page (and the
+ * MathJax lite parser crashes on it, so MathJax is skipped for that page).
+ *
  * Usage:
  *     node mathjax-check.js [--verbose] [--summary] HTMLDIR
  *
@@ -220,8 +226,49 @@ function normalizeHtml(html) {
   return parse5.serialize(parse5.parse(html));
 }
 
+// Elements whose name no browser would recognise as a tag (see BOGUS-TAG in
+// the file header), with the line and source text where each starts.
+const VALID_TAG = /^[a-zA-Z][a-zA-Z0-9-]*$/;
+
+function bogusTags(html) {
+  const found = [];
+  const walk = (node) => {
+    if (node.tagName !== undefined && !VALID_TAG.test(node.tagName)) {
+      const loc = node.sourceCodeLocation;
+      found.push({
+        tag: node.tagName,
+        line: loc ? String(loc.startLine) : '?',
+        text: loc ? html.slice(loc.startOffset, loc.startOffset + 120) : '',
+      });
+    }
+    for (const child of node.childNodes || []) walk(child);
+    if (node.content) walk(node.content); // <template>
+  };
+  walk(parse5.parse(html, { sourceCodeLocationInfo: true }));
+  return found;
+}
+
 for (const file of files) {
   const html = fs.readFileSync(file, 'utf8');
+
+  const bogus = bogusTags(html);
+  if (bogus.length) {
+    badFiles += 1;
+    for (const b of bogus) {
+      total += 1;
+      const tkey = `BOGUS-TAG  <${b.tag}>`;
+      tally.set(tkey, (tally.get(tkey) || 0) + 1);
+      if (!summaryOnly) {
+        console.log(
+          `${file}:${b.line}: [BOGUS-TAG] <${b.tag}> is not an HTML tag -- a raw '<' in the text?` +
+          ` (write \\textless{} in the .tex)  ::  ${snippet(b.text)}`,
+        );
+      }
+    }
+    console.log(`${file}: MathJax check skipped until the BOGUS-TAG(s) above are fixed`);
+    continue;
+  }
+
   errors = [];
   // Fresh input jax per page: tag/label state (tags: 'ams') is per page in
   // the browser as well.
