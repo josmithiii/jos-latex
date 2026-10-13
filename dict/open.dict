@@ -2864,10 +2864,6 @@ KEY = Digital Filter Design
 URL = https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filter-design.html
 URL = https://web.eecs.umich.edu/~fessler/course/451/l/pdf/c8.pdf
 # [STALE] URL = http://www-users.cs.york.ac.uk/~fisher/mkfilter/
-URL = http://www.circuitsage.com/filter.html
-
-KEY = Filter Design
-URL = http://www.circuitsage.com/filter.html
 
 KEY = Finite Difference Approximation | FDA
 URL = https://ccrma.stanford.edu/~jos/pasp/Finite_Difference_Approximation.html
