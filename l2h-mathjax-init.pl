@@ -38,6 +38,20 @@ $MATHJAX_EXTERNAL_CONFIG = 1;  # write shared mathjax-config.js; browser caches 
 
 require "$_jl_dir/mathjax-macros.pl";
 
+# Extra <HEAD> metadata for every page.  latex2html emits $LATEX2HTML_META in
+# each page's <HEAD> and only sets its own default (the two lines kept below)
+# when the variable is still empty, so presetting it here appends to the default.
+# The pages carry their own light/dark themes (the jos-theme toggle injected by
+# tools/inject-theme-toggle.py), so:
+#   - darkreader-lock asks the Dark Reader extension not to recolor them (its
+#     recoloring washes out figures and the toggle's colors);
+#   - color-scheme "light dark" declares both themes to the browser and to other
+#     forced-dark tools that respect it.
+$LATEX2HTML_META = '<META NAME="Generator" CONTENT="LaTeX2HTML v' . $TEX2HTMLV_SHORT . '">'
+    . "\n<META HTTP-EQUIV=\"Content-Style-Type\" CONTENT=\"text/css\">"
+    . "\n<META NAME=\"darkreader-lock\">"
+    . "\n<META NAME=\"color-scheme\" CONTENT=\"light dark\">";
+
 # \fbox{X}: render as a CSS-bordered inline-block in HTML, leaving the
 # content X to be processed by latex2html's normal pipeline (so embedded
 # \begin{tabular}, math, etc. are handled correctly).  Without this
