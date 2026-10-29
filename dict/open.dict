@@ -55,7 +55,7 @@ URL = http://en.wikipedia.org/wiki/Harmonic_series_(music)
 #PATH = / Psychology / Perception 
 
 KEY = Weber-Fechner law | Weber law
-DEF = Weber's Law states that sensory perception is proportional to <i>relative</i> change, such as percentage change, not absolute change
+DEF = Weber's Law states that sensory perception is proportional to <i>relative</i> change, such as percentage change, not absolute change.
 URL = http://apps.usd.edu/coglab/WebersLaw.html
 URL = http://www.cis.rit.edu/people/faculty/montag/vandplite/pages/chap_3/ch3p1.html
 URL = https://en.wikipedia.org/wiki/Weber%E2%80%93Fechner_law
@@ -2670,6 +2670,10 @@ URL = https://mathworld.wolfram.com/KalmanFilter.html
 KEY = Wiener Filter
 #MW: 
 URL = https://mathworld.wolfram.com/WienerFilter.html
+
+KEY = Wiener Hammerstein
+DEF = The <i>Wiener Hammerstein</i> DSP architecture, often used as an audio distortion effect, consists of a linear filter, followed by an instantaneous wave-shaper, followed by another linear filter.
+URL = https://arxiv.org/pdf/2012.08046
 
 KEY = Karhunen-Loeve Expansion | Principal Component Analysis
 URL = http://en.wikipedia.org/wiki/Karhunen-Lo%C3%A8ve_transform
